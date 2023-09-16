@@ -8,16 +8,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 
-<div id="scrollContainer">
-    <div id="cell_1">
-        <canvas id="Chart1"></canvas>
-    </div>
-    <div id="cell_2">
-        <canvas id="Chart2"></canvas>
-    </div>
-</div>
-
-
 
 <body>
     <!-- Include the Chart.js library -->
@@ -39,6 +29,16 @@
         };
         firebase.initializeApp(config);
     </script>
+
+    <div id="scrollContainer">
+        <div id="cell_1">
+            <canvas id="Chart1"></canvas>
+        </div>
+        <div id="cell_2">
+            <canvas id="Chart2"></canvas>
+        </div>
+    </div>
+
 
     <script>
         //------------------------------------------------------------------------------------------------
@@ -80,6 +80,8 @@
         });
         //------------------------------------------------------------------------------------------------
     </script>
+
+
     <script>
         //------------------------------------------------------------------------------------------------
         const data2 = {
@@ -118,9 +120,6 @@
             console.log("Chart_2 = " + data_cell_2);
         });
         //------------------------------------------------------------------------------------------------
-
-        
-
     </script>
 
 </body>

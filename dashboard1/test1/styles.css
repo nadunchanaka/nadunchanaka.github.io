@@ -1,19 +1,26 @@
+
+
 #scrollContainer{
     height: 1500px;
     overflow-y: auto;
   
   }
   #cell_1{
-    height: 1000px;
-    width: 900px;
+    height: 400px;
+    width: 700px;
     position: relative;
     float: left;
+    background-color: rgb(163, 163, 163);
+    margin: 1px;
   }
   #cell_2{
-    height: 1000px;
-    width: 900px;
+    height: 800px;
+    width: 700px;
     position: relative;
     float: left;
   }
-
+body {
+  background-color: rgb(25, 25, 26);
+}
   
+
