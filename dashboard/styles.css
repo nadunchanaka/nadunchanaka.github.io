@@ -4,20 +4,14 @@
   
   }
   #cell_1{
-    height: 600px;
-    width: 500px;
+    height: 800px;
+    width: 700px;
     position: relative;
     float: left;
   }
   #cell_2{
-    height: 600px;
-    width: 500px;
-    position: relative;
-    float: left;
-  }
-  #cell_3{
-    height: 600px;
-    width: 500px;
+    height: 800px;
+    width: 700px;
     position: relative;
     float: left;
   }
