@@ -1,17 +1,17 @@
 #scrollContainer{
-    height: 900px;
+    height: 1500px;
     overflow-y: auto;
   
   }
   #cell_1{
-    height: 800px;
-    width: 700px;
+    height: 1000px;
+    width: 900px;
     position: relative;
     float: left;
   }
   #cell_2{
-    height: 800px;
-    width: 700px;
+    height: 1000px;
+    width: 900px;
     position: relative;
     float: left;
   }
