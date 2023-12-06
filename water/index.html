@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>W3.CSS Template</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
+    <style>
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: "Montserrat", sans-serif
+        }
+
+        .w3-black {
+            background-color: #06060e !important;
+        }
+
+        .w3-row-padding img {
+            margin-bottom: 5px
+        }
+
+        /* Set the width of the sidebar to 120px */
+        .w3-sidebar {
+            width: 100px;
+            background: #201f1f;
+        }
+
+        /* Add a left margin to the "page content" that matches the width of the sidebar (120px) */
+        #main {
+            margin-left: 100px
+        }
+
+        /* Remove margins from "page content" on small screens */
+        @media only screen and (max-width: 600px) {
+            #main {
+                margin-left: 0px
+            }
+        }
+    </style>
+</head>
+
+<body class="w3-black">
+
+    <!-- Icon Bar (Sidebar - hidden on small screens) -->
+    <nav class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-center">
+        <!-- Avatar image in top left corner -->
+        <!-- <img src="/w3images/avatar_smoke.jpg" style="width:100%"> -->
+        <a href="#" class="w3-bar-item w3-button w3-padding-large w3-black">
+            <i class="fa fa-home w3-xxlarge"></i>
+            <p>HOME</p>
+        </a>
+        <a href="#about" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+            <i class="fa fa-user w3-xxlarge"></i>
+            <p>ABOUT</p>
+        </a>
+        <a href="#photos" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+            <i class="fa fa-eye w3-xxlarge"></i>
+            <p>PHOTOS</p>
+        </a>
+        <a href="#contact" class="w3-bar-item w3-button w3-padding-large w3-hover-black">
+            <i class="fa fa-envelope w3-xxlarge"></i>
+            <p>CONTACT</p>
+        </a>
+    </nav>
+
+    <!-- Navbar on small screens (Hidden on medium and large screens) -->
+    <div class="w3-top w3-hide-large w3-hide-medium" id="myNavbar">
+        <div class="w3-bar w3-black w3-opacity w3-hover-opacity-off w3-center w3-small">
+            <a href="#" class="w3-bar-item w3-button" style="width:25% !important">HOME</a>
+            <a href="#about" class="w3-bar-item w3-button" style="width:25% !important">ABOUT</a>
+            <a href="#photos" class="w3-bar-item w3-button" style="width:25% !important">PHOTOS</a>
+            <a href="#contact" class="w3-bar-item w3-button" style="width:25% !important">CONTACT</a>
+        </div>
+    </div>
+
+    <!-- Page Content -->
+    <div class="w3-padding-large" id="main">
+        <!-- Header/Home -->
+        <header class="w3-container w3-padding-32 w3-center w3-black" id="home">
+            <h1 class="w3-jumbo"><span class="w3-hide-small">WATER LEVEL MONITORING SYSTEM</span> </h1>
+            <p>Design By Nadun Rathnayake.</p>
+
+        </header>
+
+
+
+        <!-- Portfolio Section -->
+        <!-- <div class="w3-padding-1 w3-content"> -->
+            <!-- <h2 class="w3-text-light-grey">My Photos</h2> -->
+            <!-- <hr style="width:600px" class="w3-opacity"> -->
+
+            <!-- Grid for photos -->
+            <!-- <div class="w3-row-padding"> -->
+
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+                    y="0px" style="display: none;">
+                    <symbol id="wave">
+                        <path
+                            d="M420,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C514,6.5,518,4.7,528.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H420z">
+                        </path>
+                        <path
+                            d="M420,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C326,6.5,322,4.7,311.5,2.7C304.3,1.4,293.6-0.1,280,0c0,0,0,0,0,0v20H420z">
+                        </path>
+                        <path
+                            d="M140,20c21.5-0.4,38.8-2.5,51.1-4.5c13.4-2.2,26.5-5.2,27.3-5.4C234,6.5,238,4.7,248.5,2.7c7.1-1.3,17.9-2.8,31.5-2.7c0,0,0,0,0,0v20H140z">
+                        </path>
+                        <path
+                            d="M140,20c-21.5-0.4-38.8-2.5-51.1-4.5c-13.4-2.2-26.5-5.2-27.3-5.4C46,6.5,42,4.7,31.5,2.7C24.3,1.4,13.6-0.1,0,0c0,0,0,0,0,0l0,20H140z">
+                        </path>
+                    </symbol>
+                </svg>
+
+                <span class="w3-tank-name">TANK - 1</span>
+                <div class="box">
+                    <div class="percent">
+                        <div class="percentNum" id="count">0</div>
+                        <div class="percentB">%</div>
+                    </div>
+                    <div id="water" class="water">
+                        <svg viewBox="0 0 560 20" class="water_wave water_wave_back">
+                            <use xlink:href="#wave"></use>
+                        </svg>
+                        <svg viewBox="0 0 560 20" class="water_wave water_wave_front">
+                            <use xlink:href="#wave"></use>
+                        </svg>
+                    </div>
+                </div>
+
+                <script src="script.js"></script>
+            <!-- </div> -->
+
+
+
+        <!-- </div> -->
+        <!-- End photo grid -->
+    </div>
+    <!-- End Portfolio Section -->
+    </div>
+
+
+    <!-- END PAGE CONTENT -->
+    </div>
+
+</body>
+
+</html>
