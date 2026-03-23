@@ -1,0 +1,7 @@
+.footer {
+  padding-top: 2.5rem; /* 40px */
+  padding-bottom: 2.5rem;
+  text-align: center;
+  color: #404652; /* Tailwind gray-500 */
+  font-size: 0.875rem; /* 14px */
+}

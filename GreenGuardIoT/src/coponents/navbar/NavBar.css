@@ -1,0 +1,292 @@
+/* Navbar container */
+/* .navbar {
+  background-color: #cedfce;
+  padding: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-logo {
+  width: 220px;
+  height: 70px;
+} */
+
+/* Inner layout */
+/* .navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+} */
+
+/* Brand section */
+/* .navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar-icon {
+  color: #16a34a;
+  font-size: 24px;
+}
+
+.navbar-title {
+  font-weight: 700;
+  font-size: 20px;
+} */
+
+/* Navigation links */
+/* .navbar-links {
+  display: flex;
+  gap: 32px;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #16a34a;
+} */
+
+/* CTA button */
+/* .navbar-button {
+  background-color: #16a34a;
+  color: #ffffff;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.navbar-button:hover {
+  background-color: #15803d;
+} */
+
+/* Responsive */
+/* @media (max-width: 768px) {
+  .navbar-links {
+    display: none;
+  }
+} */
+
+/* ===============================
+   NAVBAR WRAPPER
+================================ */
+.navbar {
+  /* background: #165e0c; */
+  padding: 14px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 100%;
+}
+
+/* ===============================
+   NAVBAR CONTAINER
+================================ */
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 10px 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: 100%;
+  max-height: 85vh;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+.logo-image {
+  margin-left: 26%;
+  width: 50%;
+  height: auto;
+}
+
+/* When NavBar is placed inside the app sidebar */
+.app-layout .sidebar .navbar {
+  position: static;
+  padding: 12px;
+}
+
+.app-layout .sidebar .navbar-container {
+  max-width: none;
+  width: 100%;
+  margin: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background: #042703;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(2, 6, 23, 0.06);
+}
+
+.app-layout .sidebar .navbar-brand {
+  width: 100%;
+}
+
+.app-layout .sidebar .navbar-links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: transparent;
+  padding: 0;
+  width: 100%;
+}
+
+.app-layout .sidebar .nav-link {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.app-layout .sidebar .nav-link.active {
+  background: #166534;
+  color: #fff;
+}
+
+/* Toggle button */
+.sidebar-toggle {
+  align-self: flex-end;
+  background: transparent;
+  border: none;
+  font-size: 15px;
+  padding: 4px 6px;
+  cursor: pointer;
+}
+
+/* collapsed state */
+.app-layout.collapsed .sidebar {
+  width: 72px;
+  flex: 0 0 72px;
+}
+
+.app-layout.collapsed .sidebar .navbar-container {
+  max-width: 72px;
+  padding: 10px 6px;
+  align-items: center;
+}
+
+.app-layout.collapsed .link-label {
+  color: #ffffff;
+  display: none;
+}
+
+.app-layout.collapsed .link-icon {
+  font-size: 18px;
+}
+
+.app-layout.collapsed .navbar-title {
+  display: none;
+}
+
+/* ===============================
+   BRAND
+================================ */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-logo {
+  width: 38px;
+  height: 38px;
+}
+
+.navbar-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #166534;
+}
+
+/* ===============================
+   CENTER LINKS (PILL MENU)
+================================ */
+.navbar-links {
+  display: flex;
+  gap: 6px;
+  background: #f0fdf4;
+  padding: 6px;
+  border-radius: 999px;
+}
+.nav-img {
+  padding: 0px 8px 0 0;
+}
+
+.nav-link {
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+
+  padding: 8px 18px;
+  border-radius: 999px;
+
+  transition: all 0.25s ease;
+}
+
+.nav-link:hover {
+  background: #5f7868;
+  color: #ffffff;
+}
+
+/* Active link */
+.nav-link.active {
+  background: #166534;
+  color: #ffffff;
+}
+
+/* ===============================
+   RIGHT BUTTON
+================================ */
+.navbar-button {
+  width: 100%;
+  background: #ffffff;
+  color: #166534;
+  padding: 10px 24px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background 0.25s ease;
+  text-align: center;
+
+  margin-top: 30%;
+}
+
+.navbar-button:hover {
+  background: #14532d;
+  color: #ffffff;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .navbar-links {
+    display: none;
+  }
+
+  .navbar-title {
+    display: none;
+  }
+}

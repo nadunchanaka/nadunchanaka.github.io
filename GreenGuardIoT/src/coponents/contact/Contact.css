@@ -1,0 +1,135 @@
+/* Section */
+.contact {
+  background-color: #ffffff;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  padding: 40px;
+  border-radius: 24px;
+}
+
+/* Container */
+.contact-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Title */
+.contact-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+/* Form */
+.contact-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .contact-form {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Form Group */
+.contact-form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Labels */
+.contact-form label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.contact-input-layour {
+  width: 100%;
+  border-radius: 12px;
+}
+
+/* Inputs */
+.contact-input,
+.contact-textarea {
+  width: 100%;
+  background-color: #e6efe6;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  color: #111827;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-input::placeholder,
+.contact-textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* Focus state */
+.contact-input:focus,
+.contact-textarea:focus {
+  outline: none;
+  border-color: #166534;
+  box-shadow: 0 0 0 3px rgba(22, 101, 52, 0.15);
+}
+
+/* Textarea */
+.contact-textarea {
+  resize: vertical;
+  min-height: 120px;
+  grid-column: span 2;
+}
+
+@media (max-width: 767px) {
+  .contact-textarea {
+    grid-column: span 1;
+  }
+}
+
+/* Button */
+.contact-button {
+  grid-column: span 2;
+  background-color: #166534;
+  color: #ffffff;
+  padding: 16px;
+  font-weight: 700;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.contact-button:hover {
+  background-color: #15803d;
+}
+
+.contact-button:active {
+  transform: scale(0.98);
+}
+/* .contact-textarea-layour {
+  width: 100%;
+  background-color: #e6efe6;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  color: #111827;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+} */
+
+@media (max-width: 767px) {
+  .contact-button {
+    grid-column: span 1;
+  }
+}
