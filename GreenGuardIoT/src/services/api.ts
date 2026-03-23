@@ -18,3 +18,11 @@ export const saveUIDataToBackend = async (data: UISensorData) => {
     console.error("Failed to save UI data to backend", err);
   }
 };
+
+export const getCurrent = async () => {
+  return axios.get(`${API_URL}/current`);
+};
+
+export const getHistory = async () => {
+  return axios.get(`${API_URL}/history`);
+};

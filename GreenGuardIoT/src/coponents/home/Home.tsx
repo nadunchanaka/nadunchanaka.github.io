@@ -1,6 +1,5 @@
-import React from "react";
+
 import "./Home.css";
-import { useNavigate } from "react-router-dom";
 import image01 from "../../assets/Image 01.png";
 import temprature from "../../assets/Temperarure-icon.png";
 import automationIntergration from "../../assets/Automated-integration.png";
@@ -8,7 +7,6 @@ import inteligentAutoMation from "../../assets/Intelligent-automation.png";
 import dataAnalisis from "../../assets/Data-analysis.png";
 
 export default function Home() {
-  const navigate = useNavigate();
   return (
     <>
       {/* ===== Banner Section ===== */}

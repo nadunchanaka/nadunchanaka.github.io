@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import EnvironmentChart from "./EnvironmentChart";
 import SensorCard from "./SensorCard";
 import type { SensorData } from "../types/SensorData";
 import type { HistoryData } from "../types/HistoryData";
-import { getHistory, getCurrent, API_URL } from "../services/api";
+import { getHistory, getCurrent } from "../services/api";
 
 export default function DashBoard() {
   const [current, setCurrent] = useState<SensorData | null>(null);

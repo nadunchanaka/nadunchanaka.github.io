@@ -70,7 +70,7 @@ const GaugeCard: React.FC<GaugeCardProps> = ({
             paddingAngle={0}
             dataKey="value"
           >
-            {data.map((entry, index) => (
+            {data.map((_entry, index) => (
               <Cell key={`cell-${index}`} fill={colors[index]} />
             ))}
           </Pie>
@@ -90,7 +90,7 @@ const GaugeCard: React.FC<GaugeCardProps> = ({
 const Dashboard: React.FC = () => {
   const [data, setData] = useState<SensorData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
+  const [error, _setError] = useState<string>("");
 
   // useEffect(() => {
   //   const fetchData = async () => {

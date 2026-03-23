@@ -36,7 +36,6 @@
 //   );
 // }
 
-import React from "react";
 import "./NavBar.css";
 import { Link, useLocation } from "react-router-dom";
 import dashbor from "../../assets/Dashboard-img.png";
