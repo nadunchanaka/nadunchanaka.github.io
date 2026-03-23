@@ -7,7 +7,7 @@ import Contact from "../coponents/contact/Contatct";
 
 const AppRoutes: React.FC = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/GreenGuardIoT/">
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />
