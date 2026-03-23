@@ -1,8 +1,11 @@
-name: Deploy to GitHub Pages
+name: Deploy GreenGuardIoT to GitHub Pages
 
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'GreenGuardIoT/**'
+      - '.github/workflows/deploy-greenguardiot.yml'
 
 jobs:
   build-and-deploy:
@@ -16,16 +19,19 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
+          cache-dependency-path: 'GreenGuardIoT/package-lock.json'
       
       - name: Install dependencies
+        working-directory: GreenGuardIoT
         run: npm install
       
       - name: Build project
+        working-directory: GreenGuardIoT
         run: npm run build
       
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          cname: false
+          publish_dir: ./GreenGuardIoT/dist
+          destination_dir: GreenGuardIoT
