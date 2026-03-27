@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Greenhouse OS | Dashboard</title>
+<!-- 
+    NOTE: Tailwind CDN is used for development only. For production:
+    1. Install Tailwind CLI: npm install -D tailwindcss postcss autoprefixer
+    2. Initialize: npx tailwindcss init -p
+    3. Build CSS: npx tailwindcss -i ./input.css -o ./output.css --watch
+    4. Replace this CDN link with: <link rel="stylesheet" href="./output.css">
+-->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;900&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Firebase SDK (Compat version for non-module environments) -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "error-container": "#9f0519",
+                        "inverse-surface": "#f9f9fd",
+                        "surface": "#0c0e11",
+                        "on-primary-fixed-variant": "#005762",
+                        "on-secondary-fixed": "#004a22",
+                        "on-surface-variant": "#aaabaf",
+                        "primary-fixed-dim": "#00d4ec",
+                        "tertiary-fixed-dim": "#eeb200",
+                        "primary-fixed": "#00e3fd",
+                        "surface-bright": "#292c31",
+                        "secondary-fixed-dim": "#75ec98",
+                        "tertiary": "#ffd16f",
+                        "inverse-primary": "#006976",
+                        "surface-container": "#171a1d",
+                        "surface-variant": "#23262a",
+                        "on-tertiary-fixed": "#3d2b00",
+                        "tertiary-dim": "#eeb200",
+                        "secondary-container": "#006d36",
+                        "on-background": "#f9f9fd",
+                        "background": "#0c0e11",
+                        "secondary-dim": "#75ec98",
+                        "error": "#ff716c",
+                        "primary-container": "#00e3fd",
+                        "on-secondary": "#005f2e",
+                        "on-tertiary": "#614700",
+                        "on-primary-fixed": "#003840",
+                        "on-primary": "#005762",
+                        "on-secondary-fixed-variant": "#006a34",
+                        "secondary": "#83fba5",
+                        "surface-container-low": "#111417",
+                        "tertiary-fixed": "#ffbf00",
+                        "on-error-container": "#ffa8a3",
+                        "on-error": "#490006",
+                        "tertiary-container": "#ffbf00",
+                        "secondary-fixed": "#83fba5",
+                        "error-dim": "#d7383b",
+                        "surface-tint": "#81ecff",
+                        "on-primary-container": "#004d57",
+                        "outline-variant": "#46484b",
+                        "inverse-on-surface": "#535559",
+                        "on-tertiary-container": "#563e00",
+                        "outline": "#747579",
+                        "surface-container-high": "#1d2024",
+                        "primary-dim": "#00d4ec",
+                        "on-secondary-container": "#e3ffe4",
+                        "on-surface": "#f9f9fd",
+                        "surface-container-lowest": "#000000",
+                        "on-tertiary-fixed-variant": "#614700",
+                        "surface-dim": "#0c0e11",
+                        "surface-container-highest": "#23262a",
+                        "primary": "#81ecff"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(41, 44, 49, 0.6);
+            backdrop-filter: blur(20px);
+        }
+        .gauge-ring {
+            stroke-dasharray: 283;
+            stroke-dashoffset: 70;
+            transition: stroke-dashoffset 1s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30">
+<!-- TopNavBar (Shared Component) -->
+<header class="fixed top-0 w-full z-50 bg-[#0c0e11]/60 backdrop-blur-xl flex justify-between items-center px-8 h-16 w-full shadow-[0px_24px_48px_rgba(0,0,0,0.4)]">
+<div class="text-2xl font-black text-[#f9f9fd] tracking-tighter font-headline">Greenhouse OS</div>
+<nav class="hidden md:flex gap-8 items-center h-full">
+<a class="font-headline font-bold tracking-tight text-[#00BCD4] border-b-2 border-[#00BCD4] pb-1" href="#">Dashboard</a>
+<a class="font-headline font-bold tracking-tight text-[#f9f9fd]/70 hover:text-[#f9f9fd] transition-colors" href="#">Sensors</a>
+<a class="font-headline font-bold tracking-tight text-[#f9f9fd]/70 hover:text-[#f9f9fd] transition-colors" href="#">Automation</a>
+<a class="font-headline font-bold tracking-tight text-[#f9f9fd]/70 hover:text-[#f9f9fd] transition-colors" href="#">Analytics</a>
+</nav>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-[#f9f9fd]/70 hover:text-[#00BCD4] cursor-pointer transition-all active:scale-95 duration-200">notifications</span>
+<span class="material-symbols-outlined text-[#f9f9fd]/70 hover:text-[#00BCD4] cursor-pointer transition-all active:scale-95 duration-200">settings</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img alt="User profile avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxLwwgT259OdsSGCdKH_IRBz7La4Svc8SnZK0c7MvRF3v3UZaJg-8AM1hkUzbXV3rNbSIRO5Cyu4QZAib_67feTMl7YaAW-7Q9X3dBsn4388lnE7c1Buh3M1P-PWquY4SI9mz-XJlKFiIeZLuYtSSXvhHrMWuSi7RfqjEygXe6IVDYBiLzsqBgkGDrl5QDFeykkn1yyjaehUW8Hm8dRVymuXTgbohrnWi3IaLDDIbBNyvtPnHbYg4P7a98wadERGgcEBGEoljUO42g"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full w-64 hidden lg:flex flex-col border-r border-[#f9f9fd]/15 bg-[#0c0e11] z-40 pt-20">
+<div class="px-6 py-4 flex flex-col gap-1 mb-6">
+<h2 class="text-xl font-bold text-[#f9f9fd] font-headline">Sector 07</h2>
+<p class="text-sm font-medium text-[#f9f9fd]/40 font-body">Active Monitoring</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1 px-2">
+<a class="flex items-center gap-3 py-3 px-4 text-[#00BCD4] bg-gradient-to-r from-[#00BCD4]/20 to-transparent border-l-4 border-[#00BCD4] font-medium transition-all active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-[#f9f9fd]/60 hover:bg-[#171a1d] hover:text-[#f9f9fd] font-medium transition-all active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined">thermostat</span>
+<span>Climate</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-[#f9f9fd]/60 hover:bg-[#171a1d] hover:text-[#f9f9fd] font-medium transition-all active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined">water_drop</span>
+<span>Irrigation</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-[#f9f9fd]/60 hover:bg-[#171a1d] hover:text-[#f9f9fd] font-medium transition-all active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span>Nutrients</span>
+</a>
+<a class="flex items-center gap-3 py-3 px-4 text-[#f9f9fd]/60 hover:bg-[#171a1d] hover:text-[#f9f9fd] font-medium transition-all active:translate-x-1 duration-150" href="#">
+<span class="material-symbols-outlined">history</span>
+<span>History</span>
+</a>
+</nav>
+<div class="p-4 border-t border-[#f9f9fd]/10">
+<button class="w-full py-2.5 rounded-lg bg-primary text-on-primary font-bold text-sm tracking-wide transition-all active:scale-95">
+                Export Report
+            </button>
+<div class="mt-4 flex flex-col gap-2">
+<a class="flex items-center gap-3 py-2 px-4 text-[#f9f9fd]/40 hover:text-[#f9f9fd] text-xs" href="#">
+<span class="material-symbols-outlined text-sm">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 py-2 px-4 text-[#f9f9fd]/40 hover:text-[#f9f9fd] text-xs" href="#">
+<span class="material-symbols-outlined text-sm">terminal</span>
+<span>Logs</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="lg:ml-64 pt-24 pb-24 lg:pb-12 px-8 min-h-screen">
+<div class="max-w-7xl mx-auto space-y-8">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-end gap-4">
+<div>
+<h1 class="text-4xl font-black font-headline tracking-tighter text-on-surface">Telemetry Overview</h1>
+<p class="text-on-surface-variant mt-1">Live data feed from Alpha-1 Node Array</p>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 bg-secondary/10 text-secondary rounded-full border border-secondary/20">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="text-xs font-bold uppercase tracking-widest">System Healthy</span>
+</div>
+</div>
+<!-- Bento Grid: Main Gauges -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+<!-- Gauge 1: Temperature -->
+<div class="bg-surface-container rounded-xl p-6 relative overflow-hidden group" data-sensor="temperature">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label text-xs uppercase tracking-widest">Temperature</span>
+<span class="material-symbols-outlined text-primary">device_thermostat</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="relative w-32 h-32 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90">
+<circle class="text-surface-variant" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="gauge-ring" cx="64" cy="64" fill="transparent" r="58" stroke="url(#primary-grad)" stroke-linecap="round" stroke-width="8" style="stroke-dashoffset: 80;"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-black font-headline">24°</span>
+<span class="text-[10px] text-on-surface-variant uppercase">Celsius</span>
+</div>
+</div>
+<div class="w-full mt-6 h-12 flex items-end gap-1 px-2">
+<div class="flex-1 bg-primary/20 rounded-t-sm h-1/2"></div>
+<div class="flex-1 bg-primary/20 rounded-t-sm h-2/3"></div>
+<div class="flex-1 bg-primary/20 rounded-t-sm h-3/4"></div>
+<div class="flex-1 bg-primary rounded-t-sm h-1/2"></div>
+<div class="flex-1 bg-primary rounded-t-sm h-2/3"></div>
+<div class="flex-1 bg-primary/40 rounded-t-sm h-full"></div>
+</div>
+</div>
+<svg height="0" width="0">
+<defs>
+<lineargradient id="primary-grad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#81ecff"></stop>
+<stop offset="100%" stop-color="#00BCD4"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+<!-- Gauge 2: Humidity -->
+<div class="bg-surface-container rounded-xl p-6 relative overflow-hidden group" data-sensor="humidity">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label text-xs uppercase tracking-widest">Humidity</span>
+<span class="material-symbols-outlined text-secondary">water_drop</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="relative w-32 h-32 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90">
+<circle class="text-surface-variant" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="gauge-ring" cx="64" cy="64" fill="transparent" r="58" stroke="url(#secondary-grad)" stroke-linecap="round" stroke-width="8" style="stroke-dashoffset: 95;"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-black font-headline">65%</span>
+<span class="text-[10px] text-on-surface-variant uppercase">Relative</span>
+</div>
+</div>
+<div class="w-full mt-6 h-12 flex items-end gap-1 px-2">
+<div class="flex-1 bg-secondary/20 rounded-t-sm h-2/3"></div>
+<div class="flex-1 bg-secondary/20 rounded-t-sm h-1/2"></div>
+<div class="flex-1 bg-secondary rounded-t-sm h-3/4"></div>
+<div class="flex-1 bg-secondary/40 rounded-t-sm h-full"></div>
+<div class="flex-1 bg-secondary rounded-t-sm h-2/3"></div>
+<div class="flex-1 bg-secondary/20 rounded-t-sm h-1/2"></div>
+</div>
+</div>
+<svg height="0" width="0">
+<defs>
+<lineargradient id="secondary-grad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#83fba5"></stop>
+<stop offset="100%" stop-color="#006d36"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+<!-- Gauge 3: Soil Moisture -->
+<div class="bg-surface-container rounded-xl p-6 relative overflow-hidden group" data-sensor="soilMoisture">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label text-xs uppercase tracking-widest">Soil Moisture</span>
+<span class="material-symbols-outlined text-tertiary">potted_plant</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="relative w-32 h-32 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90">
+<circle class="text-surface-variant" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="gauge-ring" cx="64" cy="64" fill="transparent" r="58" stroke="url(#tertiary-grad)" stroke-linecap="round" stroke-width="8" style="stroke-dashoffset: 160;"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-black font-headline">42%</span>
+<span class="text-[10px] text-on-surface-variant uppercase">Moisture</span>
+</div>
+</div>
+<div class="w-full mt-6 h-12 flex items-end gap-1 px-2">
+<div class="flex-1 bg-tertiary/20 rounded-t-sm h-1/3"></div>
+<div class="flex-1 bg-tertiary rounded-t-sm h-1/2"></div>
+<div class="flex-1 bg-tertiary/40 rounded-t-sm h-2/3"></div>
+<div class="flex-1 bg-tertiary/20 rounded-t-sm h-1/2"></div>
+<div class="flex-1 bg-tertiary rounded-t-sm h-1/4"></div>
+<div class="flex-1 bg-tertiary rounded-t-sm h-1/2"></div>
+</div>
+</div>
+<svg height="0" width="0">
+<defs>
+<lineargradient id="tertiary-grad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#ffd16f"></stop>
+<stop offset="100%" stop-color="#ffbf00"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+<!-- Gauge 4: CO2 Level -->
+<div class="bg-surface-container rounded-xl p-6 relative overflow-hidden group" data-sensor="co2">
+<div class="flex justify-between items-start mb-4">
+<span class="text-on-surface-variant font-label text-xs uppercase tracking-widest">CO2 Concentration</span>
+<span class="material-symbols-outlined text-error">air</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="relative w-32 h-32 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90">
+<circle class="text-surface-variant" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="gauge-ring" cx="64" cy="64" fill="transparent" r="58" stroke="url(#error-grad)" stroke-linecap="round" stroke-width="8" style="stroke-dashoffset: 50;"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-black font-headline">800</span>
+<span class="text-[10px] text-on-surface-variant uppercase">PPM</span>
+</div>
+</div>
+<div class="w-full mt-6 h-12 flex items-end gap-1 px-2">
+<div class="flex-1 bg-error/20 rounded-t-sm h-1/2"></div>
+<div class="flex-1 bg-error/40 rounded-t-sm h-full"></div>
+<div class="flex-1 bg-error/20 rounded-t-sm h-3/4"></div>
+<div class="flex-1 bg-error rounded-t-sm h-1/2"></div>
+<div class="flex-1 bg-error rounded-t-sm h-1/2"></div>
+<div class="flex-1 bg-error rounded-t-sm h-2/3"></div>
+</div>
+</div>
+<svg height="0" width="0">
+<defs>
+<lineargradient id="error-grad" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#ff716c"></stop>
+<stop offset="100%" stop-color="#d7383b"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+</div>
+<!-- Second Row: Large Analytics & Alerts -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Daily Growth Overview Chart -->
+<div class="lg:col-span-2 bg-surface-container rounded-xl p-8 flex flex-col">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-xl font-bold font-headline">Daily Growth Overview</h3>
+<p class="text-xs text-on-surface-variant">Biometric expansion across all sectors</p>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="text-xs font-label">Actual</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="text-xs font-label">Target</span>
+</div>
+</div>
+</div>
+<div class="flex-1 relative min-h-[300px] flex items-end justify-between px-4 pb-2">
+<!-- Chart Mockup with divs -->
+<div class="flex flex-col items-center w-full gap-4">
+<div class="w-full h-64 relative flex items-end gap-1 px-4 border-b border-outline-variant/30">
+<div class="flex-1 bg-primary/40 h-[20%] rounded-t"></div>
+<div class="flex-1 bg-primary/40 h-[35%] rounded-t"></div>
+<div class="flex-1 bg-primary/40 h-[50%] rounded-t"></div>
+<div class="flex-1 bg-primary/40 h-[45%] rounded-t"></div>
+<div class="flex-1 bg-primary/40 h-[70%] rounded-t"></div>
+<div class="flex-1 bg-primary/40 h-[85%] rounded-t"></div>
+<div class="flex-1 bg-primary/40 h-[92%] rounded-t"></div>
+<div class="flex-1 bg-secondary/80 h-[80%] rounded-t absolute bottom-0 left-[10%] w-[5%] -z-10 blur-[2px]"></div>
+<div class="flex-1 bg-secondary/80 h-[90%] rounded-t absolute bottom-0 left-[60%] w-[5%] -z-10 blur-[2px]"></div>
+</div>
+<div class="w-full flex justify-between px-4 text-[10px] text-on-surface-variant uppercase tracking-widest font-label">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Alerts Section -->
+<div class="bg-surface-container rounded-xl p-8 flex flex-col">
+<div class="mb-6 flex justify-between items-center">
+<h3 class="text-xl font-bold font-headline">Recent Alerts</h3>
+<span class="text-primary text-xs font-bold hover:underline cursor-pointer">View All</span>
+</div>
+<div class="space-y-4 flex-1">
+<!-- Alert Item -->
+<div class="flex gap-4 p-4 rounded-lg bg-surface-container-high border-l-4 border-error group cursor-pointer hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div class="flex-1">
+<h4 class="text-sm font-bold">CO2 Critical</h4>
+<p class="text-xs text-on-surface-variant line-clamp-1">Sector 07 levels exceeding 900ppm threshold</p>
+<span class="text-[10px] text-error mt-2 block font-label uppercase">12 mins ago</span>
+</div>
+</div>
+<!-- Alert Item -->
+<div class="flex gap-4 p-4 rounded-lg bg-surface-container-high border-l-4 border-tertiary group cursor-pointer hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-tertiary">water_drop</span>
+<div class="flex-1">
+<h4 class="text-sm font-bold">Low Moisture</h4>
+<p class="text-xs text-on-surface-variant line-clamp-1">Moisture drop detected in bed #14</p>
+<span class="text-[10px] text-on-surface-variant mt-2 block font-label uppercase">45 mins ago</span>
+</div>
+</div>
+<!-- Alert Item -->
+<div class="flex gap-4 p-4 rounded-lg bg-surface-container-high border-l-4 border-secondary group cursor-pointer hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-secondary">check_circle</span>
+<div class="flex-1">
+<h4 class="text-sm font-bold">Flush Complete</h4>
+<p class="text-xs text-on-surface-variant line-clamp-1">Irrigation cycle successfully completed</p>
+<span class="text-[10px] text-on-surface-variant mt-2 block font-label uppercase">2 hours ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Greenhouse Hero Section -->
+<div class="relative w-full h-[400px] rounded-2xl overflow-hidden group">
+<img alt="Greenhouse Interior" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Interior of a futuristic high-tech greenhouse with lush green plants, LED growing lights emitting a soft purple and white glow, and technical sensors visible." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTAw3nHe4andQIcQoNI4xtZZomxo-bfV7Tozq98P7D-jddN6RUYKIR_QjvECfJH9VENHu6mp02ps0dANLcAHnsHlzJgPNGPH6um2rmgR7lgAeDDpgp2yDhSKRsCRNXqCRjFm8jpw0lmi16RqMIoAbLtbTH5dRHoyCDwdwtrQfK06gPoUTfNNHfSniczbmjWqDqPwtCFaGehO-4VrcZq7L05S6byWS3-PZ_t-_WbL_xsEOqxZzuCYgzgL07mn1iJeYpeL6BcScVYv0P"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent opacity-80"></div>
+<div class="absolute bottom-10 left-10 max-w-lg">
+<h2 class="text-4xl font-black font-headline tracking-tighter mb-4">Alpha-1 Ecosystem Status</h2>
+<p class="text-on-surface-variant text-lg">Your automated greenhouse is currently optimizing for biomass production. All nutrients are balanced and light cycles are aligned with optimal growth parameters.</p>
+<div class="mt-8 flex gap-4">
+<button class="px-6 py-3 bg-primary text-on-primary font-black rounded-lg transition-all active:scale-95 shadow-xl">MANAGE CLIMATE</button>
+<button class="px-6 py-3 bg-surface-container/80 backdrop-blur-md border border-outline-variant/30 text-on-surface font-black rounded-lg transition-all active:scale-95">VIEW LOGS</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Shared Component) -->
+<nav class="fixed bottom-0 w-full lg:hidden z-50 rounded-t-2xl bg-[#0c0e11]/80 backdrop-blur-lg flex justify-around items-center h-20 px-4 pb-safe border-t border-[#f9f9fd]/10 shadow-[0_-8px_24px_rgba(0,0,0,0.5)]">
+<div class="flex flex-col items-center justify-center text-[#00BCD4] scale-110 active:bg-[#1d2024] tap-highlight-transparent">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#f9f9fd]/40 active:bg-[#1d2024] tap-highlight-transparent">
+<span class="material-symbols-outlined">device_thermostat</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest">Climate</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#f9f9fd]/40 active:bg-[#1d2024] tap-highlight-transparent">
+<span class="material-symbols-outlined">opacity</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest">Moisture</span>
+</div>
+<div class="flex flex-col items-center justify-center text-[#f9f9fd]/40 active:bg-[#1d2024] tap-highlight-transparent">
+<span class="material-symbols-outlined">air</span>
+<span class="font-['Inter'] text-[10px] uppercase tracking-widest">CO2</span>
+</div>
+</nav>
+
+<!-- Firebase Realtime Database Integration Script -->
+<script>
+// ==================== FIREBASE INITIALIZATION ====================
+// Firebase SDK is loaded via CDN (see head section)
+// This script initializes Firebase and sets up real-time database listeners
+
+// Firebase Configuration (production credentials)
+const firebaseConfig = {
+  apiKey: "AIzaSyCwBriGgolF2ezrNTGaqgKFMrZY2efxIS4",
+  authDomain: "green-house-iot-ab0c9.firebaseapp.com",
+  databaseURL: "https://green-house-iot-ab0c9-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "green-house-iot-ab0c9",
+  storageBucket: "green-house-iot-ab0c9.firebasestorage.app",
+  messagingSenderId: "1051399417408",
+  appId: "1:1051399417408:web:fe3db669dd390ca8db39a5",
+  measurementId: "G-TTQ9GTED9S"
+};
+
+// Initialize Firebase with error handling
+let database;
+try {
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+    console.log('[Firebase] Initialized successfully');
+  } else {
+    firebase.app(); // Use existing app
+  }
+  database = firebase.database();
+} catch (error) {
+  console.error('[Firebase] Initialization failed:', error.message);
+}
+
+// Sensor database paths (must match your Firebase Realtime Database structure)
+const sensorPaths = {
+    temperature: "/env/temp",          // Temperature in °C (0-50°C range)
+    humidity: "/env/humidity",         // Humidity in % (0-100% range)
+    soilMoisture: "/env/soilMoisture", // Soil moisture in % (0-100% range)
+    co2: "/env/co2"                    // CO2 concentration in PPM (0-2000 PPM range)
+};
+
+// ==================== GAUGE UPDATE FUNCTIONS ====================
+
+/**
+ * Calculates stroke-dashoffset for circular gauge animation
+ * @param {number} value - Current sensor value
+ * @param {number} minValue - Minimum expected value
+ * @param {number} maxValue - Maximum expected value
+ * @returns {number} Stroke-dashoffset for SVG circle
+ */
+function calculateGaugeOffset(value, minValue, maxValue) {
+    const percentage = Math.max(0, Math.min(100, ((value - minValue) / (maxValue - minValue)) * 100));
+    return 283 - (percentage / 100) * 213; // stroke-dasharray: 283, min-offset: 70
+}
+
+/**
+ * Updates temperature gauge with new value
+ */
+function updateTemperature(value) {
+    if (typeof value !== 'number') {
+        console.warn('[Gauge] Invalid temperature value:', value);
+        return;
+    }
+    
+    const tempValue = Math.round(value);
+    
+    // Update numeric display
+    const tempDisplays = document.querySelectorAll('[data-sensor="temperature"] .text-3xl');
+    if (tempDisplays.length > 0) {
+        tempDisplays[0].textContent = tempValue + '°';
+    }
+    
+    // Update circular gauge ring (0-50°C range)
+    const tempGauges = document.querySelectorAll('[data-sensor="temperature"] .gauge-ring');
+    if (tempGauges.length > 0) {
+        const offset = calculateGaugeOffset(value, 0, 50);
+        tempGauges[0].style.strokeDashoffset = offset;
+    }
+    
+    console.log('[Sensor] Temperature updated:', tempValue + '°C', { raw: value, offset: calculateGaugeOffset(value, 0, 50) });
+}
+
+/**
+ * Updates humidity gauge with new value
+ */
+function updateHumidity(value) {
+    if (typeof value !== 'number') {
+        console.warn('[Gauge] Invalid humidity value:', value);
+        return;
+    }
+    
+    const humidityValue = Math.round(value);
+    
+    // Update numeric display
+    const humidityDisplays = document.querySelectorAll('[data-sensor="humidity"] .text-3xl');
+    if (humidityDisplays.length > 0) {
+        humidityDisplays[0].textContent = humidityValue + '%';
+    }
+    
+    // Update circular gauge ring (0-100% range)
+    const humidityGauges = document.querySelectorAll('[data-sensor="humidity"] .gauge-ring');
+    if (humidityGauges.length > 0) {
+        const offset = calculateGaugeOffset(value, 0, 100);
+        humidityGauges[0].style.strokeDashoffset = offset;
+    }
+    
+    console.log('[Sensor] Humidity updated:', humidityValue + '%', { raw: value, offset: calculateGaugeOffset(value, 0, 100) });
+}
+
+/**
+ * Updates soil moisture gauge with new value
+ */
+function updateSoilMoisture(value) {
+    if (typeof value !== 'number') {
+        console.warn('[Gauge] Invalid soil moisture value:', value);
+        return;
+    }
+    
+    const soilValue = Math.round(value);
+    
+    // Update numeric display
+    const soilDisplays = document.querySelectorAll('[data-sensor="soilMoisture"] .text-3xl');
+    if (soilDisplays.length > 0) {
+        soilDisplays[0].textContent = soilValue + '%';
+    }
+    
+    // Update circular gauge ring (0-100% range)
+    const soilGauges = document.querySelectorAll('[data-sensor="soilMoisture"] .gauge-ring');
+    if (soilGauges.length > 0) {
+        const offset = calculateGaugeOffset(value, 0, 100);
+        soilGauges[0].style.strokeDashoffset = offset;
+    }
+    
+    console.log('[Sensor] Soil Moisture updated:', soilValue + '%', { raw: value, offset: calculateGaugeOffset(value, 0, 100) });
+}
+
+/**
+ * Updates CO2 gauge with new value
+ */
+function updateCO2(value) {
+    if (typeof value !== 'number') {
+        console.warn('[Gauge] Invalid CO2 value:', value);
+        return;
+    }
+    
+    const co2Value = Math.round(value);
+    
+    // Update numeric display
+    const co2Displays = document.querySelectorAll('[data-sensor="co2"] .text-2xl');
+    if (co2Displays.length > 0) {
+        co2Displays[0].textContent = co2Value;
+    }
+    
+    // Update circular gauge ring (0-2000 PPM range)
+    const co2Gauges = document.querySelectorAll('[data-sensor="co2"] .gauge-ring');
+    if (co2Gauges.length > 0) {
+        const offset = calculateGaugeOffset(value, 0, 2000);
+        co2Gauges[0].style.strokeDashoffset = offset;
+    }
+    
+    console.log('[Sensor] CO2 updated:', co2Value + ' PPM', { raw: value, offset: calculateGaugeOffset(value, 0, 2000) });
+}
+
+// ==================== DATABASE LISTENERS ====================
+
+if (database) {
+    // Listen to temperature changes
+    database.ref(sensorPaths.temperature).on(
+        'value', 
+        (snapshot) => {
+            const value = snapshot.val();
+            console.log('[Listener] Temperature event triggered', {
+                exists: snapshot.exists(),
+                path: sensorPaths.temperature,
+                rawValue: value,
+                timestamp: new Date().toISOString()
+            });
+            
+            if (snapshot.exists()) {
+                updateTemperature(value);
+            } else {
+                console.warn('[Database] No data at', sensorPaths.temperature);
+            }
+        },
+        (error) => {
+            console.error('[Database] Temperature listener error:', error.code, error.message);
+        }
+    );
+
+    // Listen to humidity changes
+    database.ref(sensorPaths.humidity).on(
+        'value',
+        (snapshot) => {
+            const value = snapshot.val();
+            console.log('[Listener] Humidity event triggered', {
+                exists: snapshot.exists(),
+                path: sensorPaths.humidity,
+                rawValue: value,
+                timestamp: new Date().toISOString()
+            });
+            
+            if (snapshot.exists()) {
+                updateHumidity(value);
+            } else {
+                console.warn('[Database] No data at', sensorPaths.humidity);
+            }
+        },
+        (error) => {
+            console.error('[Database] Humidity listener error:', error.code, error.message);
+        }
+    );
+
+    // Listen to soil moisture changes
+    database.ref(sensorPaths.soilMoisture).on(
+        'value',
+        (snapshot) => {
+            const value = snapshot.val();
+            console.log('[Listener] Soil Moisture event triggered', {
+                exists: snapshot.exists(),
+                path: sensorPaths.soilMoisture,
+                rawValue: value,
+                timestamp: new Date().toISOString()
+            });
+            
+            if (snapshot.exists()) {
+                updateSoilMoisture(value);
+            } else {
+                console.warn('[Database] No data at', sensorPaths.soilMoisture);
+            }
+        },
+        (error) => {
+            console.error('[Database] Soil moisture listener error:', error.code, error.message);
+        }
+    );
+
+    // Listen to CO2 changes
+    database.ref(sensorPaths.co2).on(
+        'value',
+        (snapshot) => {
+            const value = snapshot.val();
+            console.log('[Listener] CO2 event triggered', {
+                exists: snapshot.exists(),
+                path: sensorPaths.co2,
+                rawValue: value,
+                timestamp: new Date().toISOString()
+            });
+            
+            if (snapshot.exists()) {
+                updateCO2(value);
+            } else {
+                console.warn('[Database] No data at', sensorPaths.co2);
+            }
+        },
+        (error) => {
+            console.error('[Database] CO2 listener error:', error.code, error.message);
+        }
+    );
+
+    // Monitor Firebase connection state
+    database.ref('.info/connected').on(
+        'value',
+        (snapshot) => {
+            if (snapshot.val() === true) {
+                console.log('[Firebase] Connected to Realtime Database');
+            } else {
+                console.log('[Firebase] Disconnected from Realtime Database');
+            }
+        },
+        (error) => {
+            console.error('[Firebase] Connection state error:', error.code, error.message);
+        }
+    );
+} else {
+    console.error('[Firebase] Database not initialized. Check Firebase SDK and configuration.');
+}
+</script>
+</body></html>
