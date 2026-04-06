@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode:"class",
+      theme: {
+        extend: {"colors": {"inverse-surface":"#dce1fb","outline":"#909097","surface-container":"#191f31","secondary-fixed":"#c4e7ff","secondary":"#7bd0ff","on-secondary-fixed-variant":"#004c69","outline-variant":"#45464d","surface-bright":"#33394c","error-container":"#93000a","on-tertiary-container":"#d45d00","on-primary-container":"#a87800","on-primary-fixed-variant":"#5e4200","on-tertiary":"#552100","on-surface":"#dce1fb","surface":"#0c1324","error":"#ffb4ab","on-secondary-container":"#00374d","on-primary":"#412d00","primary-container":"#221500","on-secondary":"#00354a","on-error":"#690005","tertiary":"#ffb690","on-error-container":"#ffdad6","inverse-primary":"#7c5800","surface-container-low":"#151b2d","surface-variant":"#2e3447","surface-container-high":"#23293c","tertiary-container":"#2d0e00","surface-container-highest":"#2e3447","tertiary-fixed-dim":"#ffb690","on-tertiary-fixed":"#341100","secondary-fixed-dim":"#7bd0ff","on-secondary-fixed":"#001e2c","primary":"#ffba20","on-background":"#dce1fb","on-surface-variant":"#c6c6cd","background":"#0c1324","surface-container-lowest":"#070d1f","surface-dim":"#0c1324","on-primary-fixed":"#271900","inverse-on-surface":"#2a3043","tertiary-fixed":"#ffdbca","primary-fixed-dim":"#ffba20","on-tertiary-fixed-variant":"#783200","secondary-container":"#00a6e0","surface-tint":"#ffba20","primary-fixed":"#ffdea8"
+          },"borderRadius": {"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"
+          },"fontFamily": {"headline": ["Space Grotesk"],"body": ["Manrope"],"label": ["Manrope"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      background-color: #0c1324;
+      color: #dce1fb;
+      overflow-x: hidden;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .cosmic-glow {
+      background: radial-gradient(circle at 50% 50%, rgba(255, 186, 32, 0.1) 0%, transparent 70%);
+    }
+    .asymmetric-canvas {
+      clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+    }
+  </style>
+</head>
+<body class="font-body selection:bg-primary/30 selection:text-primary">
+
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-0 h-16 flex justify-between items-center px-12 z-40 bg-[#0c1324]/40 backdrop-blur-xl">
+<div class="flex items-center space-x-8">
+<span class="font-['Space_Grotesk'] uppercase text-xs tracking-widest text-[#dce1fb]/40">Timeline</span>
+<span class="font-['Space_Grotesk'] uppercase text-xs tracking-widest text-[#dce1fb]/40">Analysis</span>
+<span class="font-['Space_Grotesk'] uppercase text-xs tracking-widest text-[#dce1fb]/40">Forecast</span>
+</div>
+<div class="flex items-center space-x-6">
+<button class="text-[#dce1fb]/40 hover:text-[#7bd0ff] hover:scale-105 transition-all duration-300">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="text-[#dce1fb]/40 hover:text-[#7bd0ff] hover:scale-105 transition-all duration-300">
+<span class="material-symbols-outlined">bookmark</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-[#dce1fb]/10">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Close up of a highly detailed futuristic cyborg profile with glowing blue optical sensors and metallic textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBI7Bveiym5qcYxi5e1ZnMzVdD2-5LXsVZNb5Wqdix5H6ma8BTY9dI3xPkGLg84ZwK8xvbvZIoTi4z1jWSfiZawWNuCjSRWRO3ak514LYbeNo-VkKX-Gzu0DFuyJE3-Cp3E4ghdxZn-KInFvYzCga3W0wTUPaR4orpumUP1dMW_f3D8-HblZf_bazHtUrSTsRKeplzniUCwC1nrmNWXpT04GswxXLDCI__Psik5ExZ3V40bfv7Jg-Xvp5S_R1D_7pJVk96pmpCDw"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="min-h-screen relative overflow-hidden flex flex-col items-center justify-center pt-16">
+<!-- Hero Background Image -->
+<div class="absolute inset-0 z-0">
+<img alt="Cosmic Dawn" class="w-full h-full object-cover opacity-30" data-alt="Epic wide shot of planet earth from space with a brilliant golden sun rising over the curved horizon creating a glowing arc" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCIqdPHBaUJaoSo7StOb5YCao0ZZkAnGkDYPyW2pbauJUaQKYXUQtU48cCmtSvX0UR1QpF58f2jmXPoSJOCMtOU3A2sP6F38GXhejHokAAAWQcyf-mkxPViBKDTyKcuvSURDR_KOe56eO9YfLX90BW5b83UA_a4mQd2nbH9FqOBQyomPmWvgjyO5Ge198qNzKo7GbgThLgMrbYikUF8dALLnL7Scf6kv0sKBd7NCFExpWX_SJ4GNzehS_InTx2zJSEbE8s7bOlwA"/>
+<div class="absolute inset-0 bg-gradient-to-b from-surface/80 via-transparent to-surface"></div>
+<div class="absolute inset-0 cosmic-glow"></div>
+</div>
+<!-- Hero Content -->
+<section class="relative z-10 text-center px-6 max-w-5xl">
+<div class="mb-6">
+<span class="font-label uppercase tracking-[0.4em] text-primary/60 text-xs mb-4 block">The Celestial Archive presents</span>
+<h1 class="font-headline font-bold text-6xl md:text-8xl tracking-tighter text-on-surface leading-none mb-8">
+          The Exponential <br/>
+<span class="text-primary">Journey of Humanity</span>
+</h1>
+<div class="flex items-center justify-center gap-4 text-[#dce1fb]/50 font-['Manrope'] text-sm tracking-widest uppercase">
+<span>Stardust</span>
+<span class="w-12 h-[1px] bg-primary/30"></span>
+<span>Silicon</span>
+<span class="w-12 h-[1px] bg-primary/30"></span>
+<span>Singularity</span>
+</div>
+</div>
+<!-- Action Area -->
+<div class="mt-16 flex flex-col items-center gap-8">
+<p class="max-w-xl text-lg text-[#dce1fb]/70 font-light leading-relaxed">
+          Embark on a chronological exploration of our existence, from the cooling of the earth to the dawn of artificial intelligence and beyond.
+        </p>
+<button class="group relative flex items-center justify-center p-[1px] rounded-lg bg-gradient-to-r from-primary to-secondary overflow-hidden">
+<div class="px-10 py-4 bg-surface rounded-lg group-hover:bg-transparent transition-colors duration-300">
+<span class="font-headline text-primary group-hover:text-surface font-bold tracking-widest uppercase text-sm">Initiate Epoch Transition</span>
+</div>
+</button>
+</div>
+</section>
+<!-- Contextual"Artifact" Bento Snippet (Footer-like visual) -->
+<section class="relative z-10 w-full mt-24 px-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto pb-24">
+<div class="p-8 bg-surface-container-low/40 backdrop-blur-md rounded-lg border border-white/5 group hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-primary mb-4 text-3xl">hourglass_empty</span>
+<h3 class="font-headline font-bold text-lg text-on-surface mb-2">Temporal Depth</h3>
+<p class="text-sm text-[#dce1fb]/60 leading-relaxed">Mapping 4.5 billion years of biological and cultural evolution through granular data points.</p>
+</div>
+<div class="p-8 bg-surface-container-low/40 backdrop-blur-md rounded-lg border border-white/5 group hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-secondary mb-4 text-3xl">insights</span>
+<h3 class="font-headline font-bold text-lg text-on-surface mb-2">Growth Vector</h3>
+<p class="text-sm text-[#dce1fb]/60 leading-relaxed">Analyzing the rapid acceleration of human knowledge from the first stone tools to quantum computing.</p>
+</div>
+<div class="p-8 bg-surface-container-low/40 backdrop-blur-md rounded-lg border border-white/5 group hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined text-primary mb-4 text-3xl">auto_awesome</span>
+<h3 class="font-headline font-bold text-lg text-on-surface mb-2">Neural Expansion</h3>
+<p class="text-sm text-[#dce1fb]/60 leading-relaxed">Forecasting the integration of biological and synthetic intelligence in the next adaptation era.</p>
+</div>
+</section>
+<!-- Scroll Indicator -->
+<div class="absolute bottom-8 flex flex-col items-center gap-2 text-[#dce1fb]/20">
+<span class="text-[10px] font-label uppercase tracking-widest">Descent into the Archive</span>
+<div class="w-[1px] h-12 bg-gradient-to-b from-primary to-transparent"></div>
+</div>
+</main>
+<!-- Background Texture Overlay -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-[100]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDOKCoUxTO1wi1F6qDybfOrKBENDjc-EBjNai2H7_SwhtkvO6qHl4ngY1JrMHxmmVez1P1VWn9iiP7yUYm3ugjC8z3KTYR3Pfp008A9sKnym62A40lnjvxYaJAMiiMkJ0piwNUtxal3xC_j94glc7kXgCukmojTRZPJY66UMZucIyixbiqn6nZyvIBX20K3eaSLc-sbTBJri-ZStO5q4CGeQQFvz509xypuZie-8lopD6GoKM83QGY6gLZjcZLPsnnaAnlZ1oSICg');"></div>
+
+<!-- Footer Shell -->
+<footer class="fixed bottom-0 w-full z-50 bg-[#0c1324]/80 backdrop-blur-xl border-t border-slate-800/30">
+    <div class="flex justify-between items-center px-12 h-12 w-full font-['Manrope'] text-[10px] uppercase tracking-[0.2em] font-light">
+        <div class="text-slate-500">
+            © 2024 The Celestial Horizon | BY NADUN RATHNAYAKE
+        </div>
+    </div>
+</footer>
+
+</body></html>

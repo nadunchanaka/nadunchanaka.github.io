@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Celestial Archive — The Exponential Journey of Humanity</title>
+  <meta name="description"
+    content="A chronological exploration of existence — from primordial earth to artificial intelligence. Navigate every epoch of the exponential journey of humanity." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    /* ─── Design Tokens ─────────────────────────────────────────── */
+    :root {
+      --surface: #0c1324;
+      --surface-low: #151b2d;
+      --surface-container: #191f31;
+      --surface-high: #23293c;
+      --surface-highest: #2e3447;
+      --outline: rgba(220, 225, 251, 0.10);
+      --outline-strong: rgba(220, 225, 251, 0.18);
+      --on-surface: #dce1fb;
+      --on-surface-dim: rgba(220, 225, 251, 0.50);
+      --on-surface-faint: rgba(220, 225, 251, 0.25);
+      --primary: #ffba20;
+      --primary-glow: rgba(255, 186, 32, 0.15);
+      --secondary: #7bd0ff;
+      --secondary-glow: rgba(123, 208, 255, 0.12);
+      --sidebar-w: 17rem;
+      /* 272px */
+      --topbar-h: 3.5rem;
+      /* 56px  */
+    }
+
+    /* ─── Reset ─────────────────────────────────────────────────── */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+      background: var(--surface);
+      color: var(--on-surface);
+    }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      font-size: 1.25rem;
+    }
+
+    /* ─── Top Bar ────────────────────────────────────────────────── */
+    #topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--topbar-h);
+      background: rgba(12, 19, 36, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--outline);
+      display: flex;
+      align-items: center;
+      padding: 0 1.25rem;
+      gap: 0.75rem;
+      z-index: 200;
+    }
+
+    /* Hamburger toggle — shown only on narrow screens */
+    #menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--on-surface-dim);
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: 0.375rem;
+      transition: color 0.2s, background 0.2s;
+    }
+
+    #menu-toggle:hover {
+      color: var(--secondary);
+      background: rgba(123, 208, 255, 0.08);
+    }
+
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+    }
+
+    .topbar-logo-orb {
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(255, 186, 32, 0.35), transparent 65%),
+        var(--surface-high);
+      border: 1px solid rgba(255, 186, 32, 0.30);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .topbar-logo-orb .material-symbols-outlined {
+      font-size: 0.95rem;
+      color: var(--primary);
+    }
+
+    .topbar-logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+
+    .topbar-sep {
+      flex: 1;
+    }
+
+    .topbar-chips {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .topbar-chips span {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--on-surface-faint);
+    }
+
+    /* ─── Layout Shell ───────────────────────────────────────────── */
+    #shell {
+      display: flex;
+      flex: 1;
+      margin-top: var(--topbar-h);
+      height: calc(100vh - var(--topbar-h));
+      overflow: hidden;
+    }
+
+    /* ─── Sidebar ────────────────────────────────────────────────── */
+    #sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      height: 100%;
+      background: var(--surface);
+      border-right: 1px solid var(--outline);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      overflow-x: hidden;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 100;
+      scrollbar-width: thin;
+      scrollbar-color: var(--surface-highest) transparent;
+    }
+
+    #sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    #sidebar::-webkit-scrollbar-thumb {
+      background: var(--surface-highest);
+      border-radius: 2px;
+    }
+
+    .sidebar-header {
+      padding: 1.5rem 1.25rem 1rem;
+      border-bottom: 1px solid var(--outline);
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .sidebar-orb {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(255, 186, 32, 0.25), transparent 70%),
+        var(--surface-high);
+      border: 1px solid rgba(255, 186, 32, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sidebar-orb .material-symbols-outlined {
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    .sidebar-brand-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--primary);
+    }
+
+    .sidebar-tagline {
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--on-surface-faint);
+      padding-left: 2.6rem;
+    }
+
+    /* Section label */
+    .nav-section-label {
+      padding: 1.25rem 1.25rem 0.4rem;
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--on-surface-faint);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Nav item */
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 1.25rem;
+      margin: 0 0.5rem;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      color: var(--on-surface-dim);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+      border: 1px solid transparent;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .nav-item:hover {
+      background: var(--surface-container);
+      color: var(--secondary);
+      transform: translateX(2px);
+      border-color: var(--outline);
+    }
+
+    .nav-item.active {
+      background: rgba(255, 186, 32, 0.08);
+      color: var(--primary);
+      border-color: rgba(255, 186, 32, 0.20);
+      font-weight: 700;
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: -0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 60%;
+      background: var(--primary);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .nav-item .material-symbols-outlined {
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      transition: font-variation-settings 0.2s;
+    }
+
+    .nav-item.active .material-symbols-outlined {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(123, 208, 255, 0.10);
+      color: var(--secondary);
+      border: 1px solid rgba(123, 208, 255, 0.20);
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+    }
+
+    /* Divider */
+    .nav-divider {
+      height: 1px;
+      background: var(--outline);
+      margin: 0.75rem 1.25rem;
+    }
+
+    /* Sidebar footer */
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 1rem 1rem 1.25rem;
+      border-top: 1px solid var(--outline);
+    }
+
+    .sidebar-cta {
+      width: 100%;
+      padding: 0.7rem;
+      background: linear-gradient(135deg, var(--primary), #e09a00);
+      color: #1a0e00;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 0 0 rgba(255, 186, 32, 0);
+    }
+
+    .sidebar-cta:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 18px rgba(255, 186, 32, 0.25);
+    }
+
+    /* ─── Content / iframe area ───────────────────────────────────── */
+    #content {
+      flex: 1;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Loading overlay */
+    #loader {
+      position: absolute;
+      inset: 0;
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem;
+      z-index: 10;
+      transition: opacity 0.4s ease;
+    }
+
+    #loader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader-ring {
+      width: 3rem;
+      height: 3rem;
+      border: 3px solid var(--surface-high);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loader-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--on-surface-faint);
+    }
+
+    #page-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* Subtle starfield on the sidebar */
+    .sidebar-stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .sidebar-stars::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 20% 15%, rgba(255, 255, 255, 0.18) 0%, transparent 100%),
+        radial-gradient(1px 1px at 75% 30%, rgba(255, 255, 255, 0.12) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 60%, rgba(255, 255, 255, 0.10) 0%, transparent 100%),
+        radial-gradient(1px 1px at 10% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 90%, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
+    }
+
+    /* ─── Overlay + sidebar-close (mobile) ──────────────────────── */
+    #sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 99;
+      backdrop-filter: blur(2px);
+    }
+
+    /* ─── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      #menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .topbar-chips {
+        display: none;
+      }
+
+      #sidebar {
+        position: fixed;
+        top: var(--topbar-h);
+        left: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+      }
+
+      #sidebar.open {
+        transform: translateX(0);
+      }
+
+      #sidebar-overlay.show {
+        display: block;
+      }
+
+      #shell {
+        margin-left: 0;
+      }
+    }
+
+    /* ─── Scrollbar on sidebar ─────────────────────────────────── */
+    #sidebar {
+      position: relative;
+    }
+
+    #sidebar>* {
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ══════════════ TOP BAR ══════════════ -->
+  <header id="topbar" role="banner">
+    <button id="menu-toggle" aria-label="Toggle navigation menu" title="Toggle navigation menu">
+      <span class="material-symbols-outlined" id="menu-icon">menu</span>
+    </button>
+
+    <a class="topbar-logo" href="#"
+      onclick="loadPage('the_exponential_journey_of_humanity_home/code.html','home');return false;"
+      aria-label="Home — The Celestial Archive">
+      <div class="topbar-logo-orb">
+        <span class="material-symbols-outlined">public</span>
+      </div>
+      <span class="topbar-logo-text">The Celestial Archive <span style="margin-left:8px; opacity:0.7; color:#fff">| NADUN RATHNAYAKE</span></span>
+    </a>
+
+    <div class="topbar-sep"></div>
+
+    <nav class="topbar-chips" aria-label="Quick links">
+      <span>Timeline</span>
+      <span>Analysis</span>
+      <span>Forecast</span>
+    </nav>
+  </header>
+
+  <!-- Overlay (mobile) -->
+  <div id="sidebar-overlay" aria-hidden="true"></div>
+
+  <!-- ══════════════ SHELL ══════════════ -->
+  <div id="shell">
+
+    <!-- ══════════════ SIDEBAR ══════════════ -->
+    <aside id="sidebar" aria-label="Main navigation">
+      <!-- Decorative stars -->
+      <div class="sidebar-stars" aria-hidden="true"></div>
+
+      <!-- Brand -->
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="sidebar-orb">
+            <span class="material-symbols-outlined">public</span>
+          </div>
+          <span class="sidebar-brand-name">The Celestial<br>Horizon</span>
+        </div>
+        <p class="sidebar-tagline">Chronicle of Existence</p>
+      </div>
+
+      <!-- HOME -->
+      <p class="nav-section-label">Origin</p>
+      <a id="nav-home" class="nav-item active" href="#"
+        onclick="loadPage('the_exponential_journey_of_humanity_home/code.html','home');return false;"
+        title="Home — The Exponential Journey of Humanity" aria-current="page">
+        <span class="material-symbols-outlined">home</span>
+        <span>Home</span>
+      </a>
+
+      <!-- CHAPTERS -->
+      <p class="nav-section-label">Epoch Chapters</p>
+
+      <a id="nav-primordial" class="nav-item" href="#"
+        onclick="loadPage('primordial_earth_the_long_dawn/code.html','primordial');return false;"
+        title="Primordial Earth — The Long Dawn">
+        <span class="material-symbols-outlined">public</span>
+        <span>Primordial Earth</span>
+        <span class="nav-badge">Ch. 1</span>
+      </a>
+
+      <a id="nav-cataclysm" class="nav-item" href="#"
+        onclick="loadPage('cataclysm_the_great_reset_updated/code.html','cataclysm');return false;"
+        title="Cataclysm — The Great Reset">
+        <span class="material-symbols-outlined">volcano</span>
+        <span>Cataclysm</span>
+        <span class="nav-badge">Ch. 2</span>
+      </a>
+
+      <a id="nav-fossil" class="nav-item" href="#"
+        onclick="loadPage('fossil_formation_the_deep_record_updated/code.html','fossil');return false;"
+        title="Fossil Formation — The Deep Record">
+        <span class="material-symbols-outlined">pest_control_rodent</span>
+        <span>Fossil Formation</span>
+        <span class="nav-badge">Ch. 3</span>
+      </a>
+
+      <a id="nav-ingenuity" class="nav-item" href="#"
+        onclick="loadPage('human_ingenuity_the_spark_of_creation/code.html','ingenuity');return false;"
+        title="Human Ingenuity — The Spark of Creation">
+        <span class="material-symbols-outlined">construction</span>
+        <span>Human Ingenuity</span>
+        <span class="nav-badge">Ch. 4</span>
+      </a>
+
+      <a id="nav-exponential" class="nav-item" href="#"
+        onclick="loadPage('exponential_growth_the_great_acceleration/code.html','exponential');return false;"
+        title="Exponential Growth — The Great Acceleration">
+        <span class="material-symbols-outlined">trending_up</span>
+        <span>Exponential Growth</span>
+        <span class="nav-badge">Ch. 5</span>
+      </a>
+
+      <a id="nav-ai" class="nav-item" href="#"
+        onclick="loadPage('ai_revolution_the_synthetic_mind/code.html','ai');return false;"
+        title="AI Revolution — The Synthetic Mind">
+        <span class="material-symbols-outlined">smart_toy</span>
+        <span>AI Revolution</span>
+        <span class="nav-badge">Ch. 6</span>
+      </a>
+
+      <a id="nav-adaptation" class="nav-item" href="#"
+        onclick="loadPage('adaptation_the_new_horizon/code.html','adaptation');return false;"
+        title="Adaptation — The New Horizon">
+        <span class="material-symbols-outlined">diversity_3</span>
+        <span>Adaptation</span>
+        <span class="nav-badge">Ch. 7</span>
+      </a>
+
+      <!-- DIVIDER -->
+      <div class="nav-divider" aria-hidden="true"></div>
+
+      <!-- FOOTER NAV -->
+      <div class="sidebar-footer">
+        <button class="sidebar-cta" onclick="loadPage('the_exponential_journey_of_humanity_home/code.html','home')">
+          ⚡ Initiate Epoch Transition
+        </button>
+      </div>
+    </aside>
+
+    <!-- ══════════════ CONTENT ══════════════ -->
+    <main id="content" role="main">
+
+      <!-- Loader overlay -->
+      <div id="loader" aria-live="polite" aria-label="Loading page">
+        <div class="loader-ring"></div>
+        <span class="loader-text">Loading epoch…</span>
+      </div>
+
+      <!-- The page frame -->
+      <iframe id="page-frame" src="the_exponential_journey_of_humanity_home/code.html" title="Content Area"
+        allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>
+
+    </main>
+  </div>
+
+  <script>
+    /* ══════════════════════════════════════════════════
+       Navigation Logic
+    ══════════════════════════════════════════════════ */
+    const frame = document.getElementById('page-frame');
+    const loader = document.getElementById('loader');
+    const overlay = document.getElementById('sidebar-overlay');
+    const sidebar = document.getElementById('sidebar');
+    const menuBtn = document.getElementById('menu-toggle');
+    const menuIcon = document.getElementById('menu-icon');
+
+    let currentId = 'home';
+
+    function loadPage(path, navId) {
+      if (navId === currentId) { closeSidebar(); return; }
+
+      // Show loader
+      loader.classList.remove('hidden');
+      frame.style.opacity = '0';
+
+      // Update active state
+      document.querySelectorAll('.nav-item').forEach(el => {
+        el.classList.remove('active');
+        el.removeAttribute('aria-current');
+      });
+      const activeEl = document.getElementById('nav-' + navId);
+      if (activeEl) {
+        activeEl.classList.add('active');
+        activeEl.setAttribute('aria-current', 'page');
+      }
+      currentId = navId;
+
+      // Load the iframe
+      frame.src = path;
+      closeSidebar();
+    }
+
+    // Hide loader once content is ready
+    frame.addEventListener('load', () => {
+      loader.classList.add('hidden');
+      frame.style.opacity = '1';
+      frame.style.transition = 'opacity 0.35s ease';
+    });
+
+    /* ── Mobile sidebar toggle ── */
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('show');
+      menuIcon.textContent = 'menu';
+    }
+
+    menuBtn.addEventListener('click', () => {
+      const isOpen = sidebar.classList.toggle('open');
+      overlay.classList.toggle('show', isOpen);
+      menuIcon.textContent = isOpen ? 'close' : 'menu';
+    });
+
+    overlay.addEventListener('click', closeSidebar);
+
+    /* ── Keyboard: Escape closes sidebar ── */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeSidebar();
+    });
+  </script>
+</body>
+
+</html>

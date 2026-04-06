@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode:"class",
+            theme: {
+                extend: {"colors": {"surface-container-lowest":"#070d1f","primary-fixed":"#ffdea8","on-primary-fixed":"#271900","inverse-primary":"#7c5800","on-tertiary-container":"#d45d00","surface-variant":"#2e3447","inverse-surface":"#dce1fb","background":"#0c1324","secondary-container":"#00a6e0","on-tertiary":"#552100","surface":"#0c1324","on-tertiary-fixed-variant":"#783200","on-primary-fixed-variant":"#5e4200","outline":"#909097","surface-container-highest":"#2e3447","inverse-on-surface":"#2a3043","surface-container-low":"#151b2d","primary":"#ffba20","on-secondary":"#00354a","on-background":"#dce1fb","tertiary-fixed":"#ffdbca","surface-container-high":"#23293c","error-container":"#93000a","secondary-fixed":"#c4e7ff","tertiary-fixed-dim":"#ffb690","primary-container":"#221500","tertiary":"#ffb690","surface-tint":"#ffba20","on-secondary-container":"#00374d","secondary":"#7bd0ff","on-primary-container":"#a87800","surface-container":"#191f31","surface-dim":"#0c1324","outline-variant":"#45464d","surface-bright":"#33394c","tertiary-container":"#2d0e00","error":"#ffb4ab","secondary-fixed-dim":"#7bd0ff","on-error-container":"#ffdad6","on-error":"#690005","on-primary":"#412d00","on-tertiary-fixed":"#341100","on-surface-variant":"#c6c6cd","on-surface":"#dce1fb","primary-fixed-dim":"#ffba20","on-secondary-fixed":"#001e2c"
+                    },"borderRadius": {"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"
+                    },"fontFamily": {"headline": ["Space Grotesk"],"body": ["Manrope"],"label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0c1324;
+            color: #dce1fb;
+            font-family: 'Manrope', sans-serif;
+        }
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .timeline-gradient {
+            background: linear-gradient(90deg, rgba(255,186,32,0.1) 0%, rgba(123,208,255,0.1) 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar (Execution from JSON) -->
+
+<!-- TopAppBar (Execution from JSON) -->
+<header class="fixed top-0 right-0 left-0 h-16 flex justify-between items-center px-12 z-40 bg-[#0c1324]/40 backdrop-blur-xl">
+<div class="font-['Space_Grotesk'] uppercase text-xs tracking-[0.3em] text-[#dce1fb]/60">The Cosmic Archive</div>
+<div class="flex items-center gap-8">
+<nav class="flex gap-8">
+<a class="font-['Space_Grotesk'] uppercase text-xs tracking-widest text-[#ffba20]" href="#">Timeline</a>
+<a class="font-['Space_Grotesk'] uppercase text-xs tracking-widest text-[#dce1fb]/40 hover:text-[#7bd0ff] transition-all duration-300" href="#">Analysis</a>
+<a class="font-['Space_Grotesk'] uppercase text-xs tracking-widest text-[#dce1fb]/40 hover:text-[#7bd0ff] transition-all duration-300" href="#">Forecast</a>
+</nav>
+<div class="flex items-center gap-4 ml-4">
+<button class="material-symbols-outlined text-[#dce1fb]/60 hover:text-[#ffba20] transition-colors">history</button>
+<button class="material-symbols-outlined text-[#dce1fb]/60 hover:text-[#ffba20] transition-colors">bookmark</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline/20 overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="close-up of a minimalist futuristic user avatar profile picture with subtle neon blue highlights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAb5pO7ABVSKykQ0Ahlj3cUdAMhSfFVQgHz-c6s7nNiZGp4Du9KfqC69r0DGVGztaXQfMxDVfW3VbyxwHqWOdNT0m0GO2fyZxQX5DvsPpYSZg6Wcc1y9aK3iNh1osbU7R2qURTyBU3o-q9Y23bXRbihjJy_-nes-rTMzsnxUvpkmR2XUv_oa5zlRlR5TdzBug1SRI26ph98lqC7j_Nzx8xSipjXzN-4-ACBqhQQbt-vrIWz9mOO_ZePtyTGC-AunZF0g8HqVr0iMw"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="mt-16 p-12 min-h-screen relative overflow-hidden">
+<!-- Atmospheric Background Texture -->
+<div class="absolute inset-0 pointer-events-none opacity-20 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]"></div>
+<div class="absolute top-0 right-0 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[120px] -mr-96 -mt-96"></div>
+<!-- Hero Section -->
+<section class="mb-24 max-w-5xl">
+<div class="inline-block py-1 px-3 bg-surface-container-high text-primary font-label text-[10px] tracking-[0.2em] uppercase rounded-full mb-6">Era: Mesozoic to Cenozoic Transition</div>
+<h1 class="text-6xl lg:text-8xl font-headline font-bold tracking-tighter mb-8 leading-tight">Fossil Formation:<br/><span class="text-secondary">The Deep Record</span></h1>
+<p class="text-xl text-on-surface/70 leading-relaxed font-body max-w-3xl">
+                The earth is a tomb that breathes. Beneath our feet, millions of years of sediment layering and evolutionary arcs are compressed into a singular narrative of life, death, and metamorphosis.
+            </p>
+</section>
+<!-- Sediment & Pressure: Bento Grid Style -->
+<section class="grid grid-cols-12 gap-6 mb-32">
+<div class="col-span-12 lg:col-span-7 bg-surface-container-low p-10 rounded-xl relative overflow-hidden group">
+<div class="relative z-10">
+<h2 class="text-3xl font-headline font-bold mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">layers</span>
+                        Sediment &amp; Pressure
+                    </h2>
+<p class="text-on-surface/60 font-body leading-relaxed mb-8 max-w-lg">
+                        When organic life expires, it is rarely lost. In the right conditions, skeletal remains are buried under successive layers of silt, sand, and clay. Over eons, the weight of a world—tectonic pressure and chemical seepage—transforms calcium into stone and carbon into energy.
+                    </p>
+<ul class="space-y-4">
+<li class="flex items-start gap-4">
+<span class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold mt-1">1</span>
+<div>
+<span class="block font-bold text-sm uppercase tracking-wider text-primary mb-1">Deposition</span>
+<span class="text-sm text-on-surface/40">Rivers carry sediment into basins, quickly burying remains away from oxygen.</span>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<span class="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold mt-1">2</span>
+<div>
+<span class="block font-bold text-sm uppercase tracking-wider text-primary mb-1">Lithification</span>
+<span class="text-sm text-on-surface/40">Pressure from upper layers turns sediment into solid rock.</span>
+</div>
+</li>
+</ul>
+</div>
+<!-- Cross Section Illustration Placeholder -->
+<div class="absolute bottom-0 right-0 w-1/2 h-full opacity-20 pointer-events-none group-hover:opacity-40 transition-opacity duration-700">
+<img class="w-full h-full object-cover grayscale brightness-50" data-alt="dramatic cross-section of earth's geological layers showing colorful rock strata and deep subterranean textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYMWGqBFrHHhKtpYL5-iNY_XOAFMPuRy2crQPLPtTUD3V2MeB0YCBmBE1yJoHosZCMGRF7rkEtB-BiJxsfdg6-TccZSK9x3SwwvB6-YFS8RzvOsJXjkKyJzHzMy5Vh_E5lPhhvwQt2AI6pE-XCk1QAJXB4ee_6ppNVekETzseMuaJGQ1x2zudb3ZV-wO5coMio5Sc3mZlu0vAiB_G_1XpoqBVQQvv58ibTnCtA4cBMfim_987xwPGxUMpulLrQO64ja-vY_-DltA"/>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-5 flex flex-col gap-6">
+<div class="flex-1 bg-surface-container-high p-8 rounded-xl border border-white/5">
+<span class="material-symbols-outlined text-secondary text-4xl mb-4">oil_barrel</span>
+<h3 class="text-xl font-headline font-bold mb-3">Carbon Echoes</h3>
+<p class="text-sm text-on-surface/50 leading-relaxed">
+                        What we burn today as fuel was once the vitality of an ancient sun, captured by ferns and plankton 300 million years ago. Fossil fuels are the condensed memory of pre-history.
+                    </p>
+</div>
+<div class="flex-1 bg-gradient-to-br from-surface-container-highest to-surface-container-low p-8 rounded-xl border border-white/5">
+<span class="material-symbols-outlined text-primary text-4xl mb-4">skillet</span>
+<h3 class="text-xl font-headline font-bold mb-3">Molecular Alchemy</h3>
+<p class="text-sm text-on-surface/50 leading-relaxed">
+                        Through permineralization, mineral-rich water flows through porous bone, depositing silica or calcite. The biological blueprint is replaced by the geological anchor.
+                    </p>
+</div>
+</div>
+</section>
+<!-- The Fossil Record Section -->
+<section class="mb-32">
+<div class="flex flex-col lg:flex-row gap-16 items-center">
+<div class="w-full lg:w-1/2 order-2 lg:order-1">
+<div class="aspect-square rounded-2xl overflow-hidden shadow-2xl relative">
+<img alt="Dinosaur Fossil" class="w-full h-full object-cover scale-110" data-alt="macro photograph of a complete Tyrannosaurus Rex skeleton fossil embedded in dark ancient rock with moody museum lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcsSI2yu6fCtEbQMQiurSriQaZ9PG4he3TpFNLuPBygM525YapT6bwKlX6YBXwMw6XcbscR6kqJut0pkZwfqZCBs9qX5tMZ5OCSAS2mBsEez7dm80mSrxk30Tz-UEFEAbWJBBt_ge-1GXIWS8Ru88dEAbKwsFajfzVpA4-i17bT1WHLR5Yxid3s6Rw__MfHtb20hJli-hZgoYovMyL2oJwCusZzE9wCSmf-J7LipLSPsN5Tm5mdLeuP7bJLY5DTmZ-KEzBI5WZjA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+</div>
+</div>
+<div class="w-full lg:w-1/2 order-1 lg:order-2">
+<div class="text-secondary font-label tracking-[0.3em] uppercase mb-4">Scientific Awakening</div>
+<h2 class="text-5xl font-headline font-bold mb-8 tracking-tight">The Great Discovery</h2>
+<p class="text-lg text-on-surface/60 font-body mb-8 leading-relaxed">
+                        For centuries, strange stones were found in the earth—giant teeth and terrifying claws attributed to legends. It wasn't until the 19th century that we realized these were the first biological records of the Great Extinction.
+                    </p>
+<div class="p-6 bg-surface-container-low border-l-4 border-primary rounded-r-lg italic text-on-surface/80 font-body">"The fossil record is the only diary we have of the long journey that led to our own existence."
+                    </div>
+</div>
+</div>
+</section>
+<!-- The Evolutionary Arc (Timeline Update) -->
+<section class="mb-24">
+<div class="text-center mb-16">
+<h2 class="text-4xl font-headline font-bold mb-4 tracking-tighter">The Evolutionary Arc</h2>
+<p class="text-on-surface/40 font-body text-sm mb-6">Visualizing the Deep Time Transition from Fossil Records to Modern Humanity</p>
+<div class="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+</div>
+<div class="relative py-24 px-12 bg-surface-container-low/30 rounded-3xl border border-white/5 timeline-gradient">
+<!-- Timeline Connector (More prominent) -->
+<div class="absolute top-1/2 left-12 right-12 h-[4px] bg-gradient-to-r from-primary via-secondary to-white rounded-full opacity-30 shadow-[0_0_20px_rgba(255,186,32,0.2)]"></div>
+<div class="flex justify-between items-start relative z-10">
+<!-- Event 1: Fossil Formation (Start) -->
+<div class="w-56 text-center group">
+<div class="mb-10 font-headline font-extrabold text-primary text-xl group-hover:scale-110 transition-transform duration-300">66—50 MYA</div>
+<div class="w-6 h-6 bg-primary rounded-full mx-auto relative mb-10 shadow-[0_0_25px_rgba(255,186,32,0.8)] border-4 border-background"></div>
+<div class="px-2">
+<div class="text-sm font-black uppercase tracking-[0.15em] mb-3 text-primary">Fossil Formation</div>
+<div class="text-[11px] text-on-surface/60 leading-relaxed font-medium">The K-Pg boundary. Mass extinction followed by the rapid sedimentation of the Mesozoic titans.</div>
+</div>
+</div>
+<!-- Event 2: Deep Compression -->
+<div class="w-56 text-center group -mt-16">
+<div class="mb-10 font-headline font-bold text-secondary-fixed opacity-60">25 MYA</div>
+<div class="w-4 h-4 bg-secondary-fixed rounded-full mx-auto relative mb-10 shadow-[0_0_15px_rgba(196,231,255,0.4)]"></div>
+<div class="px-2">
+<div class="text-xs font-bold uppercase tracking-widest mb-3 text-secondary-fixed">Compression</div>
+<div class="text-[10px] text-on-surface/40 leading-tight">Oligocene transition. Primates begin to diversify in a cooling world.</div>
+</div>
+</div>
+<!-- Event 3: Human Ancestors -->
+<div class="w-56 text-center group">
+<div class="mb-10 font-headline font-extrabold text-secondary text-xl">7—2 MYA</div>
+<div class="w-6 h-6 bg-secondary rounded-full mx-auto relative mb-10 shadow-[0_0_25px_rgba(123,208,255,0.8)] border-4 border-background"></div>
+<div class="px-2">
+<div class="text-sm font-black uppercase tracking-[0.15em] mb-3 text-secondary">Hominid Ascent</div>
+<div class="text-[11px] text-on-surface/60 leading-relaxed font-medium">Sahelanthropus to Australopithecus. The first upright steps in the African savannah.</div>
+</div>
+</div>
+<!-- Event 4: Human Emergence -->
+<div class="w-56 text-center group -mt-16">
+<div class="mb-10 font-headline font-extrabold text-white text-xl">300,000 YRS</div>
+<div class="w-6 h-6 bg-white rounded-full mx-auto relative mb-10 shadow-[0_0_30px_rgba(255,255,255,0.8)] border-4 border-primary"></div>
+<div class="px-2">
+<div class="text-sm font-black uppercase tracking-[0.15em] mb-3 text-white">Human Emergence</div>
+<div class="text-[11px] text-on-surface/60 leading-relaxed font-medium">Anatomically modern Homo sapiens appear. The dawn of the conscious archive.</div>
+</div>
+</div>
+<!-- Event 5: Present -->
+<div class="w-56 text-center group">
+<div class="mb-10 font-headline font-bold text-on-surface/40">Present Day</div>
+<div class="w-4 h-4 bg-outline/20 border-2 border-outline/40 rounded-full mx-auto relative mb-10"></div>
+<div class="px-2">
+<div class="text-xs font-bold uppercase tracking-widest mb-3 text-on-surface/40">Observation</div>
+<div class="text-[10px] text-on-surface/30 leading-tight">The Horizon reflecting on 66 million years of biological data.</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA / Footer Transition -->
+<section class="mt-24 pt-24 border-t border-outline/10 text-center">
+<div class="max-w-2xl mx-auto">
+<h3 class="text-2xl font-headline font-bold mb-6">Continue the Chronicle</h3>
+<div class="flex justify-center gap-6">
+<button class="px-8 py-3 bg-primary text-on-primary font-label text-xs uppercase tracking-[0.2em] rounded hover:scale-105 transition-all">Chronicle Entry</button>
+<button class="px-8 py-3 bg-surface-container-highest text-primary font-label text-xs uppercase tracking-[0.2em] rounded border border-primary/20 hover:border-primary transition-all">Explore Era</button>
+</div>
+</div>
+</section>
+</main>
+
+<!-- Footer Shell -->
+<footer class="fixed bottom-0 w-full z-50 bg-[#0c1324]/80 backdrop-blur-xl border-t border-slate-800/30">
+    <div class="flex justify-between items-center px-12 h-12 w-full font-['Manrope'] text-[10px] uppercase tracking-[0.2em] font-light">
+        <div class="text-slate-500">
+            © 2024 The Celestial Horizon | BY NADUN RATHNAYAKE
+        </div>
+    </div>
+</footer>
+
+</body></html>

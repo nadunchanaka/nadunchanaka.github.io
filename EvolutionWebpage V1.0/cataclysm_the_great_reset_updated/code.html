@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cataclysm: The Great Reset | The Cosmic Archive</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode:"class",
+        theme: {
+          extend: {"colors": {"secondary-container":"#00a6e0","secondary-fixed":"#c4e7ff","surface-dim":"#0c1324","on-tertiary-fixed-variant":"#783200","on-secondary-container":"#00374d","primary-fixed-dim":"#ffba20","primary":"#ffba20","surface-tint":"#ffba20","surface-bright":"#33394c","surface-container":"#191f31","on-background":"#dce1fb","surface-variant":"#2e3447","surface-container-highest":"#2e3447","on-error-container":"#ffdad6","surface-container-lowest":"#070d1f","inverse-on-surface":"#2a3043","on-surface":"#dce1fb","on-primary-fixed":"#271900","surface-container-high":"#23293c","inverse-surface":"#dce1fb","background":"#0c1324","outline":"#909097","error-container":"#93000a","on-tertiary-fixed":"#341100","on-primary":"#412d00","on-secondary":"#00354a","surface":"#0c1324","tertiary-fixed-dim":"#ffb690","inverse-primary":"#7c5800","on-primary-fixed-variant":"#5e4200","on-tertiary":"#552100","on-secondary-fixed":"#001e2c","on-surface-variant":"#c6c6cd","surface-container-low":"#151b2d","primary-fixed":"#ffdea8","on-error":"#690005","secondary":"#7bd0ff","on-tertiary-container":"#d45d00","error":"#ffb4ab","on-primary-container":"#a87800","surface":"#0c1324","outline-variant":"#45464d","tertiary":"#ffb690"
+            },"borderRadius": {"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"
+            },"fontFamily": {"headline": ["Space Grotesk"],"body": ["Manrope"],"label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-impact-gradient {
+            background: linear-gradient(to bottom, rgba(12, 19, 36, 0.2) 0%, rgba(12, 19, 36, 0.8) 70%, #0c1324 100%);
+        }
+        .glass-panel {
+            background: rgba(51, 57, 76, 0.4);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary/30 overflow-x-hidden">
+<!-- SideNavBar Shell -->
+
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 left-0 h-16 flex justify-between items-center px-12 z-40 bg-[#0c1324]/40 backdrop-blur-xl">
+<div class="flex items-center gap-8">
+<span class="font-headline uppercase text-xs tracking-[0.3em] text-[#ffba20]">The Cosmic Archive</span>
+<nav class="flex items-center gap-6">
+<a class="text-[#dce1fb]/40 font-headline uppercase text-[10px] tracking-widest hover:text-[#7bd0ff] transition-all" href="#">Timeline</a>
+<a class="text-[#ffba20] font-headline uppercase text-[10px] tracking-widest hover:text-[#7bd0ff] transition-all" href="#">Analysis</a>
+<a class="text-[#dce1fb]/40 font-headline uppercase text-[10px] tracking-widest hover:text-[#7bd0ff] transition-all" href="#">Forecast</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-[#dce1fb]/60 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+<button class="text-[#dce1fb]/60 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Close-up portrait of a thoughtful person with soft lighting and a dark, atmospheric background in a high-end tech aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeq4yYvQA6p3A04-FLzCJqjNLptdWD9nRpYT5LRn9vfGbfJtY2uahf1bSh4z_4Og9OY8KgB8eGYgYQF6gAPPf1U8zy70i5aZrWOtpk0k1y8Du3wu7b9HnMvmL1iZGrJYLztaiXVi7kkBSorPgZ5Q3B7F-plWuIRn-mYyH8PKlweM3GHjFFFistGdS1s2Nk-Zl6Xkejx7hqt2j5YM9eOFMJLWTfCK6faaX48Liki1RnQLTYjBWIoD3wsVZ0xUJ1kiELNOpzo5cL0w"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-16 min-h-screen relative overflow-y-auto">
+<!-- Hero Section with Full-Bleed Image -->
+<section class="relative h-[870px] w-full flex items-end px-16 pb-24">
+<!-- Background Image -->
+<div class="absolute inset-0 z-0 overflow-hidden">
+<img alt="Asteroid Impact" class="w-full h-full object-cover scale-110" data-alt="Dramatic asteroid impact on prehistoric earth with a massive fiery explosion, red glowing atmosphere, and debris flying through space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDF1aKiS3CsMtcfSD2XuCC75x43Kj1D3Iy3sg8n6eOn5OEZz285kx2IeiRzGxLV1kYdqvuVFNZjsgmJLAa5f-E-fdgRU9to98bbevhfRtAur_D6o-Te91qZcNgigORGancSpYCzQkSI8DmVCWH3BM7_ZGXM7HUEfV0pJkHKSmvcTr1a9eyAec47lAvNbfCa_WMX4JorCOHoMIrLqaFFm3xlNBw6mXn52V__EoiD32_f9aLK7DNGnU-yzRCa5Y6oovUrx6Rn2wPzzQ"/>
+<div class="absolute inset-0 bg-impact-gradient"></div>
+</div>
+<!-- Hero Content -->
+<div class="relative z-10 max-w-4xl">
+<div class="inline-block px-4 py-1 mb-6 border-l-2 border-primary bg-primary/10">
+<span class="text-[10px] font-label uppercase tracking-[0.2em] text-primary">Era 02: The Great Extinction</span>
+</div>
+<h2 class="text-7xl font-bold font-headline mb-6 tracking-tighter leading-none text-on-background">
+                    Cataclysm: <span class="text-primary">The Great Reset</span>
+</h2>
+<p class="text-xl font-body text-on-surface-variant max-w-2xl leading-relaxed">
+                    A celestial collision that silenced the giants and paved the way for a new world. This was not just an end, but a violent rebirth.
+                </p>
+</div>
+<!-- Scroll Indicator Decor -->
+<div class="absolute bottom-12 right-16 flex flex-col items-center gap-4">
+<span class="[writing-mode:vertical-lr] text-[10px] font-label uppercase tracking-widest text-[#dce1fb]/30">Scroll to Explore Aftermath</span>
+<div class="w-[1px] h-12 bg-gradient-to-b from-primary to-transparent"></div>
+</div>
+</section>
+<!-- Bento Grid Narrative Sections -->
+<section class="px-16 py-32 grid grid-cols-12 gap-8 relative z-10">
+<!-- Item 1: The Impact -->
+<div class="col-span-12 md:col-span-7 group">
+<div class="glass-panel p-10 rounded-lg h-full border border-[#dce1fb]/5 hover:border-primary/20 transition-all duration-500">
+<div class="flex justify-between items-start mb-12">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="meteor">meteor</span>
+<span class="text-[10px] font-label text-primary/60 tracking-widest">66 MILLION YEARS AGO</span>
+</div>
+<h3 class="text-4xl font-headline font-bold mb-6 text-on-background">The Impact</h3>
+<p class="text-on-surface-variant font-body leading-relaxed mb-8 text-lg">
+                        A six-mile-wide asteroid struck the Yucatan Peninsula with the force of a billion atomic bombs. The impact crater, 110 miles wide, remains a silent witness to the moment the age of dinosaurs ended in a flash of blinding light.
+                    </p>
+<div class="relative h-64 w-full rounded overflow-hidden">
+<img alt="The Chicxulub Crater" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A hyper-realistic CGI satellite view of the massive Chicxulub impact crater on the Yucatan Peninsula, showing shockwaves and a glowing center shortly after impact" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQNJlJcV-sbwVNT0OQOZaCgDMcBxfuaB_Q4DM3vgEjAvjwg5nhmqHKe4tBnU18NEvxMrr5vSndVma3txJiOUjrvJX0RFPUO2g8VC530AujsLwwn4m6XMUtldW1U1HuM42Fm-wC4tSsJZ5ykx9wRJdCE-YR-jBrOqiUUFN1qIgftt5aT5UZb6Xq8qbnlxAjqdr_JRbWOjuDhidivOPBi0U0h_na6Gf2YdufTUx0AaDPyR1l1t1yya2cFI5Gu0RSunUJE8LavLKnNg"/>
+</div>
+</div>
+</div>
+<!-- Item 2: The Aftermath -->
+<div class="col-span-12 md:col-span-5 flex flex-col gap-8">
+<div class="bg-surface-container-high p-8 rounded-lg flex-1 group border border-[#dce1fb]/5 hover:border-secondary/30 transition-all duration-300">
+<span class="material-symbols-outlined text-3xl text-secondary mb-6" data-icon="air">air</span>
+<h3 class="text-2xl font-headline font-bold mb-4">The Aftermath</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6">
+                        Global wildfires erupted instantly. Dust and soot choked the atmosphere, plunging the planet into a multi-year nuclear winter. Photosynthesis halted, causing a cascading collapse of the food chain.
+                    </p>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-surface-variant rounded-full text-[9px] font-label uppercase tracking-widest text-[#dce1fb]/60">Ecological Collapse</span>
+<span class="px-3 py-1 bg-surface-variant rounded-full text-[9px] font-label uppercase tracking-widest text-[#dce1fb]/60">Atmospheric Ash</span>
+</div>
+</div>
+<!-- Item 3: The Opportunity -->
+<div class="bg-primary/5 p-8 rounded-lg flex-1 border border-primary/10 group hover:bg-primary/10 transition-colors">
+<div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-primary" data-icon="storm">storm</span>
+</div>
+<h3 class="text-2xl font-headline font-bold mb-4 text-primary">The Opportunity</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                        Destruction cleared the stage. As the giants fell, small, burrowing mammals—our ancestors—emerged into the wasteland. Their resilience transformed a graveyard into a nursery for the rise of human intelligence.
+                    </p>
+</div>
+</div>
+<!-- Aesthetic Data Points -->
+<div class="col-span-12 mt-16 flex justify-between items-center border-t border-[#dce1fb]/5 pt-8">
+<div class="text-center">
+<p class="text-3xl font-headline font-bold text-primary tracking-tighter">75%</p>
+<p class="text-[10px] font-label uppercase tracking-widest text-[#dce1fb]/40">Species Extinct</p>
+</div>
+<div class="text-center">
+<p class="text-3xl font-headline font-bold text-secondary tracking-tighter">-20°C</p>
+<p class="text-[10px] font-label uppercase tracking-widest text-[#dce1fb]/40">Global Temp Drop</p>
+</div>
+<div class="text-center">
+<p class="text-3xl font-headline font-bold text-on-background tracking-tighter">10k Yrs</p>
+<p class="text-[10px] font-label uppercase tracking-widest text-[#dce1fb]/40">Recovery Window</p>
+</div>
+<div class="text-center">
+<p class="text-3xl font-headline font-bold text-primary tracking-tighter">∞</p>
+<p class="text-[10px] font-label uppercase tracking-widest text-[#dce1fb]/40">Human Potential</p>
+</div>
+</div>
+</section>
+<!-- Visual Narrative -->
+<section class="px-16 py-16">
+<div class="glass-panel rounded-lg overflow-hidden border border-[#dce1fb]/5 relative min-h-[500px] flex items-center">
+<img alt="Dinosaurs and Early Mammals" class="absolute inset-0 w-full h-full object-cover opacity-60" data-alt="An atmospheric, wide-angle illustration showing a massive Tyrannosaurus Rex in the distance silhouetted against a fiery sky, while in the foreground, a small, shrew-like early mammal (Cimolestes) peeks out from a burrow among charred ferns, illustrating the scale of the extinction event." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmRodxRbK391xF5k0RIbeQRrjX1SPxDQglmr31aJeb4rT2yua0Oa3lyILzqO4JxcE6N0M1R0hNU38T3SIcus01sdUi-xJI3BaS0MuhdBJE8ZK5VpWgSMuzNGwAU438hAAOjuaV7snElUOdHXqwlswaBdC0kvcAuOjU7KsNA5o6FkgmKt34PFCJ2sIzxTldeHH8--VBQGO1RzW6-xhmbcvQZwX0O3ii2vQJkMlQTveH2GgZJt7X4oJJuXgwqQBljnFkJo9hPL0H-Q"/>
+<div class="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent"></div>
+<div class="relative z-10 max-w-xl px-12">
+<span class="text-[10px] font-label text-primary uppercase tracking-[0.3em] mb-4 block">Survival of the Small</span>
+<h3 class="text-5xl font-headline font-bold text-on-background mb-6 leading-tight">The Scale of <span class="text-primary">Transformation</span></h3>
+<p class="text-on-surface-variant font-body text-lg leading-relaxed">
+                While the titans of the Cretaceous were swept away by fire and darkness, the future belonged to the hidden. This illustration captures the juxtaposition of the era: the sheer physical dominance of the dinosaurs versus the resilient, adaptable biology of the mammals that would inherit the earth.
+            </p>
+</div>
+</div>
+</section>
+<!-- Evolutionary Arc Section -->
+<section class="px-16 py-24 mb-16">
+<div class="mb-12">
+<h3 class="text-2xl font-headline font-bold text-on-background uppercase tracking-widest flex items-center gap-3">
+<span class="w-8 h-[1px] bg-primary"></span>
+        Evolutionary Arc
+    </h3>
+<p class="text-xs font-label text-[#dce1fb]/40 mt-2 uppercase tracking-[0.2em]">Mapping the transition from devastation to biological preservation</p>
+</div>
+<div class="relative pt-20 pb-12">
+<!-- Horizontal Timeline Base -->
+<div class="absolute top-[88px] left-0 right-0 h-[1px] bg-[#dce1fb]/10"></div>
+<!-- Timeline Points -->
+<div class="relative flex justify-between">
+<!-- Point 1: Cataclysm -->
+<div class="relative flex flex-col items-center">
+<div class="absolute -top-16 text-center">
+<span class="text-primary text-sm font-headline font-bold block mb-1">CATACLYSM</span>
+<span class="text-[10px] font-label text-[#dce1fb]/60 uppercase tracking-widest">66.0 MYA</span>
+</div>
+<div class="w-4 h-4 rounded-full bg-primary border-4 border-background z-10"></div>
+<div class="mt-4 text-center">
+<p class="text-[10px] text-on-surface-variant leading-tight w-24">The Impact Event &amp; Initial Devastation</p>
+</div>
+</div>
+<!-- Highlighted Period: Fossilization -->
+<div class="flex-1 relative mx-8">
+<!-- Shaded Region -->
+<div class="absolute top-[84px] left-0 right-0 h-2 bg-secondary/10 rounded-full border-x border-secondary/30"></div>
+<div class="absolute top-12 left-0 right-0 text-center">
+<span class="text-secondary text-[10px] font-headline font-bold tracking-[0.3em] uppercase">Fossilization Period</span>
+<div class="mt-1 h-[2px] w-24 mx-auto bg-gradient-to-r from-transparent via-secondary to-transparent"></div>
+</div>
+</div>
+<!-- Point 2: Fossil Formation -->
+<div class="relative flex flex-col items-center">
+<div class="absolute -top-16 text-center">
+<span class="text-secondary text-sm font-headline font-bold block mb-1">FOSSIL FORMATION</span>
+<span class="text-[10px] font-label text-[#dce1fb]/60 uppercase tracking-widest">~60-50 MYA</span>
+</div>
+<div class="w-4 h-4 rounded-full bg-secondary border-4 border-background z-10"></div>
+<div class="mt-4 text-center">
+<p class="text-[10px] text-on-surface-variant leading-tight w-24">Stable Sedimentary Deposition</p>
+</div>
+</div>
+<!-- Point 3: Diversification -->
+<div class="relative flex flex-col items-center opacity-40">
+<div class="absolute -top-16 text-center">
+<span class="text-on-surface text-sm font-headline font-bold block mb-1">DIVERSIFICATION</span>
+<span class="text-[10px] font-label text-[#dce1fb]/60 uppercase tracking-widest">35.0 MYA</span>
+</div>
+<div class="w-4 h-4 rounded-full bg-[#dce1fb]/20 border-4 border-background z-10"></div>
+</div>
+</div>
+</div>
+<!-- Decorative Graph Info -->
+<div class="mt-16 grid grid-cols-3 gap-8 border-l border-[#dce1fb]/10 pl-8">
+<div>
+<p class="text-[10px] font-label uppercase tracking-widest text-[#dce1fb]/30 mb-2">Primary Mechanism</p>
+<p class="text-xs text-on-surface-variant leading-relaxed font-body italic">Rapid burial of biological remains within impact-disturbed strata, followed by millions of years of mineralization.</p>
+</div>
+<div>
+<p class="text-[10px] font-label uppercase tracking-widest text-[#dce1fb]/30 mb-2">Biological Shift</p>
+<p class="text-xs text-on-surface-variant leading-relaxed font-body">Transition from reptilian dominance to mammalian niche expansion recorded in the K-Pg boundary layer.</p>
+</div>
+<div>
+<p class="text-[10px] font-label uppercase tracking-widest text-[#dce1fb]/30 mb-2">Archival Value</p>
+<p class="text-xs text-on-surface-variant leading-relaxed font-body">98% of prehistoric knowledge derived from specimens preserved during this specific window of time.</p>
+</div>
+</div>
+</section>
+<!-- Final Vision Section -->
+<section class="px-16 pb-32">
+<div class="relative h-96 rounded-lg overflow-hidden flex items-center justify-center text-center px-12">
+<img alt="Earth Recovery" class="absolute inset-0 w-full h-full object-cover opacity-40" data-alt="Earth seen from space during a slow atmospheric recovery with subtle green life appearing on continents through swirling dark clouds" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHAt9sWgY2tmaSTP7wJI8ss_6JPYIIxseBDk5Lc1k1UF8CPMergLi_sdOvPVxi-orvhkwW2ZP-082i3SW_tSLwL97p8Kg2yUbkEYhnaR9-7DnW4OJo0maMxlaaX1wM7Hzr7L2l6itVuZguWI_AYwAgah7J3GYzf6rPGiWfolsWDg48l8aoc9NP4te6XECkrGAFTqzQj0_LEGZSBHiJgxyR12PkxnA3HKUVmxEWOkFzXgcgmrLu8BuNgjHG6SXty2URnU04XNNn0g"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background"></div>
+<div class="relative z-10 max-w-2xl">
+<h4 class="text-3xl font-headline font-bold mb-6 italic">"In the heart of the void, the seeds of the future found their soil."</h4>
+<button class="flex items-center gap-2 mx-auto px-8 py-4 bg-transparent border border-secondary text-secondary font-headline uppercase text-xs tracking-widest hover:bg-secondary/10 transition-all group">
+                        Enter the Age of Mammals
+                        <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+
+<!-- Footer Shell -->
+<footer class="fixed bottom-0 w-full z-50 bg-[#0c1324]/80 backdrop-blur-xl border-t border-slate-800/30">
+    <div class="flex justify-between items-center px-12 h-12 w-full font-['Manrope'] text-[10px] uppercase tracking-[0.2em] font-light">
+        <div class="text-slate-500">
+            © 2024 The Celestial Horizon | BY NADUN RATHNAYAKE
+        </div>
+    </div>
+</footer>
+
+</body></html>
