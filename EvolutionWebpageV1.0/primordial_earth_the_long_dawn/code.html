@@ -36,8 +36,7 @@
 <body class="bg-surface text-on-surface font-body selection:bg-primary/30 selection:text-primary overflow-hidden">
 <!-- SideNavBar Shell -->
 
-<!-- TopAppBar Shell -->
-<header class="fixed top-0 right-0 left-0 h-16 flex justify-between items-center px-12 z-40 bg-[#0c1324]/40 backdrop-blur-xl">
+<header class="fixed top-0 right-0 left-0 h-16 flex justify-between items-center px-4 md:px-12 z-40 bg-[#0c1324]/40 backdrop-blur-xl hidden md:flex">
 <div class="flex items-center space-x-8">
 <span class="text-[#dce1fb]/60 font-['Space_Grotesk'] uppercase text-[10px] tracking-[0.3em]">Timeline Sequence: 0.01</span>
 <nav class="flex items-center space-x-6">
@@ -65,11 +64,11 @@
 <div class="absolute inset-0 dawn-gradient z-10"></div>
 <img class="w-full h-full object-cover opacity-60" data-alt="Vast prehistoric landscape of volcanic mountains cooling under a dramatic dark sky with amber dawn light reflecting off magma pools" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT4EkQlXguiiKT5kTl1OHwTbgAA-v1SaDZNOwtAFUTW4p5qqZQkGy3d4tuJp2ASkalx3Eq-ymYbHHNkZ1TvO9CRN03OlfNEpT9JpiRJjNJlLBLLHdVkdsUmXHcCMIvybLf1k8uckqDnsIycxJFwYoycovHBtJcelkTGjcTOvQghy6fz0sR4U5iyCJB2zIzUCyJpMiqX91h_yTHCIs6Itwq0MFsRndDugkW97etJUnXhEhmflQc1zBGNEdgBAN7GJZ3P2X7AMwYkw"/>
 </div>
-<div class="relative z-20 px-12 pt-40 pb-48 flex flex-col min-h-screen">
+<div class="relative z-20 px-6 md:px-12 pt-20 md:pt-40 pb-20 md:pb-48 flex flex-col min-h-screen">
 <!-- Central Title & Subtitle -->
 <div class="max-w-4xl">
 <p class="font-label uppercase text-secondary tracking-[0.4em] text-xs mb-4">Initial Epoch: The Dawn</p>
-<h1 class="font-headline text-[5rem] leading-none font-bold text-on-surface tracking-tighter mb-6">
+<h1 class="font-headline text-4xl md:text-[5rem] leading-none font-bold text-on-surface tracking-tighter mb-6">
                     Primordial Earth: <span class="text-primary">Dawn of Life</span>
 </h1>
 <p class="font-body text-lg text-on-surface-variant max-w-2xl leading-relaxed">
@@ -77,9 +76,9 @@
                 </p>
 </div>
 <!-- Bento-Style Interactive Cards Section -->
-<div class="mt-auto grid grid-cols-12 gap-6 h-[320px]">
+<div class="mt-auto grid grid-cols-1 md:grid-cols-12 gap-6 h-auto md:h-[320px]">
 <!-- Hadean Eon Card -->
-<div class="col-span-4 bg-surface-container-low group cursor-pointer overflow-hidden rounded-lg transition-transform duration-300 hover:scale-[1.02]">
+<div class="col-span-1 md:col-span-4 bg-surface-container-low group cursor-pointer overflow-hidden rounded-lg transition-transform duration-300 hover:scale-[1.02]">
 <div class="h-1/2 overflow-hidden">
 <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Dark molten earth with turbulent orange lava flows and heavy asteroid bombardment from a celestial perspective" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgGtJYjxthCeLmHPFDC0a5HarqqM-3D7zVX9vDZ58U42P0YxLUWE1Dyp0OCTNCt3S2IrVZBTLdkUW5OPVMGc130AX6UXsgLIlO5jf3GbIMrHPlKoKp1GBW0owUx56jfoO9gr4nxnqkbVEjeA1102VB7wiykB9ZoPNRsLfSa669X7xNiChrCTZgnMKrs6Dq-ty-PH93FueBnuLOvaz7DwEoIWd9vzoENsRmOLk4VXZ344Rwl9nvPIl1xAD1kmefnwpNkc-pl_TAYQ"/>
 </div>
@@ -93,8 +92,8 @@
 </div>
 </div>
 <!-- Archean Eon Card -->
-<div class="col-span-4 bg-surface-container-low group cursor-pointer overflow-hidden rounded-lg transition-transform duration-300 hover:scale-[1.02]">
-<div class="h-1/2 overflow-hidden">
+<div class="col-span-1 md:col-span-4 bg-surface-container-low group cursor-pointer overflow-hidden rounded-lg transition-transform duration-300 hover:scale-[1.02]">
+<div class="h-48 md:h-1/2 overflow-hidden">
 <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Prehistoric shallow oceans with stromatolite formations under a deep teal sky with the first signs of atmospheric clarity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_QqMK0if4IoADhbGwWm2fv37kqYc6odroGJqas4q1L4o99ow21lO3t-4CjkJIKzReWyiG0UqNPEUXq2zHeVn36fZKza4-XmBgg_MrKHwm4XNVO699TpkfqoUryNAN_E5OQGcmDHnaPhxCtcAVO2LL6Tjv-_Z1dgYryM_J9yWsq_VVDYUOqdvRj4-1dPNTrL78wmGnptI6MkJcbmr8rhbJ9irtfOasH32XEreFjtpSuh8Ldgt_nJgMUxB60aO4QIka_egmQylhww"/>
 </div>
 <div class="p-6">
@@ -107,8 +106,8 @@
 </div>
 </div>
 <!-- Early Photosynthesis Card -->
-<div class="col-span-4 bg-surface-container-low group cursor-pointer overflow-hidden rounded-lg transition-transform duration-300 hover:scale-[1.02]">
-<div class="h-1/2 overflow-hidden">
+<div class="col-span-1 md:col-span-4 bg-surface-container-low group cursor-pointer overflow-hidden rounded-lg transition-transform duration-300 hover:scale-[1.02]">
+<div class="h-48 md:h-1/2 overflow-hidden">
 <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="Close up of microscopic cyanobacteria clusters emitting tiny oxygen bubbles in primitive turquoise waters" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAu-hbfRSj0MrctSsF2_TrN7xeN37xYsuUqJazRyeXAhJy9EXdYLTsddmicLqI3L2SAtueLlLkrDUmHjDwhiQVmCOT_f8JtKqnYsCAqxFyf_lvBoCg-F7c3ewADVkmJNumN5Olay1KygYZbCXWkYwQIiOe5nsbvFC7tVeN98CLtkOls1nBmlunXtURjUgBGB9f-HQxAo8CtcMFnnFX_agpFumT3PF2hIM2T7ngI2-Z93gpFWiHohQUrIegI10HF3F0j4PFwqU4fww"/>
 </div>
 <div class="p-6">
@@ -123,7 +122,7 @@
 </div>
 </div>
 <!-- Evolutionary Arc Graph -->
-<div class="absolute bottom-0 right-0 left-0 h-32 px-12 pb-8 flex flex-col justify-end z-30 bg-gradient-to-t from-surface via-surface/90 to-transparent">
+<div class="hidden md:flex absolute bottom-0 right-0 left-0 h-32 px-12 pb-8 flex-col justify-end z-30 bg-gradient-to-t from-surface via-surface/90 to-transparent">
 <div class="flex items-center justify-between mb-4">
 <h4 class="font-headline text-[10px] uppercase tracking-[0.3em] text-[#dce1fb]/40">Evolutionary Arc: Record 4.5B - 0.06B</h4>
 <div class="flex items-center space-x-4">
