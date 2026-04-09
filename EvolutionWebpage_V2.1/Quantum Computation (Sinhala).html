@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="si"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ක්වොන්ටම් ගණනය කිරීම: උප පරමාණුක සීමාව | The Celestial Horizon</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Noto+Sans+Sinhala:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-high": "#23293c",
+                      "primary": "#ffba20",
+                      "outline-variant": "#45464d",
+                      "primary-fixed-dim": "#ffba20",
+                      "primary-container": "#221500",
+                      "tertiary": "#ffb690",
+                      "primary-fixed": "#ffdea8",
+                      "error-container": "#93000a",
+                      "on-primary-fixed-variant": "#5e4200",
+                      "surface-container-lowest": "#070d1f",
+                      "surface-container-highest": "#2e3447",
+                      "on-secondary-container": "#00374d",
+                      "on-primary-fixed": "#271900",
+                      "error": "#ffb4ab",
+                      "on-error": "#690005",
+                      "tertiary-container": "#2d0e00",
+                      "on-tertiary-fixed": "#341100",
+                      "on-surface-variant": "#c6c6cd",
+                      "tertiary-fixed": "#ffdbca",
+                      "secondary-container": "#00a6e0",
+                      "inverse-surface": "#dce1fb",
+                      "secondary-fixed": "#c4e7ff",
+                      "on-error-container": "#ffdad6",
+                      "on-background": "#dce1fb",
+                      "surface-tint": "#ffba20",
+                      "tertiary-fixed-dim": "#ffb690",
+                      "on-secondary-fixed": "#001e2c",
+                      "surface": "#0c1324",
+                      "on-tertiary-container": "#d45d00",
+                      "on-tertiary": "#552100",
+                      "secondary-fixed-dim": "#7bd0ff",
+                      "on-secondary": "#00354a",
+                      "surface-container": "#191f31",
+                      "on-primary": "#412d00",
+                      "background": "#0c1324",
+                      "surface-bright": "#33394c",
+                      "inverse-on-surface": "#2a3043",
+                      "on-secondary-fixed-variant": "#004c69",
+                      "secondary": "#7bd0ff",
+                      "on-tertiary-fixed-variant": "#783200",
+                      "surface-variant": "#2e3447",
+                      "surface-dim": "#0c1324",
+                      "outline": "#909097",
+                      "on-primary-container": "#a87800",
+                      "surface-container-low": "#151b2d",
+                      "on-surface": "#dce1fb",
+                      "inverse-primary": "#7c5800"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "fontFamily": {
+                      "headline": ["Space Grotesk", "Noto Sans Sinhala"],
+                      "body": ["Manrope", "Noto Sans Sinhala"],
+                      "label": ["Manrope", "Noto Sans Sinhala"]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0c1324;
+            color: #dce1fb;
+            font-family: 'Manrope', 'Noto Sans Sinhala', sans-serif;
+            overflow-x: hidden;
+        }
+        .cosmic-glow {
+            background: radial-gradient(circle at 50% 50%, rgba(123, 208, 255, 0.1) 0%, transparent 70%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary/30 selection:text-primary">
+
+<!-- Main Content Canvas -->
+<main class="w-full h-full pt-8 min-h-[100dvh] relative overflow-x-hidden overflow-y-auto">
+<!-- Hero Background -->
+<div class="absolute inset-0 -z-10 bg-[url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=2000&amp;q=80')] bg-cover bg-center opacity-20 mix-blend-screen" data-alt="Intricate network of glowing cyan and deep blue lines representing quantum entanglement and computational nodes in a vast dark cosmic void"></div>
+<div class="absolute inset-0 -z-10 bg-gradient-to-br from-surface via-surface/90 to-surface-container-lowest"></div>
+<div class="absolute top-0 right-0 w-2/3 h-2/3 bg-secondary/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/4"></div>
+<div class="max-w-7xl mx-auto px-12 py-20">
+<!-- Hero Section -->
+<header class="mb-24 relative">
+<div class="flex items-center gap-4 mb-6">
+<span class="h-px w-12 bg-primary"></span>
+<span class="font-['Manrope'] text-[10px] uppercase tracking-[0.3em] text-primary">පරිච්ඡේදය VIII: උප පරමාණුක ක්ෂිතිජයන්</span>
+</div>
+<h1 class="text-7xl font-bold font-['Space_Grotesk'] text-[#dce1fb] leading-tight mb-8 -ml-1">
+                    ක්වොන්ටම් ගණනය කිරීම:<br/>
+<span class="text-secondary">උප පරමාණුක සීමාව</span>
+</h1>
+<p class="text-xl text-on-surface-variant max-w-2xl font-light leading-relaxed font-['Manrope']">
+                    ද්විමය සීමාවන්ගෙන් ඔබ්බට යමින්, අපි අනන්ත සම්භාවිතා ලෝකයට පිවිසෙන්නෙමු. බිට්ස් (bits) වරක් අරගල කළ තැන, දැන් කියුබිට්ස් (qubits) බහු-විශ්වයේ නිහඬ ගෘහ නිර්මාණ ශිල්පය තුළ නර්තනයේ යෙදෙයි.
+                </p>
+</header>
+<!-- Bento Grid Content -->
+<div class="grid grid-cols-12 gap-8 mb-32">
+<!-- Section 1: Superposition -->
+<div class="col-span-12 lg:col-span-7 bg-surface-container-low p-10 relative group overflow-hidden border-l border-primary/20">
+<div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl" data-icon="blur_on">blur_on</span>
+</div>
+<div class="relative z-10">
+<span class="font-['Manrope'] text-[10px] uppercase tracking-[0.2em] text-on-surface-variant block mb-4">මූලික යාන්ත්‍රණය</span>
+<h2 class="text-3xl font-bold font-['Space_Grotesk'] text-[#dce1fb] mb-6">සුපිරි පිහිටීම සහ පැටලීම</h2>
+<p class="text-on-surface-variant leading-relaxed mb-8">
+                            සාම්ප්‍රදායික පරිගණක ක්‍රියාවලිය බිට් (0 හෝ 1) මත රඳා පවතී. ක්වොන්ටම් ගණනය කිරීම් වලදී කියුබිට් (qubit) භාවිතා වන අතර, ඒවාට එකවර අවස්ථා කිහිපයක පැවතිය හැකිය. අනුක්‍රමික සැකසුම් සිට සමගාමී සම්භාවිතාව දක්වා වූ මෙම මාරුව සැකසුම් බලයේ විශාල පිම්මකට ඉඩ සලසයි. 'පැටලීම' (entanglement) හරහා, අංශු ඕනෑම දුරක සිට සම්බන්ධ වී පවතින අතර සම්භාව්‍ය භෞතික විද්‍යාව අභිබවා යන වේගයකින් තොරතුරු හුවමාරු කර ගනී.
+                        </p>
+<div class="flex gap-12">
+<div>
+<div class="text-primary text-2xl font-bold font-headline">2<sup>n</sup></div>
+<div class="text-[10px] uppercase tracking-widest text-on-surface-variant mt-1">සමාන්තර අවස්ථා</div>
+</div>
+<div>
+<div class="text-secondary text-2xl font-bold font-headline">&lt;10mK</div>
+<div class="text-[10px] uppercase tracking-widest text-on-surface-variant mt-1">මෙහෙයුම් උෂ්ණත්වය</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: Quantum Advantage -->
+<div class="col-span-12 lg:col-span-5 flex flex-col gap-8">
+<div class="bg-surface-container-high p-8 flex-1 border-t border-secondary/20">
+<span class="material-symbols-outlined text-secondary mb-4" data-icon="lock_open">lock_open</span>
+<h3 class="text-xl font-bold font-['Space_Grotesk'] text-[#dce1fb] mb-3">ක්වොන්ටම් වාසිය</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                            සම්භාව්‍ය සුපිරි පරිගණක වලට විසඳීමට සහස්‍ර ගණනාවක් ගතවන අණුක ජීව විද්‍යාවේ සහ ඉහළ මට්ටමේ ගුප්ත ලේඛන විද්‍යාවේ සංකීර්ණ ගැටලු දැන් තත්පර කිහිපයකින් විසඳනු ලැබේ. මෙය අණුක සැලසුම් සහ නිරපේක්ෂ දත්ත ආරක්ෂණයේ යුගයයි.
+                        </p>
+</div>
+<div class="bg-surface-container-high p-8 flex-1 border-t border-primary/20">
+<span class="material-symbols-outlined text-primary mb-4" data-icon="speed">speed</span>
+<h3 class="text-xl font-bold font-['Space_Grotesk'] text-[#dce1fb] mb-3">පශ්චාත්-සම්භාව්‍ය යුගය</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">
+                            ක්වොන්ටම් වේගයෙන් බලගන්වන ලෝකයකට මාරුවීම හුදු යාවත්කාලීන කිරීමක් පමණක් නොවේ; එය විශාල වෙනසකි. සම්පත් වෙන්කිරීමේ සිට පුරෝකථන දේශගුණික ආකෘති නිර්මාණය දක්වා ගෝලීය ආර්ථිකයේ සෑම අංශයක්ම දැන් උප පරමාණුක නිරවද්‍යතාවයෙන් පාලනය වේ.
+                        </p>
+</div>
+</div>
+</div>
+<!-- Evolutionary Arc Graph -->
+<section class="mt-20">
+<div class="flex justify-between items-end mb-12">
+<div>
+<h3 class="text-2xl font-bold font-['Space_Grotesk'] text-[#dce1fb]">පරිණාමීය චාපය</h3>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant mt-2">බුද්ධි පරිමාණයේ ප්‍රක්ෂේපණය</p>
+</div>
+<div class="text-right">
+<span class="text-primary font-headline text-lg">වත්මන් යුගය: ක්වොන්ටම් සංශ්ලේෂණය</span>
+</div>
+</div>
+<div class="h-64 w-full relative flex items-end gap-1 px-2">
+<!-- Graph Background Lines -->
+<div class="absolute inset-0 border-b border-on-surface/10 flex flex-col justify-between">
+<div class="border-t border-on-surface/5 w-full"></div>
+<div class="border-t border-on-surface/5 w-full"></div>
+<div class="border-t border-on-surface/5 w-full"></div>
+</div>
+<!-- Timeline Bars -->
+<div class="flex-1 group relative">
+<div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-container-highest px-2 py-1 text-[8px] uppercase tracking-tighter whitespace-nowrap">ජීව විද්‍යාත්මක සංජානනය</div>
+<div class="bg-on-surface/20 w-full h-8 group-hover:bg-on-surface/40 transition-colors"></div>
+</div>
+<div class="flex-1 group relative">
+<div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-container-highest px-2 py-1 text-[8px] uppercase tracking-tighter whitespace-nowrap">මුල් කාලීන AI</div>
+<div class="bg-on-surface/30 w-full h-16 group-hover:bg-on-surface/50 transition-colors"></div>
+</div>
+<div class="flex-1 group relative">
+<div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-container-highest px-2 py-1 text-[8px] uppercase tracking-tighter whitespace-nowrap">ස්නායු ජාල</div>
+<div class="bg-on-surface/40 w-full h-24 group-hover:bg-on-surface/60 transition-colors"></div>
+</div>
+<div class="flex-1 group relative">
+<div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-container-highest px-2 py-1 text-[8px] uppercase tracking-tighter whitespace-nowrap">AI ආරම්භය</div>
+<div class="bg-secondary/40 w-full h-32 group-hover:bg-secondary/60 transition-colors"></div>
+</div>
+<div class="flex-1 group relative">
+<div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-100 bg-primary/20 px-2 py-1 text-[8px] font-bold uppercase tracking-tighter whitespace-nowrap">ක්වොන්ටම් වර්ධනය</div>
+<div class="bg-primary w-full h-48 group-hover:shadow-[0_0_20px_rgba(255,186,32,0.4)] transition-all"></div>
+</div>
+<div class="flex-1 group relative">
+<div class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-container-highest px-2 py-1 text-[8px] uppercase tracking-tighter whitespace-nowrap">විශ්වීය සංවේදනය</div>
+<div class="bg-on-surface/10 w-full h-60 border border-on-surface/20 border-dashed group-hover:bg-on-surface/20 transition-colors"></div>
+</div>
+</div>
+<div class="flex justify-between mt-4 text-[10px] uppercase tracking-[0.2em] text-on-surface-variant font-medium">
+<span>පූර්ව ඩිජිටල්</span>
+<span>20 වන සියවස</span>
+<span>21 වන සියවස</span>
+<span>ඩිජිටල් උච්චතම අවස්ථාව</span>
+<span class="text-primary">වත්මන් ලේඛනාගාරය</span>
+<span>පශ්චාත්-සිංගියුලාරිටිය</span>
+</div>
+</section>
+</div>
+<!-- Decorative Foreground Elements -->
+<div class="fixed bottom-0 right-0 p-12 pointer-events-none opacity-50">
+<div class="text-[120px] font-headline font-bold text-surface-container-highest leading-none select-none">01</div>
+</div>
+</main>
+
+</body></html>

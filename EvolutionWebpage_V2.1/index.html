@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html class="dark" lang="si">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>ආකාශ ක්ෂිතිජය | Celestial Horizon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Noto+Sans+Sinhala:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "surface": "#0c1324",
+                "surface-container": "#191f31",
+                "primary": "#ffba20",
+                "secondary": "#7bd0ff",
+              },
+              "fontFamily": {
+                "headline": ["Space Grotesk", "Noto Sans Sinhala"],
+                "body": ["Manrope", "Noto Sans Sinhala"]
+              }
+            }
+          }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        body { overflow: hidden; } /* Ensure only iframe scrolls */
+    </style>
+</head>
+<body class="bg-surface text-[#dce1fb] font-body selection:bg-primary/30 selection:text-primary flex h-[100dvh] w-screen overflow-hidden">
+    
+    <!-- Mobile Overlay -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/60 z-40 hidden transition-opacity lg:hidden" onclick="toggleMenu()"></div>
+
+    <!-- SideNavBar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 w-[280px] flex flex-col py-6 bg-surface border-r border-[#dce1fb]/10 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+        <div class="px-6 mb-8 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full border border-primary/20 flex items-center justify-center bg-surface-container shrink-0">
+                    <span class="material-symbols-outlined text-primary">public</span>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold font-headline text-primary uppercase tracking-[0.1em]">ආකාශ ක්ෂිතිජය</h1>
+                    <p class="font-body tracking-wide text-[9px] text-[#dce1fb]/50">පැවැත්මේ පුරාවෘත්තය</p>
+                </div>
+            </div>
+            <button onclick="toggleMenu()" class="lg:hidden text-[#dce1fb]/70 hover:text-primary p-2">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto w-full px-2 space-y-1">
+            <a class="nav-link flex items-center py-3.5 px-4 rounded-lg hover:bg-[#161e31] transition-all group" href="primordial_earth_sinhala.html" target="contentFrame">
+                <span class="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform">public</span>
+                <span class="font-body text-[13px] tracking-wide">ආදි පෘථිවිය</span>
+            </a>
+            <a class="nav-link flex items-center py-3.5 px-4 rounded-lg hover:bg-[#161e31] transition-all group" href="cataclysm_sinhala.html" target="contentFrame">
+                <span class="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform">volcano</span>
+                <span class="font-body text-[13px] tracking-wide">මහා විපත්තිය</span>
+            </a>
+            <a class="nav-link flex items-center py-3.5 px-4 rounded-lg hover:bg-[#161e31] transition-all group" href="fossil_creation_sinhala.html" target="contentFrame">
+                <span class="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform">pest_control_rodent</span>
+                <span class="font-body text-[13px] tracking-wide">පොසිල නිර්මාණය</span>
+            </a>
+            <a class="nav-link flex items-center py-3.5 px-4 rounded-lg hover:bg-[#161e31] transition-all group" href="human_skill_sinhala.html" target="contentFrame">
+                <span class="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform">construction</span>
+                <span class="font-body text-[13px] tracking-wide">මානව කුසලතාව</span>
+            </a>
+            <a class="nav-link flex items-center py-3.5 px-4 rounded-lg hover:bg-[#161e31] transition-all group" href="code.html" target="contentFrame">
+                <span class="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform">trending_up</span>
+                <span class="font-body text-[13px] tracking-wide">වේගවත් වර්ධනය</span>
+            </a>
+            <a class="nav-link flex items-center py-3.5 px-4 rounded-lg hover:bg-[#161e31] transition-all group" href="ai_revolution_sinhala.html" target="contentFrame">
+                <span class="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform">smart_toy</span>
+                <span class="font-body text-[13px] tracking-wide">AI විප්ලවය</span>
+            </a>
+            <a class="nav-link flex items-center py-3.5 px-4 rounded-lg hover:bg-[#161e31] transition-all group" href="adaptation_sinhala.html" target="contentFrame">
+                <span class="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform">diversity_3</span>
+                <span class="font-body text-[13px] tracking-wide">අනුගත වීම</span>
+            </a>
+            <a class="nav-link flex items-center py-3.5 px-4 rounded-lg hover:bg-[#161e31] transition-all group" href="aethel_horizon_sinhala.html" target="contentFrame">
+                <span class="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform">visibility</span>
+                <span class="font-body text-[13px] tracking-wide">අනාගත ක්ෂිතිජය</span>
+            </a>
+            <a class="nav-link flex items-center py-3.5 px-4 rounded-lg hover:bg-[#161e31] transition-all group" href="Quantum Computation (Sinhala).html" target="contentFrame">
+                <span class="material-symbols-outlined mr-4 group-hover:scale-110 transition-transform">blur_on</span>
+                <span class="font-body text-[13px] tracking-wide">ක්වොන්ටම් ගණනය කිරීම</span>
+            </a>
+        </nav>
+        
+        <div class="px-6 mt-4">
+            <button class="w-full py-3.5 bg-[#221500]/60 border border-primary/20 text-primary font-headline text-xs tracking-widest rounded-lg hover:bg-primary/10 transition-colors">
+                පුරාවෘත්ත ඇතුළත් කිරීම
+            </button>
+        </div>
+    </aside>
+
+    <div id="mainWrapper" class="flex-1 flex flex-col min-w-0 lg:ml-[280px] w-full h-full relative transition-all duration-300">
+        <!-- TopAppBar -->
+        <header class="h-16 flex justify-between items-center px-4 lg:px-8 z-40 bg-surface/60 backdrop-blur-xl shrink-0 border-b border-[#dce1fb]/5 shadow-sm absolute top-0 left-0 right-0">
+            <div class="flex items-center gap-4">
+                <button id="menuToggleBtn" onclick="toggleMenu()" class="lg:hidden text-[#dce1fb]/70 p-2 hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <div class="hidden md:flex items-center space-x-6">
+                    <span class="text-[#dce1fb]/50 font-headline uppercase text-[10px] tracking-[0.2em]">&copy; Nadun Ratnayake | කාලරාමු අනුපිළිවෙල: 0.01</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <button class="text-[#dce1fb]/50 hover:text-primary transition-colors p-2">
+                    <span class="material-symbols-outlined text-lg">history</span>
+                </button>
+                <button class="text-[#dce1fb]/50 hover:text-primary transition-colors p-2">
+                    <span class="material-symbols-outlined text-lg">bookmark</span>
+                </button>
+                <div class="w-8 h-8 rounded-full border border-secondary/30 p-0.5 overflow-hidden ml-2">
+                    <span class="material-symbols-outlined text-secondary w-full h-full flex items-center justify-center bg-[#151b2d] rounded-full text-base">person</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- IFrame Container -->
+        <main class="flex-1 w-full h-full pt-16 relative bg-surface">
+            <iframe id="contentFrame" name="contentFrame" src="primordial_earth_sinhala.html" class="absolute inset-0 w-full h-full border-none"></iframe>
+        </main>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const iframe = document.getElementById('contentFrame');
+        const mainWrapper = document.getElementById('mainWrapper');
+        const menuToggleBtn = document.getElementById('menuToggleBtn');
+
+        function toggleMenu() {
+            sidebar.classList.toggle('-translate-x-full');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                overlay.classList.add('hidden');
+            } else {
+                overlay.classList.remove('hidden');
+            }
+        }
+
+        function setActiveLink(clickedLink) {
+            navLinks.forEach(link => {
+                link.classList.remove('text-primary', 'font-bold', 'bg-[#161e31]/60', 'border-l-2', 'border-primary', 'pl-3.5');
+                link.classList.add('text-[#dce1fb]/60');
+                link.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 0, 'wght' 400";
+            });
+            clickedLink.classList.remove('text-[#dce1fb]/60');
+            clickedLink.classList.add('text-primary', 'font-bold', 'bg-[#161e31]/60', 'border-l-2', 'border-primary', 'pl-3.5');
+            clickedLink.querySelector('.material-symbols-outlined').style.fontVariationSettings = "'FILL' 1, 'wght' 600";
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                setActiveLink(this);
+                if (window.innerWidth < 1024) {
+                    if (!sidebar.classList.contains('-translate-x-full')) {
+                        toggleMenu();
+                    }
+                }
+            });
+        });
+
+        // initial state
+        setActiveLink(navLinks[0]);
+
+        iframe.addEventListener('load', () => {
+            try {
+                if(iframe.contentDocument && iframe.contentDocument.title) {
+                    document.title = iframe.contentDocument.title + " | ආකාශ ක්ෂිතිජය";
+                }
+            } catch(e) {}
+        });
+    </script>
+</body>
+</html>
