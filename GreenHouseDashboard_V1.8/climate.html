@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <!-- Firebase SDK (Compat version for non-module environments) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-fixed": "#00e3fd",
+            "surface-container-lowest": "#000000",
+            "surface-container-low": "#111417",
+            "primary-dim": "#00d4ec",
+            "on-secondary-fixed-variant": "#006a34",
+            "tertiary-fixed-dim": "#eeb200",
+            "tertiary-dim": "#eeb200",
+            "secondary-fixed": "#83fba5",
+            "on-tertiary-container": "#563e00",
+            "outline": "#747579",
+            "error-container": "#9f0519",
+            "surface": "#0c0e11",
+            "on-primary-container": "#004d57",
+            "tertiary-container": "#ffbf00",
+            "primary": "#81ecff",
+            "surface-dim": "#0c0e11",
+            "on-primary": "#005762",
+            "background": "#0c0e11",
+            "primary-container": "#00e3fd",
+            "surface-container-high": "#1d2024",
+            "on-primary-fixed-variant": "#005762",
+            "on-secondary": "#005f2e",
+            "tertiary": "#ffd16f",
+            "on-background": "#f9f9fd",
+            "secondary-container": "#006d36",
+            "error": "#ff716c",
+            "on-error": "#490006",
+            "on-tertiary-fixed-variant": "#614700",
+            "surface-bright": "#292c31",
+            "secondary": "#83fba5",
+            "surface-container-highest": "#23262a",
+            "secondary-fixed-dim": "#75ec98",
+            "inverse-surface": "#f9f9fd",
+            "on-surface": "#f9f9fd",
+            "primary-fixed-dim": "#00d4ec",
+            "secondary-dim": "#75ec98",
+            "outline-variant": "#46484b",
+            "on-secondary-container": "#e3ffe4",
+            "surface-tint": "#81ecff",
+            "error-dim": "#d7383b",
+            "surface-container": "#171a1d",
+            "tertiary-fixed": "#ffbf00",
+            "inverse-on-surface": "#535559",
+            "surface-variant": "#23262a",
+            "on-tertiary-fixed": "#3d2b00",
+            "on-secondary-fixed": "#004a22",
+            "on-error-container": "#ffa8a3",
+            "on-tertiary": "#614700",
+            "on-surface-variant": "#aaabaf",
+            "inverse-primary": "#006976",
+            "on-primary-fixed": "#003840"
+          },
+          fontFamily: {
+            "headline": ["Space Grotesk"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .glass-panel {
+      background: rgba(41, 44, 49, 0.6);
+      backdrop-filter: blur(20px);
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+    }
+
+    input[type=range]::-webkit-slider-runnable-track {
+      background: #23262a;
+      height: 4px;
+      border-radius: 2px;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      background: #81ecff;
+      margin-top: -6px;
+      box-shadow: 0 0 10px rgba(129, 236, 255, 0.5);
+    }
+  </style>
+</head>
+
+<body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+  <!-- TopNavBar (Shared Component) -->
+  <header
+    class="fixed top-0 w-full z-50 bg-[#0c0e11]/60 backdrop-blur-xl flex justify-between items-center px-8 h-16 w-full shadow-[0px_24px_48px_rgba(0,0,0,0.4)]">
+    <div class="text-2xl font-black text-[#f9f9fd] tracking-tighter font-headline">Greenhouse OS</div>
+    <nav class="hidden md:flex gap-8 items-center h-full">
+    </nav>
+    <div class="flex items-center gap-6">
+      <span
+        class="material-symbols-outlined text-[#f9f9fd]/70 hover:text-[#00BCD4] cursor-pointer transition-all active:scale-95 duration-200">notifications</span>
+      <span
+        class="material-symbols-outlined text-[#f9f9fd]/70 hover:text-[#00BCD4] cursor-pointer transition-all active:scale-95 duration-200">settings</span>
+      <div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+        <img alt="User profile avatar" class="w-full h-full object-cover"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxLwwgT259OdsSGCdKH_IRBz7La4Svc8SnZK0c7MvRF3v3UZaJg-8AM1hkUzbXV3rNbSIRO5Cyu4QZAib_67feTMl7YaAW-7Q9X3dBsn4388lnE7c1Buh3M1P-PWquY4SI9mz-XJlKFiIeZLuYtSSXvhHrMWuSi7RfqjEygXe6IVDYBiLzsqBgkGDrl5QDFeykkn1yyjaehUW8Hm8dRVymuXTgbohrnWi3IaLDDIbBNyvtPnHbYg4P7a98wadERGgcEBGEoljUO42g" />
+      </div>
+    </div>
+  </header>
+  <!-- Side Navigation Bar (Desktop) -->
+  <aside class="fixed left-0 h-full w-64 bg-slate-900 flex flex-col py-6 hidden lg:flex mt-[56px] z-40">
+    <div class="px-6 mb-8">
+      <h2 class="text-cyan-400 font-bold font-headline">Atmospheric Control</h2>
+      <p class="text-slate-500 text-xs font-medium">Zone 01 - Primary Vault</p>
+    </div>
+    <nav class="flex-1 space-y-1">
+      <a class="text-slate-500 flex items-center gap-3 px-6 py-3 hover:bg-slate-800 hover:text-slate-100 transition-all active:translate-x-1"
+        href="index.html">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span class="font-headline text-sm font-medium">Overview</span>
+      </a>
+      <a class="bg-cyan-500/10 text-cyan-400 border-r-4 border-cyan-400 flex items-center gap-3 px-6 py-3 active:translate-x-1"
+        href="climate.html">
+        <span class="material-symbols-outlined">thermostat</span>
+        <span class="font-headline text-sm font-medium">Climate</span>
+      </a>
+      <a class="text-slate-500 flex items-center gap-3 px-6 py-3 hover:bg-slate-800 hover:text-slate-100 transition-all active:translate-x-1"
+        href="Irrigation.html">
+        <span class="material-symbols-outlined">water_drop</span>
+        <span class="font-headline text-sm font-medium">Irrigation</span>
+      </a>
+      <a class="text-slate-500 flex items-center gap-3 px-6 py-3 hover:bg-slate-800 hover:text-slate-100 transition-all active:translate-x-1"
+        href="Nutrients.html">
+        <span class="material-symbols-outlined">science</span>
+        <span class="font-headline text-sm font-medium">Nutrients</span>
+      </a>
+      <a class="text-slate-500 flex items-center gap-3 px-6 py-3 hover:bg-slate-800 hover:text-slate-100 transition-all active:translate-x-1"
+        href="history.html">
+        <span class="material-symbols-outlined">timeline</span>
+        <span class="font-headline text-sm font-medium">History</span>
+      </a>
+    </nav>
+    <div class="px-6 mt-auto space-y-4">
+      <button
+        class="w-full bg-primary-container text-on-primary-container font-headline font-bold py-3 rounded-xl flex items-center justify-center gap-2 hover:brightness-110 active:scale-95 transition-all">
+        <span class="material-symbols-outlined">add</span>
+        Add Device
+      </button>
+      <div class="pt-4 border-t border-outline-variant/10">
+        <a class="text-slate-500 flex items-center gap-3 py-2 text-sm hover:text-slate-100" href="#">
+          <span class="material-symbols-outlined text-lg">help</span>
+          Support
+        </a>
+        <a class="text-slate-500 flex items-center gap-3 py-2 text-sm hover:text-slate-100" href="#">
+          <span class="material-symbols-outlined text-lg">description</span>
+          Logs
+        </a>
+      </div>
+    </div>
+  </aside>
+  <!-- Main Content Canvas -->
+  <main class="lg:ml-64 pt-24 px-6 pb-12 min-h-screen">
+    <div class="max-w-7xl mx-auto space-y-8">
+      <!-- Header Section -->
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div>
+          <h1 class="text-4xl font-headline font-bold tracking-tight text-on-surface">Climate Control</h1>
+          <p class="text-on-surface-variant font-body mt-1">Real-time environmental synchronization for optimal growth.
+          </p>
+        </div>
+        <div class="flex items-center gap-4 bg-surface-container p-2 rounded-full border border-outline-variant/10">
+          <span class="pl-4 text-xs font-headline font-bold uppercase tracking-widest text-on-surface-variant">System
+            Mode</span>
+          <div class="flex bg-surface-container-lowest rounded-full p-1">
+            <button id="climateAutoBtn" data-mode="automatic"
+              class="px-6 py-2 rounded-full text-xs font-bold font-headline bg-primary text-on-primary shadow-lg shadow-primary/20 transition-all">AUTOMATIC</button>
+            <button id="climateManualBtn" data-mode="manual"
+              class="px-6 py-2 rounded-full text-xs font-bold font-headline text-on-surface-variant hover:text-on-surface transition-all">MANUAL</button>
+          </div>
+          <div class="flex items-center gap-2 px-4 border-l border-outline-variant/20">
+            <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+            <span class="text-xs font-headline font-semibold text-secondary">ACTIVE</span>
+          </div>
+        </div>
+      </div>
+      <!-- Bento Grid Layout -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- Temperature Gauge -->
+        <div
+          class="md:col-span-4 bg-surface-container rounded-xl p-8 flex flex-col items-center justify-center relative overflow-hidden">
+          <div
+            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50">
+          </div>
+          <span class="text-on-surface-variant text-sm font-label uppercase tracking-widest mb-6">Current Temp</span>
+          <div class="relative w-48 h-48 flex items-center justify-center">
+            <svg class="w-full h-full -rotate-90">
+              <circle class="text-surface-variant" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor"
+                stroke-width="8"></circle>
+              <circle cx="96" cy="96" fill="transparent" r="88" stroke="url(#tempGradient)" stroke-dasharray="552.92"
+                stroke-dashoffset="138" stroke-linecap="round" stroke-width="12"></circle>
+              <defs>
+                <lineargradient id="tempGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+                  <stop offset="0%" style="stop-color:#00d4ec"></stop>
+                  <stop offset="100%" style="stop-color:#81ecff"></stop>
+                </lineargradient>
+              </defs>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span id="tempValueDisplay" class="text-6xl font-headline font-bold text-on-surface">--<span
+                  class="text-3xl text-primary-dim">°C</span></span>
+              <span id="tempStatusLabel" class="text-secondary text-xs font-bold mt-1 flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs">sync</span>
+                LIVE
+              </span>
+            </div>
+          </div>
+          <div class="mt-8 w-full space-y-4">
+            <div class="flex justify-between text-xs font-label text-on-surface-variant">
+              <span>Target Temperature</span>
+              <span id="temperatureDisplay" class="text-primary font-bold">22.5°C</span>
+            </div>
+            <input id="temperatureSlider" class="w-full accent-primary" max="35" min="15" type="range" value="22.5"
+              disabled />
+          </div>
+        </div>
+        <!-- Humidity Gauge -->
+        <div
+          class="md:col-span-4 bg-surface-container rounded-xl p-8 flex flex-col items-center justify-center relative overflow-hidden">
+          <div
+            class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-secondary to-transparent opacity-50">
+          </div>
+          <span class="text-on-surface-variant text-sm font-label uppercase tracking-widest mb-6">Humidity Level</span>
+          <div class="relative w-48 h-48 flex items-center justify-center">
+            <svg class="w-full h-full -rotate-90">
+              <circle class="text-surface-variant" cx="96" cy="96" fill="transparent" r="88" stroke="currentColor"
+                stroke-width="8"></circle>
+              <circle cx="96" cy="96" fill="transparent" r="88" stroke="url(#humGradient)" stroke-dasharray="552.92"
+                stroke-dashoffset="193" stroke-linecap="round" stroke-width="12"></circle>
+              <defs>
+                <lineargradient id="humGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+                  <stop offset="0%" style="stop-color:#83fba5"></stop>
+                  <stop offset="100%" style="stop-color:#75ec98"></stop>
+                </lineargradient>
+              </defs>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span id="humValueDisplay" class="text-6xl font-headline font-bold text-on-surface">--<span
+                  class="text-3xl text-secondary-dim">%</span></span>
+              <span id="humStatusLabel" class="text-secondary text-xs font-bold mt-1 flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs">sync</span>
+                LIVE
+              </span>
+            </div>
+          </div>
+          <div class="mt-8 w-full space-y-4">
+            <div class="flex justify-between text-xs font-label text-on-surface-variant">
+              <span>Target Humidity</span>
+              <span id="humidityDisplay" class="text-secondary font-bold">60%</span>
+            </div>
+            <input id="humiditySlider" class="w-full accent-secondary" max="200" min="30" type="range" value="60"
+              disabled />
+          </div>
+        </div>
+        <!-- Control Toggles -->
+        <div class="md:col-span-4 space-y-6">
+          <!-- Fan Control -->
+          <div id="fanCard"
+            class="bg-surface-container rounded-xl p-6 flex items-center justify-between group hover:bg-surface-container-high transition-all">
+            <div class="flex items-center gap-4">
+              <div id="fanIconWrap"
+                class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined">cyclone</span>
+              </div>
+              <div>
+                <h3 class="font-headline font-bold text-on-surface">Ventilation Fan</h3>
+                <p class="text-xs text-on-surface-variant">Status: <span id="fanStatusText"
+                    class="text-on-surface-variant">OFF</span></p>
+              </div>
+            </div>
+            <!-- Fan Toggle Switch -->
+            <button id="fanToggle" aria-label="Toggle ventilation fan" title="Enable Manual mode to control"
+              class="w-14 h-7 rounded-full bg-surface-variant relative transition-all duration-300 opacity-50 cursor-not-allowed focus:outline-none"
+              disabled>
+              <div id="fanThumb"
+                class="absolute left-1 top-1 w-5 h-5 rounded-full bg-outline transition-all duration-300"></div>
+            </button>
+          </div>
+          <!-- Heating Unit (display only, not controllable) -->
+          <div
+            class="bg-surface-container rounded-xl p-6 flex items-center justify-between group hover:bg-surface-container-high transition-all">
+            <div class="flex items-center gap-4">
+              <div
+                class="w-12 h-12 rounded-lg bg-error/10 flex items-center justify-center text-error group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined">heat_pump</span>
+              </div>
+              <div>
+                <h3 class="font-headline font-bold text-on-surface">Heating Unit</h3>
+                <p class="text-xs text-on-surface-variant">Status: <span class="text-on-surface-variant">Auto</span></p>
+              </div>
+            </div>
+            <div class="w-14 h-7 rounded-full bg-surface-variant relative opacity-40">
+              <div class="absolute left-1 top-1 w-5 h-5 rounded-full bg-outline"></div>
+            </div>
+          </div>
+          <!-- Humidifier -->
+          <div id="humCard"
+            class="bg-surface-container rounded-xl p-6 flex items-center justify-between group hover:bg-surface-container-high transition-all">
+            <div class="flex items-center gap-4">
+              <div id="humIconWrap"
+                class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined">water_lux</span>
+              </div>
+              <div>
+                <h3 class="font-headline font-bold text-on-surface">Humidifier</h3>
+                <p class="text-xs text-on-surface-variant">Status: <span id="humStatusText"
+                    class="text-on-surface-variant">OFF</span></p>
+              </div>
+            </div>
+            <!-- Humidifier Toggle Switch -->
+            <button id="humToggle" aria-label="Toggle humidifier" title="Enable Manual mode to control"
+              class="w-14 h-7 rounded-full bg-surface-variant relative transition-all duration-300 opacity-50 cursor-not-allowed focus:outline-none"
+              disabled>
+              <div id="humThumb"
+                class="absolute left-1 top-1 w-5 h-5 rounded-full bg-outline transition-all duration-300"></div>
+            </button>
+          </div>
+        </div>
+        <!-- 24h Trend Line Chart -->
+        <div class="md:col-span-12 bg-surface-container rounded-xl p-8">
+          <div class="flex justify-between items-center mb-8">
+            <div>
+              <h3 class="font-headline font-bold text-xl text-on-surface">24h Climate Cycle</h3>
+              <p class="text-sm text-on-surface-variant">Correlation between Temp and Humidity</p>
+            </div>
+            <div class="flex gap-4">
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-primary"></div>
+                <span class="text-xs text-on-surface-variant">Temp</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-secondary"></div>
+                <span class="text-xs text-on-surface-variant">Humidity</span>
+              </div>
+            </div>
+          </div>
+          <div class="h-72 w-full relative group">
+            <svg id="climateGraphSVG" class="w-full h-full overflow-visible" preserveAspectRatio="none"
+              viewBox="0 0 1000 220">
+              <defs>
+                <!-- Temperature gradient fill -->
+                <linearGradient id="tempFillGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#81ecff" stop-opacity="0.35" />
+                  <stop offset="100%" stop-color="#81ecff" stop-opacity="0" />
+                </linearGradient>
+                <!-- Humidity gradient fill -->
+                <linearGradient id="humFillGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#83fba5" stop-opacity="0.25" />
+                  <stop offset="100%" stop-color="#83fba5" stop-opacity="0" />
+                </linearGradient>
+                <!-- Temp line glow filter -->
+                <filter id="tempGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+                <!-- Hum line glow filter -->
+                <filter id="humGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="2.5" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <!-- Horizontal grid lines -->
+              <line stroke="currentColor" stroke-width="0.5" class="text-outline-variant/20" x1="0" x2="1000" y1="44"
+                y2="44" />
+              <line stroke="currentColor" stroke-width="0.5" class="text-outline-variant/20" x1="0" x2="1000" y1="88"
+                y2="88" />
+              <line stroke="currentColor" stroke-width="0.5" class="text-outline-variant/20" x1="0" x2="1000" y1="132"
+                y2="132" />
+              <line stroke="currentColor" stroke-width="0.5" class="text-outline-variant/20" x1="0" x2="1000" y1="176"
+                y2="176" />
+              <!-- Temperature shaded area fill -->
+              <path id="tempFillPath" d="" fill="url(#tempFillGrad)" />
+              <!-- Humidity shaded area fill -->
+              <path id="humFillPath" d="" fill="url(#humFillGrad)" />
+              <!-- Temperature averaged line -->
+              <path id="tempGraphPath" d="" fill="none" stroke="#81ecff" stroke-width="2.5" stroke-linecap="round"
+                stroke-linejoin="round" filter="url(#tempGlow)" />
+              <!-- Humidity averaged line -->
+              <path id="humGraphPath" d="" fill="none" stroke="#83fba5" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" stroke-dasharray="6 3" filter="url(#humGlow)" />
+              <!-- Dot markers (last point) -->
+              <circle id="tempDot" r="5" fill="#81ecff" stroke="#0c0e11" stroke-width="2" opacity="0" />
+              <circle id="humDot" r="4" fill="#83fba5" stroke="#0c0e11" stroke-width="2" opacity="0" />
+            </svg>
+            <!-- Timeline Labels -->
+            <div id="timelineLabels"
+              class="flex justify-between mt-3 text-[10px] text-on-surface-variant font-label uppercase tracking-widest">
+              <span>00:00</span><span>04:00</span><span>08:00</span><span>12:00</span><span>16:00</span><span>20:00</span><span>Now</span>
+            </div>
+          </div>
+        </div>
+        <!-- Environment Visualization Card -->
+        <div class="md:col-span-8 bg-surface-container rounded-xl overflow-hidden relative min-h-[300px]">
+          <img alt="Greenhouse Interior" class="w-full h-full object-cover opacity-40 mix-blend-luminosity"
+            data-alt="cinematic wide angle shot of a modern high-tech hydroponic greenhouse with rows of glowing led lights and lush vibrant leafy greens reflecting soft cool artificial lighting"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDT65EyPBVbaZtj0fMHMmC7U2CEkM_otDaIynfa5jm91xo8ESRnEo42oKHRqNZJ2mT75mD91rMHTAxJxjMRrWCcV2MqyPt-DwZpaRE7NxMYHibXUQcl21w_y1MkwD4WaBykU69aQrfnDRkqCkbD_HZHBN-jwvOa1xFGuhYjZTa_lLp1BJoDXens_YqKzYU1SH4SI5RU8H8nF08SzjuD5VYxHxgQeG2AQde0Ko9_86jy4kZpg71PCNCoZvIakzVGvy9eOjLCiImhwjj" />
+          <div class="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-transparent"></div>
+          <div class="absolute bottom-0 left-0 p-8 w-full flex justify-between items-end">
+            <div>
+              <span
+                class="inline-block px-3 py-1 rounded-full bg-secondary/20 text-secondary text-[10px] font-bold tracking-tighter mb-2">LIVE
+                FEED</span>
+              <h3 class="text-2xl font-headline font-bold text-on-surface">Greenhouse Vault A-1</h3>
+              <p class="text-on-surface-variant max-w-md">Atmospheric conditions are synchronized with the metabolic
+                rate of current crop cycle (Stage: Vegetative).</p>
+            </div>
+            <div class="flex gap-2">
+              <button
+                class="p-3 rounded-full bg-surface-container-high/80 backdrop-blur-md text-on-surface hover:bg-primary-container hover:text-on-primary-container transition-all">
+                <span class="material-symbols-outlined">videocam</span>
+              </button>
+              <button
+                class="p-3 rounded-full bg-surface-container-high/80 backdrop-blur-md text-on-surface hover:bg-primary-container hover:text-on-primary-container transition-all">
+                <span class="material-symbols-outlined">photo_camera</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Quick Stats Column -->
+        <div class="md:col-span-4 bg-surface-container-high rounded-xl p-8 flex flex-col justify-between">
+          <div>
+            <h4 class="font-headline font-bold text-on-surface mb-6">Atmospheric Efficiency</h4>
+            <div class="space-y-6">
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-on-surface-variant">Dew Point</span>
+                <span class="text-sm font-bold text-on-surface">17.2°C</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-on-surface-variant">VPD (kPa)</span>
+                <span class="text-sm font-bold text-secondary">0.95</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-on-surface-variant">CO2 Levels</span>
+                <span class="text-sm font-bold text-on-surface">840 ppm</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-on-surface-variant">Air Exchange Rate</span>
+                <span class="text-sm font-bold text-on-surface">4.2 / hr</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-8 pt-6 border-t border-outline-variant/10">
+            <div class="flex items-center gap-3 text-secondary">
+              <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified</span>
+              <span class="text-xs font-bold tracking-tight">AI OPTIMIZATION ACTIVE</span>
+            </div>
+            <p class="text-[11px] text-on-surface-variant mt-2 leading-relaxed">
+              Climate algorithms are currently balancing energy consumption vs growth speed based on current electricity
+              tariff peaks.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    // Check Authentication - Redirect to login if not authenticated
+    if (localStorage.getItem('gh_auth') !== 'true') {
+        window.location.href = 'login.html';
+    }
+
+    // ==================== FIREBASE INITIALIZATION ====================
+    const firebaseConfig = {
+      apiKey: "AIzaSyCwBriGgolF2ezrNTGaqgKFMrZY2efxIS4",
+      authDomain: "green-house-iot-ab0c9.firebaseapp.com",
+      databaseURL: "https://green-house-iot-ab0c9-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "green-house-iot-ab0c9",
+      storageBucket: "green-house-iot-ab0c9.firebasestorage.app",
+      messagingSenderId: "1051399417408",
+      appId: "1:1051399417408:web:fe3db669dd390ca8db39a5",
+      measurementId: "G-TTQ9GTED9S"
+    };
+
+    let database;
+    try {
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+        console.log('[Firebase] Initialized successfully');
+      } else {
+        firebase.app();
+      }
+      database = firebase.database();
+    } catch (error) {
+      console.error('[Firebase] Initialization failed:', error.message);
+    }
+
+    // Sensor database path (matches actual Firebase structure from ESP32)
+    const sensorPath = "/sensor_readings";
+
+    // ==================== GAUGE UPDATE FUNCTIONS ====================
+
+    // Store current values for smooth animation
+    let currentTemperature = 0;
+    let currentHumidity = 0;
+    let tempAnimationId = null;
+    let humAnimationId = null;
+
+    /**
+     * Calculates stroke-dashoffset for circular gauge animation.
+     * Full circumference = 2 * PI * 88 ≈ 552.92.
+     * We show ~75% of the arc (414.69 units), leaving a gap at the bottom.
+     */
+    function calculateGaugeOffset(value, minValue, maxValue) {
+      const circumference = 552.92;
+      const arcLength = circumference * 0.75; // 75% arc
+      const percentage = Math.max(0, Math.min(100, ((value - minValue) / (maxValue - minValue)) * 100));
+      // dashoffset shrinks as value increases (more arc shown)
+      return circumference - (percentage / 100) * arcLength;
+    }
+
+    /**
+     * Smoothly animates temperature value with interpolation
+     */
+    function animateTemperatureTo(targetValue, duration = 1500) {
+      // Cancel previous animation if running
+      if (tempAnimationId) {
+        cancelAnimationFrame(tempAnimationId);
+      }
+
+      const startValue = currentTemperature;
+      const startTime = Date.now();
+
+      function animate() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Ease-out cubic interpolation for smooth deceleration
+        const easeProgress = 1 - Math.pow(1 - progress, 3);
+
+        // Interpolate between start and target value
+        currentTemperature = startValue + (targetValue - startValue) * easeProgress;
+
+        const displayValue = Math.round(currentTemperature * 10) / 10;
+
+        // Update main temperature display via stable ID
+        const tempEl = document.getElementById('tempValueDisplay');
+        if (tempEl) {
+          tempEl.innerHTML = Math.round(displayValue) + '<span class="text-3xl text-primary-dim">°C</span>';
+        }
+
+        // Update circular gauge ring (0-50°C range)
+        const tempGauges = document.querySelectorAll('circle[stroke="url(#tempGradient)"]');
+        if (tempGauges.length > 0) {
+          const offset = calculateGaugeOffset(currentTemperature, 0, 50);
+          tempGauges[0].setAttribute('stroke-dashoffset', offset);
+        }
+
+        if (progress < 1) {
+          tempAnimationId = requestAnimationFrame(animate);
+        } else {
+          console.log('[Climate] Temperature animation complete:', displayValue.toFixed(1) + '°C');
+        }
+      }
+
+      tempAnimationId = requestAnimationFrame(animate);
+    }
+
+    /**
+     * Smoothly animates humidity value with interpolation
+     */
+    function animateHumidityTo(targetValue, duration = 1500) {
+      // Cancel previous animation if running
+      if (humAnimationId) {
+        cancelAnimationFrame(humAnimationId);
+      }
+
+      const startValue = currentHumidity;
+      const startTime = Date.now();
+
+      function animate() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Ease-out cubic interpolation for smooth deceleration
+        const easeProgress = 1 - Math.pow(1 - progress, 3);
+
+        // Interpolate between start and target value
+        currentHumidity = startValue + (targetValue - startValue) * easeProgress;
+
+        const displayValue = Math.round(currentHumidity);
+
+        // Update main humidity display via stable ID
+        const humEl = document.getElementById('humValueDisplay');
+        if (humEl) {
+          humEl.innerHTML = displayValue + '<span class="text-3xl text-secondary-dim">%</span>';
+        }
+
+        // Update circular gauge ring (0-100% range)
+        const humGauges = document.querySelectorAll('circle[stroke="url(#humGradient)"]');
+        if (humGauges.length > 0) {
+          const offset = calculateGaugeOffset(currentHumidity, 0, 100);
+          humGauges[0].setAttribute('stroke-dashoffset', offset);
+        }
+
+        if (progress < 1) {
+          humAnimationId = requestAnimationFrame(animate);
+        } else {
+          console.log('[Climate] Humidity animation complete:', displayValue + '%');
+        }
+      }
+
+      humAnimationId = requestAnimationFrame(animate);
+    }
+
+    /**
+     * Updates temperature gauge with new value from Firebase (triggers smooth animation)
+     */
+    function updateTemperatureGauge(value) {
+      if (typeof value !== 'number') {
+        console.warn('[Gauge] Invalid temperature value:', value);
+        return;
+      }
+
+      console.log('[Climate] Temperature data received:', value + '°C, animating...');
+      animateTemperatureTo(value, 1500);
+    }
+
+    /**
+     * Updates humidity gauge with new value from Firebase (triggers smooth animation)
+     */
+    function updateHumidityGauge(value) {
+      if (typeof value !== 'number') {
+        console.warn('[Gauge] Invalid humidity value:', value);
+        return;
+      }
+
+      console.log('[Climate] Humidity data received:', value + '%, animating...');
+      animateHumidityTo(value, 1500);
+    }
+
+    // ==================== 24-HOUR CLIMATE GRAPH (AVERAGED) ====================
+
+    const graphConfig = {
+      TIME_PERIOD_MINUTES: 24,  // Set to 1440 for full 24h production cycle
+      BUCKET_COUNT: 48,          // Averaged segments drawn across the window
+      svgWidth: 1000,
+      svgHeight: 220,
+      graphTop: 10,
+      graphBottom: 210,
+      tempMin: 0, tempMax: 50,
+      humMin: 0, humMax: 100,
+    };
+
+    // Active bucket array — each entry: { startMs, endMs, tempSum, humSum, count }
+    let graphBuckets = [];
+
+    function getGraphY(value, min, max) {
+      const pct = Math.max(0, Math.min(1, (value - min) / (max - min)));
+      return graphConfig.graphBottom - pct * (graphConfig.graphBottom - graphConfig.graphTop);
+    }
+
+    function getGraphX(bucketIndex, totalBuckets) {
+      return (bucketIndex / Math.max(totalBuckets - 1, 1)) * graphConfig.svgWidth;
+    }
+
+    function buildSmoothPath(points) {
+      if (points.length === 0) return '';
+      if (points.length === 1) return `M${points[0].x},${points[0].y}`;
+      let d = `M${points[0].x},${points[0].y}`;
+      for (let i = 1; i < points.length; i++) {
+        const prev = points[i - 1];
+        const curr = points[i];
+        const cpX = (prev.x + curr.x) / 2;
+        d += ` C${cpX},${prev.y} ${cpX},${curr.y} ${curr.x},${curr.y}`;
+      }
+      return d;
+    }
+
+    /**
+     * Build BUCKET_COUNT fixed-size buckets anchored to latestMs as "now".
+     * Each reading is assigned to a bucket; then averages are computed.
+     */
+    function buildBucketsFromReadings(readings, latestMs) {
+      const windowMs = graphConfig.TIME_PERIOD_MINUTES * 60 * 1000;
+      const bucketMs = windowMs / graphConfig.BUCKET_COUNT;
+      const windowStartMs = latestMs - windowMs;
+
+      // Initialize empty buckets
+      const buckets = [];
+      for (let i = 0; i < graphConfig.BUCKET_COUNT; i++) {
+        buckets.push({ startMs: windowStartMs + i * bucketMs, endMs: windowStartMs + (i + 1) * bucketMs, tempSum: 0, humSum: 0, count: 0 });
+      }
+
+      // Place each reading into its bucket
+      readings.forEach(({ temperature, humidity, timestampMs }) => {
+        if (timestampMs < windowStartMs || timestampMs > latestMs) return; // outside window
+        const idx = Math.floor((timestampMs - windowStartMs) / bucketMs);
+        const clampedIdx = Math.min(idx, graphConfig.BUCKET_COUNT - 1);
+        if (clampedIdx >= 0) {
+          buckets[clampedIdx].tempSum += temperature;
+          buckets[clampedIdx].humSum += humidity;
+          buckets[clampedIdx].count++;
+        }
+      });
+
+      return buckets;
+    }
+
+    function redrawGraph() {
+      const tempPath = document.getElementById('tempGraphPath');
+      const humPath = document.getElementById('humGraphPath');
+      const tempFill = document.getElementById('tempFillPath');
+      const humFill = document.getElementById('humFillPath');
+      const tempDot = document.getElementById('tempDot');
+      const humDot = document.getElementById('humDot');
+      if (!tempPath || !humPath) return;
+
+      const filled = graphBuckets.filter(b => b.count > 0);
+      if (filled.length < 2) {
+        console.warn('[Graph] Not enough filled buckets to draw:', filled.length);
+        return;
+      }
+
+      const tempPoints = [];
+      const humPoints = [];
+
+      filled.forEach((b, i) => {
+        const x = getGraphX(i, filled.length);
+        const avgTemp = b.tempSum / b.count;
+        const avgHum = b.humSum / b.count;
+        tempPoints.push({ x, y: getGraphY(avgTemp, graphConfig.tempMin, graphConfig.tempMax) });
+        humPoints.push({ x, y: getGraphY(avgHum, graphConfig.humMin, graphConfig.humMax) });
+      });
+
+      const tempD = buildSmoothPath(tempPoints);
+      const humD = buildSmoothPath(humPoints);
+
+      tempPath.setAttribute('d', tempD);
+      humPath.setAttribute('d', humD);
+
+      if (tempFill) {
+        const last = tempPoints[tempPoints.length - 1];
+        const first = tempPoints[0];
+        tempFill.setAttribute('d', `${tempD} L${last.x},${graphConfig.graphBottom} L${first.x},${graphConfig.graphBottom} Z`);
+      }
+      if (humFill) {
+        const last = humPoints[humPoints.length - 1];
+        const first = humPoints[0];
+        humFill.setAttribute('d', `${humD} L${last.x},${graphConfig.graphBottom} L${first.x},${graphConfig.graphBottom} Z`);
+      }
+
+      if (tempDot) {
+        const lp = tempPoints[tempPoints.length - 1];
+        tempDot.setAttribute('cx', lp.x); tempDot.setAttribute('cy', lp.y); tempDot.setAttribute('opacity', '1');
+      }
+      if (humDot) {
+        const lp = humPoints[humPoints.length - 1];
+        humDot.setAttribute('cx', lp.x); humDot.setAttribute('cy', lp.y); humDot.setAttribute('opacity', '1');
+      }
+
+      console.log(`[Graph] Drawn with ${filled.length} averaged buckets`);
+    }
+
+    function updateTimelineLabels() {
+      const labelsContainer = document.getElementById('timelineLabels');
+      if (!labelsContainer) return;
+      const val = graphConfig.TIME_PERIOD_MINUTES >= 60 ? graphConfig.TIME_PERIOD_MINUTES / 60 : graphConfig.TIME_PERIOD_MINUTES;
+      const unit = graphConfig.TIME_PERIOD_MINUTES >= 60 ? 'h' : 'm';
+      const step = val / 6;
+      labelsContainer.innerHTML = '';
+      for (let i = 0; i <= 6; i++) {
+        const label = i === 6 ? 'Now' : `-${Math.round((val - i * step) * 10) / 10}${unit}`;
+        labelsContainer.innerHTML += `<span>${label}</span>`;
+      }
+    }
+
+    updateTimelineLabels();
+
+    // ==================== DATABASE LISTENERS ====================
+
+    if (database) {
+      let latestTimestampMs = 0;
+
+      // STEP 1: Load full historical batch, collect all readings, find latest timestamp, build buckets
+      database.ref(sensorPath).limitToLast(1500).once('value', (snapshot) => {
+        const allReadings = [];
+        snapshot.forEach((child) => {
+          const d = child.val();
+          if (d && typeof d.temperature === 'number' && typeof d.humidity === 'number' && d.timestamp) {
+            const tsMs = new Date(d.timestamp).getTime();
+            if (!isNaN(tsMs)) {
+              allReadings.push({ temperature: d.temperature, humidity: d.humidity, timestampMs: tsMs });
+              if (tsMs > latestTimestampMs) latestTimestampMs = tsMs;
+            }
+          }
+        });
+
+        if (allReadings.length === 0) {
+          console.warn('[Graph] No valid historical readings found in database');
+          return;
+        }
+
+        console.log(`[Graph] Loaded ${allReadings.length} readings. Latest: ${new Date(latestTimestampMs).toISOString()}`);
+
+        // Build fixed buckets anchored to the latest data timestamp
+        graphBuckets = buildBucketsFromReadings(allReadings, latestTimestampMs);
+        const nonEmptyCount = graphBuckets.filter(b => b.count > 0).length;
+        console.log(`[Graph] ${nonEmptyCount} / ${graphConfig.BUCKET_COUNT} buckets have data`);
+        redrawGraph();
+      });
+
+      // STEP 2: Real-time listener — update gauge + ingest new point into live buckets
+      database.ref(sensorPath).limitToLast(1).on('child_added', (snapshot) => {
+        const d = snapshot.val();
+        if (d && typeof d.temperature === 'number' && typeof d.humidity === 'number') {
+          const ts = d.timestamp ? new Date(d.timestamp).getTime() : Date.now();
+
+          updateTemperatureGauge(d.temperature);
+          updateHumidityGauge(d.humidity);
+
+          // Insert into the correct live bucket if window is initialized
+          if (graphBuckets.length > 0 && ts > latestTimestampMs) {
+            latestTimestampMs = ts;
+            const windowMs = graphConfig.TIME_PERIOD_MINUTES * 60 * 1000;
+            const windowStartMs = ts - windowMs;
+            // Ingest into existing buckets in range
+            const bucketMs = windowMs / graphConfig.BUCKET_COUNT;
+            const idx = Math.floor((ts - graphBuckets[0].startMs) / bucketMs);
+            if (idx >= 0 && idx < graphBuckets.length) {
+              graphBuckets[idx].tempSum += d.temperature;
+              graphBuckets[idx].humSum += d.humidity;
+              graphBuckets[idx].count++;
+              redrawGraph();
+              console.log('[Graph] Real-time point added to bucket', idx);
+            }
+          }
+        }
+      }, (err) => console.error('[Graph] Listener error:', err));
+    }
+
+
+
+
+
+    // ==================== MANUAL MODE CONTROLS + DEVICE TOGGLES ====================
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const autoBtn = document.getElementById('climateAutoBtn');
+      const manualBtn = document.getElementById('climateManualBtn');
+      const temperatureSlider = document.getElementById('temperatureSlider');
+      const humiditySlider = document.getElementById('humiditySlider');
+      const temperatureDisplay = document.getElementById('temperatureDisplay');
+      const humidityDisplay = document.getElementById('humidityDisplay');
+
+      // Toggle UI elements
+      const fanToggle = document.getElementById('fanToggle');
+      const fanThumb = document.getElementById('fanThumb');
+      const fanStatusText = document.getElementById('fanStatusText');
+      const humToggle = document.getElementById('humToggle');
+      const humThumb = document.getElementById('humThumb');
+      const humStatusText = document.getElementById('humStatusText');
+
+      // Firebase refs
+      const envRef      = database ? database.ref('/envData') : null;
+      const systemModeRef = database ? database.ref('/envData/systemMode') : null;
+      const fanRef      = database ? database.ref('/climate/fan') : null;
+      const humRef      = database ? database.ref('/climate/humidifier') : null;
+
+      // Internal state
+      let currentMode = 'automatic';  // 'automatic' | 'manual'
+      let fanState = false;         // true = on
+      let humState = false;         // true = on
+
+      // Debounce timers (prevent rapid Firebase writes)
+      let fanDebounceTimer = null;
+      let humDebounceTimer = null;
+      const DEBOUNCE_MS = 500;
+
+      // ── Toggle visual helpers ──────────────────────────────────────────────
+      function applyToggleUI(thumb, track, statusEl, isOn, color) {
+        if (isOn) {
+          track.classList.remove('bg-surface-variant', 'opacity-50', 'cursor-not-allowed');
+          track.classList.add(color);
+          thumb.classList.remove('bg-outline', 'left-1');
+          thumb.classList.add('bg-white', 'left-7');
+          statusEl.textContent = 'ON';
+          statusEl.className = 'text-' + (color === 'bg-secondary' ? 'secondary' : 'primary');
+        } else {
+          track.classList.remove(color);
+          track.classList.add('bg-surface-variant');
+          thumb.classList.remove('bg-white', 'left-7');
+          thumb.classList.add('bg-outline', 'left-1');
+          statusEl.textContent = 'OFF';
+          statusEl.className = 'text-on-surface-variant';
+        }
+      }
+
+      function setFanUI(isOn) {
+        applyToggleUI(fanThumb, fanToggle, fanStatusText, isOn, 'bg-primary');
+      }
+
+      function setHumUI(isOn) {
+        applyToggleUI(humThumb, humToggle, humStatusText, isOn, 'bg-secondary');
+      }
+
+      // ── Write to Firebase (debounced) ──────────────────────────────────────
+      function writeFanState(isOn) {
+        if (!fanRef || currentMode !== 'manual') return;
+        clearTimeout(fanDebounceTimer);
+        fanDebounceTimer = setTimeout(() => {
+          const val = isOn ? 'on' : 'off';
+          fanRef.set({ value: val })
+            .then(() => console.log('[Firebase] /climate/fan →', val))
+            .catch(e => console.error('[Firebase] Fan write error:', e));
+        }, DEBOUNCE_MS);
+      }
+
+      function writeHumState(isOn) {
+        if (!humRef || currentMode !== 'manual') return;
+        clearTimeout(humDebounceTimer);
+        humDebounceTimer = setTimeout(() => {
+          const val = isOn ? 'on' : 'off';
+          humRef.set({ value: val })
+            .then(() => console.log('[Firebase] /climate/humidifier →', val))
+            .catch(e => console.error('[Firebase] Humidifier write error:', e));
+        }, DEBOUNCE_MS);
+      }
+
+      // ── Enable / disable toggle buttons ────────────────────────────────────
+      function setTogglesEnabled(enabled) {
+        [fanToggle, humToggle].forEach(btn => {
+          if (enabled) {
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            btn.classList.add('cursor-pointer');
+            btn.title = 'Click to toggle';
+          } else {
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btn.classList.remove('cursor-pointer');
+            btn.title = 'Enable Manual mode to control';
+          }
+        });
+      }
+
+      // ── Force both devices OFF and write to Firebase ───────────────────────
+      function forceDevicesOff() {
+        fanState = false;
+        humState = false;
+        setFanUI(false);
+        setHumUI(false);
+        // Write OFF immediately (bypass normal debounce guard by temporarily
+        // allowing one write even in auto transition)
+        if (fanRef) {
+          fanRef.set({ value: 'off' })
+            .then(() => console.log('[Firebase] /climate/fan → off (auto mode)'))
+            .catch(e => console.error('[Firebase] Fan off error:', e));
+        }
+        if (humRef) {
+          humRef.set({ value: 'off' })
+            .then(() => console.log('[Firebase] /climate/humidifier → off (auto mode)'))
+            .catch(e => console.error('[Firebase] Humidifier off error:', e));
+        }
+      }
+
+      // ── Toggle click handlers ───────────────────────────────────────────────
+      fanToggle.addEventListener('click', () => {
+        if (currentMode !== 'manual') return;
+        fanState = !fanState;
+        setFanUI(fanState);
+        writeFanState(fanState);
+      });
+
+      humToggle.addEventListener('click', () => {
+        if (currentMode !== 'manual') return;
+        humState = !humState;
+        setHumUI(humState);
+        writeHumState(humState);
+      });
+
+      // ── Target slider handlers (unchanged behavior) ────────────────────────
+      const handleTemperatureChange = () => {
+        temperatureDisplay.textContent = temperatureSlider.value + '°C';
+      };
+      const handleTemperaturePush = () => {
+        if (envRef) {
+          envRef.update({ targetTemperature: parseFloat(temperatureSlider.value) });
+          console.log('[Firebase] Target Temperature updated:', temperatureSlider.value);
+        }
+      };
+      const handleHumidityChange = () => {
+        humidityDisplay.textContent = humiditySlider.value + '%';
+      };
+      const handleHumidityPush = () => {
+        if (envRef) {
+          envRef.update({ targetHumidity: parseFloat(humiditySlider.value) });
+          console.log('[Firebase] Target Humidity updated:', humiditySlider.value);
+        }
+      };
+
+      // ── Load initial target slider values ──────────────────────────────────
+      if (envRef) {
+        envRef.once('value').then((snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            if (data.targetTemperature !== undefined) {
+              temperatureSlider.value = data.targetTemperature;
+              temperatureDisplay.textContent = data.targetTemperature + '°C';
+            }
+            if (data.targetHumidity !== undefined) {
+              humiditySlider.value = data.targetHumidity;
+              humidityDisplay.textContent = data.targetHumidity + '%';
+            }
+          }
+        }).catch(err => console.error('[Firebase] Failed to load initial targets:', err));
+      }
+
+      // ── Read/listen to System Mode from Firebase ───────────────────────────
+      if (systemModeRef) {
+        systemModeRef.on('value', (snapshot) => {
+          const mode = snapshot.val() || 'automatic';
+          updateButtonStates(mode);
+        });
+      }
+
+      // ── Write Mode to Firebase on button click ─────────────────────────────
+      autoBtn.addEventListener('click', () => {
+        if (systemModeRef) systemModeRef.set('automatic');
+      });
+      manualBtn.addEventListener('click', () => {
+        if (systemModeRef) systemModeRef.set('manual');
+      });
+      const updateButtonStates = (activeMode) => {
+        currentMode = activeMode;
+
+        autoBtn.classList.remove('bg-primary', 'text-on-primary', 'shadow-lg', 'shadow-primary/20');
+        manualBtn.classList.remove('bg-primary', 'text-on-primary', 'shadow-lg', 'shadow-primary/20');
+        autoBtn.classList.add('text-on-surface-variant', 'hover:text-on-surface');
+        manualBtn.classList.add('text-on-surface-variant', 'hover:text-on-surface');
+
+        if (activeMode === 'automatic') {
+          autoBtn.classList.remove('text-on-surface-variant', 'hover:text-on-surface');
+          autoBtn.classList.add('bg-primary', 'text-on-primary', 'shadow-lg', 'shadow-primary/20');
+          temperatureSlider.disabled = true;
+          humiditySlider.disabled = true;
+          temperatureSlider.removeEventListener('input', handleTemperatureChange);
+          humiditySlider.removeEventListener('input', handleHumidityChange);
+          temperatureSlider.removeEventListener('change', handleTemperaturePush);
+          humiditySlider.removeEventListener('change', handleHumidityPush);
+          // Disable & force-off both devices
+          setTogglesEnabled(false);
+          forceDevicesOff();
+        } else {
+          manualBtn.classList.remove('text-on-surface-variant', 'hover:text-on-surface');
+          manualBtn.classList.add('bg-primary', 'text-on-primary', 'shadow-lg', 'shadow-primary/20');
+          temperatureSlider.disabled = false;
+          humiditySlider.disabled = false;
+          temperatureSlider.addEventListener('input', handleTemperatureChange);
+          humiditySlider.addEventListener('input', handleHumidityChange);
+          temperatureSlider.addEventListener('change', handleTemperaturePush);
+          humiditySlider.addEventListener('change', handleHumidityPush);
+          // Enable toggle buttons
+          setTogglesEnabled(true);
+        }
+      };
+
+      // Initialise fallback if Firebase is disconnected
+      setFanUI(false);
+      setHumUI(false);
+    });
+  </script>
+  <!-- Bottom Navigation Bar (Mobile) -->
+  <nav
+    class="fixed bottom-0 w-full z-50 bg-slate-950/80 backdrop-blur-xl md:hidden flex justify-around items-center py-4 px-6 border-t border-outline-variant/10">
+    <a href="index.html" class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">dashboard</span>
+      <span class="text-[10px] font-bold">Overview</span>
+    </a>
+    <a href="climate.html" class="flex flex-col items-center gap-1 text-cyan-400">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">thermostat</span>
+      <span class="text-[10px] font-bold">Climate</span>
+    </a>
+    <a href="Irrigation.html" class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">water_drop</span>
+      <span class="text-[10px] font-bold">Irrigation</span>
+    </a>
+    <a href="Nutrients.html" class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">science</span>
+      <span class="text-[10px] font-bold">Nutrients</span>
+    </a>
+    <a href="history.html" class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">timeline</span>
+      <span class="text-[10px] font-bold">History</span>
+    </a>
+  </nav>
+</body>
+
+</html>

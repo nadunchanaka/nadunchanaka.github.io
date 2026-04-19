@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-fixed": "#00e3fd",
+            "surface-container-lowest": "#000000",
+            "surface-container-low": "#111417",
+            "primary-dim": "#00d4ec",
+            "on-secondary-fixed-variant": "#006a34",
+            "tertiary-fixed-dim": "#eeb200",
+            "tertiary-dim": "#eeb200",
+            "secondary-fixed": "#83fba5",
+            "on-tertiary-container": "#563e00",
+            "outline": "#747579",
+            "error-container": "#9f0519",
+            "surface": "#0c0e11",
+            "on-primary-container": "#004d57",
+            "tertiary-container": "#ffbf00",
+            "primary": "#81ecff",
+            "surface-dim": "#0c0e11",
+            "on-primary": "#005762",
+            "background": "#0c0e11",
+            "primary-container": "#00e3fd",
+            "surface-container-high": "#1d2024",
+            "on-primary-fixed-variant": "#005762",
+            "on-secondary": "#005f2e",
+            "tertiary": "#ffd16f",
+            "on-background": "#f9f9fd",
+            "secondary-container": "#006d36",
+            "error": "#ff716c",
+            "on-error": "#490006",
+            "on-tertiary-fixed-variant": "#614700",
+            "surface-bright": "#292c31",
+            "secondary": "#83fba5",
+            "surface-container-highest": "#23262a",
+            "secondary-fixed-dim": "#75ec98",
+            "inverse-surface": "#f9f9fd",
+            "on-surface": "#f9f9fd",
+            "primary-fixed-dim": "#00d4ec",
+            "secondary-dim": "#75ec98",
+            "outline-variant": "#46484b",
+            "on-secondary-container": "#e3ffe4",
+            "surface-tint": "#81ecff",
+            "error-dim": "#d7383b",
+            "surface-container": "#171a1d",
+            "tertiary-fixed": "#ffbf00",
+            "inverse-on-surface": "#535559",
+            "surface-variant": "#23262a",
+            "on-tertiary-fixed": "#3d2b00",
+            "on-secondary-fixed": "#004a22",
+            "on-error-container": "#ffa8a3",
+            "on-tertiary": "#614700",
+            "on-surface-variant": "#aaabaf",
+            "inverse-primary": "#006976",
+            "on-primary-fixed": "#003840"
+          },
+          fontFamily: {
+            "headline": ["Space Grotesk"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+
+<body class="bg-surface text-on-surface font-body selection:bg-primary/30">
+  <!-- Side Navigation Bar -->
+  <aside class="fixed left-0 h-full w-64 bg-slate-900 flex flex-col py-6 z-50">
+    <div class="px-6 mb-8">
+      <h1 class="text-cyan-400 font-bold font-headline text-xl tracking-tighter">Greenhouse OS</h1>
+      <p class="text-slate-500 text-xs font-medium uppercase tracking-widest mt-1">Precision IoT</p>
+    </div>
+    <nav class="flex-1 space-y-1">
+      <a class="text-slate-500 flex items-center gap-3 px-4 py-3 mx-2 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition-all active:translate-x-1 duration-150 font-medium text-sm"
+        href="index.html">
+        <span class="material-symbols-outlined">dashboard</span>
+        Overview
+      </a>
+      <a class="text-slate-500 flex items-center gap-3 px-4 py-3 mx-2 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition-all active:translate-x-1 duration-150 font-medium text-sm"
+        href="climate.html">
+        <span class="material-symbols-outlined">thermostat</span>
+        Climate
+      </a>
+      <a class="text-slate-500 flex items-center gap-3 px-4 py-3 mx-2 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition-all active:translate-x-1 duration-150 font-medium text-sm"
+        href="Irrigation.html">
+        <span class="material-symbols-outlined">water_drop</span>
+        Irrigation
+      </a>
+      <a class="text-slate-500 flex items-center gap-3 px-4 py-3 mx-2 rounded-lg hover:bg-slate-800 hover:text-slate-100 transition-all active:translate-x-1 duration-150 font-medium text-sm"
+        href="Nutrients.html">
+        <span class="material-symbols-outlined">science</span>
+        Nutrients
+      </a>
+      <!-- Active Tab: History -->
+      <a class="bg-cyan-500/10 text-cyan-400 border-r-4 border-cyan-400 flex items-center gap-3 px-4 py-3 mx-2 font-medium text-sm transition-all active:translate-x-1 duration-150"
+        href="history.html">
+        <span class="material-symbols-outlined">timeline</span>
+        History
+      </a>
+    </nav>
+    <div class="px-4 mt-auto space-y-4">
+      <button
+        class="w-full py-3 px-4 bg-primary text-on-primary font-bold rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity active:scale-95">
+        <span class="material-symbols-outlined text-[20px]">add</span>
+        Add Device
+      </button>
+      <div class="space-y-1">
+        <a class="text-slate-500 flex items-center gap-3 px-4 py-2 hover:text-slate-100 transition-colors text-xs font-medium uppercase tracking-wider"
+          href="#">
+          <span class="material-symbols-outlined text-[18px]">help</span>
+          Support
+        </a>
+        <a class="text-slate-500 flex items-center gap-3 px-4 py-2 hover:text-slate-100 transition-colors text-xs font-medium uppercase tracking-wider"
+          href="#">
+          <span class="material-symbols-outlined text-[18px]">description</span>
+          Logs
+        </a>
+      </div>
+    </div>
+  </aside>
+  <!-- Top App Bar -->
+  <header
+    class="fixed top-0 left-64 right-0 z-40 bg-slate-950/60 backdrop-blur-xl shadow-2xl shadow-cyan-900/10 h-16 flex items-center justify-between px-8">
+    <div class="flex items-center gap-8">
+      <h2 class="font-headline font-bold text-slate-100 text-lg">History &amp; Analytics</h2>
+      <div class="flex items-center gap-4 border-l border-slate-800 pl-8">
+        <span class="text-cyan-400 font-medium text-sm border-b-2 border-cyan-400 pb-1 px-1 cursor-pointer">7
+          Days</span>
+        <span
+          class="text-slate-400 font-medium text-sm hover:text-cyan-300 transition-colors cursor-pointer pb-1 px-1">30
+          Days</span>
+        <span
+          class="text-slate-400 font-medium text-sm hover:text-cyan-300 transition-colors cursor-pointer pb-1 px-1">Quarterly</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-6">
+      <div class="flex gap-4">
+        <button
+          class="flex items-center gap-2 text-slate-100 bg-surface-container px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-surface-container-high transition-colors active:scale-95">
+          <span class="material-symbols-outlined text-[18px]">download</span>
+          CSV
+        </button>
+        <button
+          class="flex items-center gap-2 text-slate-100 bg-surface-container px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-surface-container-high transition-colors active:scale-95">
+          <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+          PDF
+        </button>
+      </div>
+      <div class="flex items-center gap-4 text-slate-400 border-l border-slate-800 pl-6">
+        <span
+          class="material-symbols-outlined cursor-pointer hover:text-cyan-400 transition-colors">notifications</span>
+        <span class="material-symbols-outlined cursor-pointer hover:text-cyan-400 transition-colors">settings</span>
+        <div class="w-8 h-8 rounded-full overflow-hidden border border-cyan-500/30">
+          <img alt="User Avatar" class="w-full h-full object-cover"
+            data-alt="professional portrait of a technologist with short hair and modern glasses in soft studio lighting"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfodRV0e4PcNKvkogzAoHWmOJrdSG4spmWInv4pK0R-tinsA14YUNIBivyVteS8lK3Qw1T_VrptLbfZeUniz7bRDdWQHtAJGlNzq2vXjBjFPMVrkEy9DlK50fXGANz9mCi69YZIdL-ES9jBihPOzzkQDHo1D67rlkyolyvPlp0tPOdRL0Mv9d5n_b1cZLRj5tRVd6rVCFAPz4Lm-Gv-ODFT77MlCcdobYVo9nR94Uj9gcUSXmxBfMuoyhuIIRhOq8xbMS-4cyYfwIy" />
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Main Content Area -->
+  <main class="ml-64 pt-24 p-8 min-h-screen">
+    <!-- Bento Grid Top Row: Stats Summary -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <!-- Avg Temp -->
+      <div class="bg-surface-container-low p-6 rounded-xl relative overflow-hidden group">
+        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+          <span class="material-symbols-outlined text-6xl">thermostat</span>
+        </div>
+        <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">Average Temp</p>
+        <div class="flex items-baseline gap-2">
+          <h3 id="histAvgTemp" class="font-headline text-4xl font-bold text-on-surface">--<span
+              class="text-lg font-normal ml-1">°C</span></h3>
+        </div>
+        <div class="mt-4 h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+          <div id="histTempBar" class="h-full bg-gradient-to-r from-primary to-primary-dim" style="width:0%"></div>
+        </div>
+      </div>
+      <!-- Max Humidity -->
+      <div class="bg-surface-container-low p-6 rounded-xl relative overflow-hidden group">
+        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+          <span class="material-symbols-outlined text-6xl">humidity_percentage</span>
+        </div>
+        <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">Average Humidity</p>
+        <div class="flex items-baseline gap-2">
+          <h3 id="histAvgHum" class="font-headline text-4xl font-bold text-on-surface">--<span
+              class="text-lg font-normal ml-1">%</span></h3>
+        </div>
+        <div class="mt-4 h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+          <div id="histHumBar" class="h-full bg-gradient-to-r from-secondary to-on-secondary-fixed-variant"
+            style="width:0%"></div>
+        </div>
+      </div>
+      <!-- Vapor Pressure Deficit -->
+      <div class="bg-surface-container-low p-6 rounded-xl relative overflow-hidden group">
+        <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+          <span class="material-symbols-outlined text-6xl">cloud</span>
+        </div>
+        <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">Vapor Pressure Deficit</p>
+        <div class="flex items-baseline gap-2">
+          <h3 id="histAvgVPD" class="font-headline text-4xl font-bold text-on-surface">--<span
+              class="text-lg font-normal ml-1">kPa</span></h3>
+        </div>
+        <div class="mt-4 h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
+          <div id="histVPDBar" class="h-full bg-gradient-to-r from-tertiary to-tertiary-dim" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Main Multi-Series Analytics Chart -->
+    <div class="bg-surface-container p-8 rounded-xl mb-8 relative">
+      <div class="flex justify-between items-center mb-6">
+        <div>
+          <h4 class="font-headline text-xl font-bold">Atmospheric Telemetry</h4>
+          <p class="text-slate-500 text-sm mt-1">Multi-series comparison across primary growth parameters</p>
+        </div>
+        <div class="flex gap-6">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-primary ring-4 ring-primary/10"></span>
+            <span class="text-xs font-medium text-slate-300">Temperature</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-secondary ring-4 ring-secondary/10"></span>
+            <span class="text-xs font-medium text-slate-300">Humidity</span>
+          </div>
+        </div>
+      </div>
+      <div class="w-full h-[360px] relative">
+        <svg id="historyGraphSVG" class="w-full h-full overflow-visible" preserveAspectRatio="none"
+          viewBox="0 0 1000 340">
+          <defs>
+            <!-- Gradient fills -->
+            <linearGradient id="hg-tempFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#81ecff" stop-opacity="0.30" />
+              <stop offset="100%" stop-color="#81ecff" stop-opacity="0" />
+            </linearGradient>
+            <linearGradient id="hg-humFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#83fba5" stop-opacity="0.22" />
+              <stop offset="100%" stop-color="#83fba5" stop-opacity="0" />
+            </linearGradient>
+            <!-- Glow filters -->
+            <filter id="hg-tempGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="hg-humGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id="hg-co2Glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          <!-- Grid lines -->
+          <line stroke="#23262a" stroke-width="1" x1="0" x2="1000" y1="68" y2="68" />
+          <line stroke="#23262a" stroke-width="1" x1="0" x2="1000" y1="136" y2="136" />
+          <line stroke="#23262a" stroke-width="1" x1="0" x2="1000" y1="204" y2="204" />
+          <line stroke="#23262a" stroke-width="1" x1="0" x2="1000" y1="272" y2="272" />
+          <!-- Shaded fill areas -->
+          <path id="hg-tempFillPath" d="" fill="url(#hg-tempFill)" />
+          <path id="hg-humFillPath" d="" fill="url(#hg-humFill)" />
+          <path id="hg-tempPath" d="" fill="none" stroke="#81ecff" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round" filter="url(#hg-tempGlow)" />
+          <path id="hg-humPath" d="" fill="none" stroke="#83fba5" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" stroke-dasharray="6 3" filter="url(#hg-humGlow)" />
+          <!-- Live dots -->
+          <circle id="hg-tempDot" r="5" fill="#81ecff" stroke="#0c0e11" stroke-width="2" opacity="0" />
+          <circle id="hg-humDot" r="4" fill="#83fba5" stroke="#0c0e11" stroke-width="2" opacity="0" />
+        </svg>
+        <!-- X-Axis Labels -->
+        <div id="historyTimelineLabels"
+          class="flex justify-between mt-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+          <span>-24m</span><span>-20m</span><span>-16m</span><span>-12m</span><span>-8m</span><span>-4m</span><span>Now</span>
+        </div>
+      </div>
+    </div>
+    <!-- Bottom Section: Dual Tables -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Critical Events -->
+      <section>
+        <div class="flex items-center justify-between mb-4">
+          <h5 class="font-headline font-bold text-slate-100 flex items-center gap-2">
+            <span class="material-symbols-outlined text-error">warning</span>
+            Critical Events
+          </h5>
+          <button
+            class="text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors uppercase tracking-widest">View
+            All</button>
+        </div>
+        <div class="bg-surface-container-low rounded-xl overflow-hidden">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-surface-container-high/50 text-slate-400 text-[10px] uppercase font-bold tracking-widest">
+              <tr>
+                <th class="px-6 py-4">Event Type</th>
+                <th class="px-6 py-4">Status</th>
+                <th class="px-6 py-4">Timestamp</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-surface-variant/30">
+              <tr class="hover:bg-surface-bright/20 transition-colors group">
+                <td class="px-6 py-4 font-medium text-slate-200">Temp Threshold Overrun</td>
+                <td class="px-6 py-4">
+                  <span
+                    class="bg-error/10 text-error px-2 py-0.5 rounded text-[10px] font-bold border border-error/20">CRITICAL</span>
+                </td>
+                <td class="px-6 py-4 text-slate-500 font-mono text-xs">Today, 04:22 PM</td>
+              </tr>
+              <tr class="hover:bg-surface-bright/20 transition-colors group">
+                <td class="px-6 py-4 font-medium text-slate-200">Irrigation Valve Failure</td>
+                <td class="px-6 py-4">
+                  <span
+                    class="bg-error/10 text-error px-2 py-0.5 rounded text-[10px] font-bold border border-error/20">CRITICAL</span>
+                </td>
+                <td class="px-6 py-4 text-slate-500 font-mono text-xs">Oct 24, 09:12 AM</td>
+              </tr>
+              <tr class="hover:bg-surface-bright/20 transition-colors group">
+                <td class="px-6 py-4 font-medium text-slate-200">CO2 Sensor Offline</td>
+                <td class="px-6 py-4">
+                  <span
+                    class="bg-tertiary/10 text-tertiary px-2 py-0.5 rounded text-[10px] font-bold border border-tertiary/20">WARNING</span>
+                </td>
+                <td class="px-6 py-4 text-slate-500 font-mono text-xs">Oct 23, 11:45 PM</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <!-- Alert History -->
+      <section>
+        <div class="flex items-center justify-between mb-4">
+          <h5 class="font-headline font-bold text-slate-100 flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">history</span>
+            Alert History
+          </h5>
+          <button
+            class="text-xs font-bold text-cyan-400 hover:text-cyan-300 transition-colors uppercase tracking-widest">Refresh</button>
+        </div>
+        <div class="bg-surface-container-low rounded-xl overflow-hidden">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-surface-container-high/50 text-slate-400 text-[10px] uppercase font-bold tracking-widest">
+              <tr>
+                <th class="px-6 py-4">Action Taken</th>
+                <th class="px-6 py-4">System Response</th>
+                <th class="px-6 py-4">Resolved</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-surface-variant/30">
+              <tr class="hover:bg-surface-bright/20 transition-colors group">
+                <td class="px-6 py-4 font-medium text-slate-200">Auto-Ventilation Init</td>
+                <td class="px-6 py-4 text-slate-400">Fans active @ 100%</td>
+                <td class="px-6 py-4 text-secondary">
+                  <span class="material-symbols-outlined text-sm"
+                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                </td>
+              </tr>
+              <tr class="hover:bg-surface-bright/20 transition-colors group">
+                <td class="px-6 py-4 font-medium text-slate-200">Emergency Irrigation</td>
+                <td class="px-6 py-4 text-slate-400">Tank B-4 Dispatched</td>
+                <td class="px-6 py-4 text-secondary">
+                  <span class="material-symbols-outlined text-sm"
+                    style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                </td>
+              </tr>
+              <tr class="hover:bg-surface-bright/20 transition-colors group">
+                <td class="px-6 py-4 font-medium text-slate-200">Manual Override Engaged</td>
+                <td class="px-6 py-4 text-slate-400">User ID: admin_01</td>
+                <td class="px-6 py-4 text-tertiary">
+                  <span class="material-symbols-outlined text-sm">pending</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+  <!-- Connection Status Chip -->
+  <div class="fixed bottom-8 right-8 z-[60]">
+    <div id="connStatusChip" class="border-l-4 p-4 rounded-lg shadow-2xl flex items-center gap-4 transition-all duration-500
+    bg-surface-container-high border-amber-400">
+      <div id="connIconWrap" class="p-2 rounded-full bg-amber-400/20">
+        <span id="connIcon" class="material-symbols-outlined text-[20px] text-amber-400">warning</span>
+      </div>
+      <div>
+        <p id="connLabel" class="text-xs font-bold text-slate-100">No Connection</p>
+        <p id="connSub" class="text-[10px] text-slate-400 uppercase tracking-widest">Connecting to database&hellip;</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==================== FIREBASE INITIALIZATION ====================
+    const firebaseConfig = {
+      apiKey: "AIzaSyCwBriGgolF2ezrNTGaqgKFMrZY2efxIS4",
+      authDomain: "green-house-iot-ab0c9.firebaseapp.com",
+      databaseURL: "https://green-house-iot-ab0c9-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "green-house-iot-ab0c9",
+      storageBucket: "green-house-iot-ab0c9.firebasestorage.app",
+      messagingSenderId: "1051399417408",
+      appId: "1:1051399417408:web:fe3db669dd390ca8db39a5"
+    };
+
+    let database;
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      database = firebase.database();
+      console.log('[Firebase] History page initialized');
+    } catch (e) {
+      console.error('[Firebase] Init failed:', e.message);
+    }
+
+    const sensorPath = '/sensor_readings';
+
+    // ==================== GRAPH ENGINE ====================
+    const hgConfig = {
+      TIME_PERIOD_MINUTES: 24,
+      BUCKET_COUNT: 48,
+      svgWidth: 1000,
+      svgHeight: 340,
+      graphTop: 10,
+      graphBottom: 330,
+      tempMin: 0, tempMax: 50,
+      humMin: 0, humMax: 100,
+      co2Min: 0, co2Max: 2000,  // CO2 scaled to 0-100% of this range
+    };
+
+    let hgBuckets = [];   // { startMs, endMs, tempSum, humSum, co2Sum, count }
+
+    function hgY(value, min, max) {
+      const pct = Math.max(0, Math.min(1, (value - min) / (max - min)));
+      return hgConfig.graphBottom - pct * (hgConfig.graphBottom - hgConfig.graphTop);
+    }
+
+    function hgX(i, total) {
+      return (i / Math.max(total - 1, 1)) * hgConfig.svgWidth;
+    }
+
+    function hgSmoothPath(points) {
+      if (!points.length) return '';
+      if (points.length === 1) return `M${points[0].x},${points[0].y}`;
+      let d = `M${points[0].x},${points[0].y}`;
+      for (let i = 1; i < points.length; i++) {
+        const cpX = (points[i - 1].x + points[i].x) / 2;
+        d += ` C${cpX},${points[i - 1].y} ${cpX},${points[i].y} ${points[i].x},${points[i].y}`;
+      }
+      return d;
+    }
+
+    function hgBuildBuckets(readings, latestMs) {
+      const windowMs = hgConfig.TIME_PERIOD_MINUTES * 60 * 1000;
+      const bucketMs = windowMs / hgConfig.BUCKET_COUNT;
+      const startMs = latestMs - windowMs;
+      const buckets = [];
+      for (let i = 0; i < hgConfig.BUCKET_COUNT; i++) {
+        buckets.push({ startMs: startMs + i * bucketMs, endMs: startMs + (i + 1) * bucketMs, tempSum: 0, humSum: 0, co2Sum: 0, count: 0 });
+      }
+      readings.forEach(({ temperature, humidity, co2, timestampMs }) => {
+        if (timestampMs < startMs || timestampMs > latestMs) return;
+        const idx = Math.min(Math.floor((timestampMs - startMs) / bucketMs), hgConfig.BUCKET_COUNT - 1);
+        if (idx >= 0) {
+          buckets[idx].tempSum += temperature;
+          buckets[idx].humSum += humidity;
+          buckets[idx].co2Sum += (co2 || 0);
+          buckets[idx].count++;
+        }
+      });
+      return buckets;
+    }
+
+    function hgRedraw() {
+      const tempPath = document.getElementById('hg-tempPath');
+      const humPath = document.getElementById('hg-humPath');
+      const tempFill = document.getElementById('hg-tempFillPath');
+      const humFill = document.getElementById('hg-humFillPath');
+      const tempDot = document.getElementById('hg-tempDot');
+      const humDot = document.getElementById('hg-humDot');
+      if (!tempPath || !humPath) return;
+
+      const filled = hgBuckets.filter(b => b.count > 0);
+      if (filled.length < 2) { console.warn('[History Graph] Not enough data:', filled.length); return; }
+
+      const tempPts = [], humPts = [];
+      filled.forEach((b, i) => {
+        const x = hgX(i, filled.length);
+        tempPts.push({ x, y: hgY(b.tempSum / b.count, hgConfig.tempMin, hgConfig.tempMax) });
+        humPts.push({ x, y: hgY(b.humSum / b.count, hgConfig.humMin, hgConfig.humMax) });
+      });
+
+      const td = hgSmoothPath(tempPts), hd = hgSmoothPath(humPts);
+      tempPath.setAttribute('d', td); humPath.setAttribute('d', hd);
+
+      const B = hgConfig.graphBottom;
+      if (tempFill) tempFill.setAttribute('d', `${td} L${tempPts[tempPts.length - 1].x},${B} L${tempPts[0].x},${B} Z`);
+      if (humFill) humFill.setAttribute('d', `${hd} L${humPts[humPts.length - 1].x},${B} L${humPts[0].x},${B} Z`);
+
+      const setDot = (el, pts) => { if (el) { const lp = pts[pts.length - 1]; el.setAttribute('cx', lp.x); el.setAttribute('cy', lp.y); el.setAttribute('opacity', '1'); } };
+      setDot(tempDot, tempPts); setDot(humDot, humPts);
+    }
+
+    // ==================== STAT CARD UPDATER ====================
+    function updateStatCards(readings) {
+      if (!readings.length) return;
+      const avgTemp = readings.reduce((s, r) => s + r.temperature, 0) / readings.length;
+      const avgHum = readings.reduce((s, r) => s + r.humidity, 0) / readings.length;
+      
+      // Calculate Average VPD
+      let vpdSum = 0;
+      readings.forEach(r => {
+        const svp = 0.61078 * Math.exp((17.27 * r.temperature) / (r.temperature + 237.3));
+        const avp = svp * (r.humidity / 100);
+        vpdSum += (svp - avp);
+      });
+      const avgVPD = vpdSum / readings.length;
+
+      const tEl = document.getElementById('histAvgTemp');
+      const hEl = document.getElementById('histAvgHum');
+      const vEl = document.getElementById('histAvgVPD');
+      const tBar = document.getElementById('histTempBar');
+      const hBar = document.getElementById('histHumBar');
+      const vBar = document.getElementById('histVPDBar');
+
+      if (tEl) tEl.innerHTML = `${avgTemp.toFixed(1)}<span class="text-lg font-normal ml-1">°C</span>`;
+      if (hEl) hEl.innerHTML = `${Math.round(avgHum)}<span class="text-lg font-normal ml-1">%</span>`;
+      if (vEl) vEl.innerHTML = `${avgVPD.toFixed(2)}<span class="text-lg font-normal ml-1">kPa</span>`;
+      if (tBar) tBar.style.width = Math.min(100, (avgTemp / 50) * 100) + '%';
+      if (hBar) hBar.style.width = Math.min(100, avgHum) + '%';
+      if (vBar) vBar.style.width = Math.min(100, (avgVPD / 2.5) * 100) + '%';
+    }
+
+    // ==================== DATABASE LISTENER ====================
+    if (database) {
+      database.ref(sensorPath).limitToLast(1500).once('value', (snapshot) => {
+        const allReadings = [];
+        let latestMs = 0;
+        snapshot.forEach((child) => {
+          const d = child.val();
+          if (d && typeof d.temperature === 'number' && typeof d.humidity === 'number' && d.timestamp) {
+            const tsMs = new Date(d.timestamp).getTime();
+            if (!isNaN(tsMs)) {
+              allReadings.push({ temperature: d.temperature, humidity: d.humidity, timestampMs: tsMs });
+              if (tsMs > latestMs) latestMs = tsMs;
+            }
+          }
+        });
+        console.log(`[History Graph] ${allReadings.length} readings loaded. Latest: ${new Date(latestMs).toISOString()}`);
+        if (allReadings.length === 0) return;
+        hgBuckets = hgBuildBuckets(allReadings, latestMs);
+        updateStatCards(allReadings);
+        hgRedraw();
+      });
+
+      // Real-time updates (shift window and buckets if needed)
+      database.ref(sensorPath).limitToLast(1).on('child_added', (snapshot) => {
+        const d = snapshot.val();
+        if (d && typeof d.temperature === 'number' && d.timestamp) {
+          const ts = new Date(d.timestamp).getTime();
+          // If new data is outside the current window, rebuild buckets
+          let needsRebuild = false;
+          if (!hgBuckets.length) {
+            needsRebuild = true;
+          } else {
+            const windowMs = hgConfig.TIME_PERIOD_MINUTES * 60 * 1000;
+            const bucketMs = windowMs / hgConfig.BUCKET_COUNT;
+            const lastBucketEnd = hgBuckets[hgBuckets.length - 1].endMs;
+            if (ts > lastBucketEnd) {
+              needsRebuild = true;
+            }
+          }
+          if (needsRebuild) {
+            // Fetch the latest readings and rebuild buckets
+            database.ref(sensorPath).limitToLast(1500).once('value', (snap) => {
+              const allReadings = [];
+              let latestMs = 0;
+              snap.forEach((child) => {
+                const d2 = child.val();
+                if (d2 && typeof d2.temperature === 'number' && typeof d2.humidity === 'number' && d2.timestamp) {
+                  const tsMs = new Date(d2.timestamp).getTime();
+                  if (!isNaN(tsMs)) {
+                    allReadings.push({ temperature: d2.temperature, humidity: d2.humidity, co2: d2.co2 || 0, timestampMs: tsMs });
+                    if (tsMs > latestMs) latestMs = tsMs;
+                  }
+                }
+              });
+              hgBuckets = hgBuildBuckets(allReadings, latestMs);
+              updateStatCards(allReadings);
+              hgRedraw();
+            });
+          } else {
+            // Add to current bucket if within window
+            const windowMs = hgConfig.TIME_PERIOD_MINUTES * 60 * 1000;
+            const bucketMs = windowMs / hgConfig.BUCKET_COUNT;
+            const idx = Math.floor((ts - hgBuckets[0].startMs) / bucketMs);
+            if (idx >= 0 && idx < hgBuckets.length) {
+              hgBuckets[idx].tempSum += d.temperature;
+              hgBuckets[idx].humSum += d.humidity || 0;
+              hgBuckets[idx].co2Sum += d.co2 || 0;
+              hgBuckets[idx].count++;
+              hgRedraw();
+            }
+          }
+        }
+      });
+      // ==================== CONNECTION STATUS CHIP ====================
+      database.ref('.info/connected').on('value', (snap) => {
+        const isConnected = snap.val() === true;
+
+        const chip = document.getElementById('connStatusChip');
+        const iconWrap = document.getElementById('connIconWrap');
+        const icon = document.getElementById('connIcon');
+        const label = document.getElementById('connLabel');
+        const sub = document.getElementById('connSub');
+        if (!chip) return;
+
+        if (isConnected) {
+          // Connected state — cyan/green theme
+          chip.className = 'border-l-4 p-4 rounded-lg shadow-2xl flex items-center gap-4 transition-all duration-500 bg-surface-container-high border-cyan-400';
+          iconWrap.className = 'p-2 rounded-full bg-cyan-400/20';
+          icon.className = 'material-symbols-outlined text-[20px] text-cyan-400 animate-spin';
+          icon.style.animationDuration = '3s';
+          icon.textContent = 'sync';
+          label.textContent = 'Live Data Feed';
+          sub.textContent = 'green-house-iot-ab0c9 · Connected';
+        } else {
+          // Disconnected state — amber / warning theme
+          chip.className = 'border-l-4 p-4 rounded-lg shadow-2xl flex items-center gap-4 transition-all duration-500 bg-surface-container-high border-amber-400';
+          iconWrap.className = 'p-2 rounded-full bg-amber-400/20';
+          icon.className = 'material-symbols-outlined text-[20px] text-amber-400';
+          icon.style.animationDuration = '';
+          icon.textContent = 'warning';
+          label.textContent = 'No Connection';
+          sub.textContent = 'Database unreachable · Check network';
+        }
+      });
+    }
+  </script>
+  <!-- Bottom Navigation Bar (Mobile) -->
+  <nav
+    class="fixed bottom-0 w-full z-50 bg-slate-950/80 backdrop-blur-xl md:hidden flex justify-around items-center py-4 px-6 border-t border-outline-variant/10">
+    <a href="index.html" class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">dashboard</span>
+      <span class="text-[10px] font-bold">Overview</span>
+    </a>
+    <a href="climate.html" class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">thermostat</span>
+      <span class="text-[10px] font-bold">Climate</span>
+    </a>
+    <a href="Irrigation.html" class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">water_drop</span>
+      <span class="text-[10px] font-bold">Irrigation</span>
+    </a>
+    <a href="Nutrients.html" class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">science</span>
+      <span class="text-[10px] font-bold">Nutrients</span>
+    </a>
+    <a href="history.html" class="flex flex-col items-center gap-1 text-cyan-400">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">timeline</span>
+      <span class="text-[10px] font-bold">History</span>
+    </a>
+  </nav>
+</body>
+
+</html>
