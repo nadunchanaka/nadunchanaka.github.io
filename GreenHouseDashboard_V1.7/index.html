@@ -110,6 +110,36 @@
             stroke-dashoffset: 70;
             transition: stroke-dashoffset 1s ease-out;
         }
+
+        @keyframes waves {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .animate-waves {
+            animation: waves 2s infinite linear;
+        }
+
+        .liquid-container {
+            width: 200%;
+            height: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .wave-svg {
+            width: 100%;
+            height: 60px;
+            position: absolute;
+            top: -55px;
+            left: 0;
+        }
     </style>
 </head>
 
@@ -125,9 +155,15 @@
                 class="material-symbols-outlined text-[#f9f9fd]/70 hover:text-[#00BCD4] cursor-pointer transition-all active:scale-95 duration-200">notifications</span>
             <span
                 class="material-symbols-outlined text-[#f9f9fd]/70 hover:text-[#00BCD4] cursor-pointer transition-all active:scale-95 duration-200">settings</span>
-            <div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
-                <img alt="User profile avatar" class="w-full h-full object-cover"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxLwwgT259OdsSGCdKH_IRBz7La4Svc8SnZK0c7MvRF3v3UZaJg-8AM1hkUzbXV3rNbSIRO5Cyu4QZAib_67feTMl7YaAW-7Q9X3dBsn4388lnE7c1Buh3M1P-PWquY4SI9mz-XJlKFiIeZLuYtSSXvhHrMWuSi7RfqjEygXe6IVDYBiLzsqBgkGDrl5QDFeykkn1yyjaehUW8Hm8dRVymuXTgbohrnWi3IaLDDIbBNyvtPnHbYg4P7a98wadERGgcEBGEoljUO42g" />
+            <div class="group relative flex items-center gap-3">
+                <div class="text-right hidden sm:block">
+                    <p class="text-[10px] font-bold text-on-surface uppercase tracking-tighter leading-tight">Admin User</p>
+                    <button onclick="localStorage.removeItem('gh_auth'); window.location.href='login.html';" class="text-[9px] text-primary hover:underline transition-all block text-right w-full">SIGN OUT</button>
+                </div>
+                <div class="w-8 h-8 rounded-full overflow-hidden border border-primary/20">
+                    <img alt="User profile avatar" class="w-full h-full object-cover"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxLwwgT259OdsSGCdKH_IRBz7La4Svc8SnZK0c7MvRF3v3UZaJg-8AM1hkUzbXV3rNbSIRO5Cyu4QZAib_67feTMl7YaAW-7Q9X3dBsn4388lnE7c1Buh3M1P-PWquY4SI9mz-XJlKFiIeZLuYtSSXvhHrMWuSi7RfqjEygXe6IVDYBiLzsqBgkGDrl5QDFeykkn1yyjaehUW8Hm8dRVymuXTgbohrnWi3IaLDDIbBNyvtPnHbYg4P7a98wadERGgcEBGEoljUO42g" />
+                </div>
             </div>
         </div>
     </header>
@@ -370,35 +406,41 @@
                         </defs>
                     </svg>
                 </div>
-                <!-- Gauge 4: CO2 Level -->
-                <div class="bg-surface-container rounded-xl p-6 relative overflow-hidden group" data-sensor="co2">
+                <!-- Gauge 4: VPD Level -->
+                <div class="bg-surface-container rounded-xl p-6 relative overflow-hidden group" data-sensor="vpd">
                     <div class="flex justify-between items-start mb-4">
-                        <span class="text-on-surface-variant font-label text-xs uppercase tracking-widest">CO2
-                            Concentration</span>
-                        <span class="material-symbols-outlined text-error">air</span>
+                        <span class="text-on-surface-variant font-label text-xs uppercase tracking-widest">Vapor
+                            Pressure Deficit</span>
+                        <span id="vpdIcon" class="material-symbols-outlined text-secondary">cloud</span>
                     </div>
                     <div class="flex flex-col items-center">
                         <div class="relative w-32 h-32 flex items-center justify-center">
                             <svg class="w-full h-full -rotate-90">
                                 <circle class="text-surface-variant" cx="64" cy="64" fill="transparent" r="58"
                                     stroke="currentColor" stroke-width="8"></circle>
-                                <circle class="gauge-ring" cx="64" cy="64" fill="transparent" r="58"
-                                    stroke="url(#error-grad)" stroke-linecap="round" stroke-width="8"
-                                    style="stroke-dashoffset: 50;"></circle>
+                                <circle id="vpdGaugeRing" class="gauge-ring" cx="64" cy="64" fill="transparent" r="58"
+                                    stroke="url(#vpd-grad)" stroke-linecap="round" stroke-width="8"
+                                    style="stroke-dashoffset: 283; transition: stroke-dashoffset 1s ease-out;"></circle>
                             </svg>
                             <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                <span class="text-2xl font-black font-headline">800</span>
-                                <span class="text-[10px] text-on-surface-variant uppercase">PPM</span>
+                                <span class="text-3xl font-black font-headline" id="vpdValue">0.0</span>
+                                <span class="text-[10px] text-on-surface-variant uppercase">kPa</span>
                             </div>
                         </div>
-                        <div class="w-full mt-6 flex flex-col gap-0 px-2" data-sensor-bars="co2">
+                        <div class="w-full mt-6 flex flex-col gap-0 px-2" data-sensor-bars="vpd">
                             <div class="h-12 flex items-end gap-1">
-                                <div class="flex-1 bg-error/50 rounded-t-sm" data-bar="0" style="height: 16.67%"></div>
-                                <div class="flex-1 bg-error/50 rounded-t-sm" data-bar="1" style="height: 16.67%"></div>
-                                <div class="flex-1 bg-error/50 rounded-t-sm" data-bar="2" style="height: 16.67%"></div>
-                                <div class="flex-1 bg-error/50 rounded-t-sm" data-bar="3" style="height: 16.67%"></div>
-                                <div class="flex-1 bg-error/50 rounded-t-sm" data-bar="4" style="height: 16.67%"></div>
-                                <div class="flex-1 bg-error/50 rounded-t-sm" data-bar="5" style="height: 16.67%"></div>
+                                <div class="flex-1 bg-secondary/50 rounded-t-sm" data-bar="0" style="height: 16.67%">
+                                </div>
+                                <div class="flex-1 bg-secondary/50 rounded-t-sm" data-bar="1" style="height: 16.67%">
+                                </div>
+                                <div class="flex-1 bg-secondary/50 rounded-t-sm" data-bar="2" style="height: 16.67%">
+                                </div>
+                                <div class="flex-1 bg-secondary/50 rounded-t-sm" data-bar="3" style="height: 16.67%">
+                                </div>
+                                <div class="flex-1 bg-secondary/50 rounded-t-sm" data-bar="4" style="height: 16.67%">
+                                </div>
+                                <div class="flex-1 bg-secondary/50 rounded-t-sm" data-bar="5" style="height: 16.67%">
+                                </div>
                             </div>
                             <div
                                 class="flex gap-1 text-[9px] text-on-surface-variant font-label uppercase tracking-tight justify-between px-0">
@@ -413,9 +455,9 @@
                     </div>
                     <svg height="0" width="0">
                         <defs>
-                            <lineargradient id="error-grad" x1="0%" x2="100%" y1="0%" y2="100%">
-                                <stop offset="0%" stop-color="#ff716c"></stop>
-                                <stop offset="100%" stop-color="#d7383b"></stop>
+                            <lineargradient id="vpd-grad" x1="0%" x2="100%" y1="0%" y2="100%">
+                                <stop id="vpd-stop-start" offset="0%" stop-color="#83fba5"></stop>
+                                <stop id="vpd-stop-end" offset="100%" stop-color="#006d36"></stop>
                             </lineargradient>
                         </defs>
                     </svg>
@@ -423,46 +465,78 @@
             </div>
             <!-- Second Row: Large Analytics & Alerts -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Daily Growth Overview Chart -->
+                <!-- Animated Water Tank Widget -->
                 <div class="lg:col-span-2 bg-surface-container rounded-xl p-8 flex flex-col">
-                    <div class="flex justify-between items-center mb-8">
+                    <div class="flex items-center justify-between mb-8">
                         <div>
-                            <h3 class="text-xl font-bold font-headline">Daily Growth Overview</h3>
-                            <p class="text-xs text-on-surface-variant">Biometric expansion across all sectors</p>
+                            <div class="flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary text-xl"
+                                    data-icon="opacity">opacity</span>
+                                <h3 class="text-xl font-bold font-headline text-on-surface">Main Reservoir</h3>
+                            </div>
+                            <p class="text-xs text-on-surface-variant mt-1">Real-time Water Reservoir Tracking</p>
                         </div>
-                        <div class="flex gap-4">
-                            <div class="flex items-center gap-2">
-                                <div class="w-3 h-3 rounded-full bg-primary"></div>
-                                <span class="text-xs font-label">Actual</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="w-3 h-3 rounded-full bg-secondary"></div>
-                                <span class="text-xs font-label">Target</span>
-                            </div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+                            <span class="text-xs font-label">Active</span>
                         </div>
                     </div>
-                    <div class="flex-1 relative min-h-[300px] flex items-end justify-between px-4 pb-2">
-                        <!-- Chart Mockup with divs -->
-                        <div class="flex flex-col items-center w-full gap-4">
-                            <div
-                                class="w-full h-64 relative flex items-end gap-1 px-4 border-b border-outline-variant/30">
-                                <div class="flex-1 bg-primary/40 h-[20%] rounded-t"></div>
-                                <div class="flex-1 bg-primary/40 h-[35%] rounded-t"></div>
-                                <div class="flex-1 bg-primary/40 h-[50%] rounded-t"></div>
-                                <div class="flex-1 bg-primary/40 h-[45%] rounded-t"></div>
-                                <div class="flex-1 bg-primary/40 h-[70%] rounded-t"></div>
-                                <div class="flex-1 bg-primary/40 h-[85%] rounded-t"></div>
-                                <div class="flex-1 bg-primary/40 h-[92%] rounded-t"></div>
-                                <div
-                                    class="flex-1 bg-secondary/80 h-[80%] rounded-t absolute bottom-0 left-[10%] w-[5%] -z-10 blur-[2px]">
-                                </div>
-                                <div
-                                    class="flex-1 bg-secondary/80 h-[90%] rounded-t absolute bottom-0 left-[60%] w-[5%] -z-10 blur-[2px]">
+
+                    <div class="flex-1 grid grid-cols-1 md:grid-cols-12 gap-8 items-center mt-4">
+                        <!-- Tank Side (Updated CodePen Style) -->
+                        <div
+                            class="md:col-span-8 relative h-80 w-full bg-surface-container-low rounded-2xl overflow-hidden shadow-inner flex flex-col justify-end border-2 border-outline-variant/20">
+                            <!-- Liquid Animation Effect -->
+                            <div class="absolute bottom-0 left-0 w-full transition-all duration-1000 ease-in-out"
+                                id="tankLevelBg" style="height: 57%;">
+                                <div class="liquid-container animate-waves">
+                                    <svg class="wave-svg" viewBox="0 0 200 100" preserveAspectRatio="none">
+                                        <path fill="#81ecff"
+                                            d="M 0,0 v 100 h 200 v -100 c -10,0 -15,10 -25,10 c -10,0 -15,-10 -25,-10 c -10,0 -15,10 -25,10 c -10,0 -15,-10 -25,-10 c -10,0 -15,10 -25,10 c -10,0 -15,-10 -25,-10 c -10,0 -15,10 -25,10 c -10,0 -15,-10 -25,-10" />
+                                        <path fill="#81ecff" opacity="0.5"
+                                            d="M 0,10 v 100 h 200 v -100 c -10,0 -15,10 -25,10 c -10,0 -15,-10 -25,-10 c -10,0 -15,10 -25,10 c -10,0 -15,-10 -25,-10 c -10,0 -15,10 -25,10 c -10,0 -15,-10 -25,-10 c -10,0 -15,10 -25,10 c -10,0 -15,-10 -25,-10"
+                                            transform="translate(-10, 0)" />
+                                    </svg>
+                                    <div class="w-full h-full bg-[#81ecff]"></div>
                                 </div>
                             </div>
+                            <!-- Values overlay -->
                             <div
-                                class="w-full flex justify-between px-4 text-[10px] text-on-surface-variant uppercase tracking-widest font-label">
-                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                                class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] z-10">
+                                <span class="text-6xl font-black font-headline text-white"
+                                    id="tankPercentage">57%</span>
+                                <span
+                                    class="text-xs font-label text-white/80 uppercase tracking-widest mt-2 font-bold bg-black/30 px-3 py-1 rounded-full backdrop-blur-sm shadow-sm"><span
+                                        id="tankLitres">1140</span> / 2,000 L</span>
+                            </div>
+                        </div>
+
+                        <!-- Stats Column (Irrigation Page Style) -->
+                        <div class="md:col-span-4 flex flex-col gap-4">
+                            <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/5">
+                                <p class="text-[10px] font-headline text-on-surface-variant uppercase mb-1">Total Water
+                                    Used</p>
+                                <p class="text-2xl font-headline font-bold text-on-surface">1,248.5 L</p>
+                                <p class="text-[10px] text-secondary mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-xs">trending_down</span> -4.2% from last
+                                    week
+                                </p>
+                            </div>
+                            <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/5">
+                                <p class="text-[10px] font-headline text-on-surface-variant uppercase mb-1">System
+                                    Uptime</p>
+                                <p class="text-2xl font-headline font-bold text-on-surface">99.9 %</p>
+                                <p class="text-[10px] text-secondary mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-xs">verified</span> Healthy
+                                </p>
+                            </div>
+                            <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/5">
+                                <p class="text-[10px] font-headline text-on-surface-variant uppercase mb-1">Active
+                                    Valves</p>
+                                <p class="text-2xl font-headline font-bold text-on-surface">0 / 24</p>
+                                <p class="text-[10px] text-on-surface-variant mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-xs">adjust</span> All systems nominal
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -473,10 +547,13 @@
                         <h3 class="text-xl font-bold font-headline">Recent Alerts</h3>
                         <span class="text-primary text-xs font-bold hover:underline cursor-pointer">View All</span>
                     </div>
-                    <div id="recentAlertsContainer" class="space-y-4 flex-1 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
+                    <div id="recentAlertsContainer"
+                        class="space-y-4 flex-1 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
                         <!-- Dynamic alerts will be inserted here by JavaScript -->
-                        <div class="flex gap-4 p-4 rounded-lg bg-surface-container-high border-l-4 border-outline-variant items-center justify-center">
-                            <p class="text-xs text-on-surface-variant font-bold animate-pulse">Scanning system states...</p>
+                        <div
+                            class="flex gap-4 p-4 rounded-lg bg-surface-container-high border-l-4 border-outline-variant items-center justify-center">
+                            <p class="text-xs text-on-surface-variant font-bold animate-pulse">Scanning system states...
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -523,15 +600,25 @@
             <span class="material-symbols-outlined">opacity</span>
             <span class="font-['Inter'] text-[10px] uppercase tracking-widest">Moisture</span>
         </a>
-        <a href="climate.html"
+        <a href="Nutrients.html"
             class="flex flex-col items-center justify-center text-[#f9f9fd]/40 active:bg-[#1d2024] tap-highlight-transparent">
-            <span class="material-symbols-outlined">air</span>
-            <span class="font-['Inter'] text-[10px] uppercase tracking-widest">CO2</span>
+            <span class="material-symbols-outlined">science</span>
+            <span class="font-['Inter'] text-[10px] uppercase tracking-widest">Labs</span>
+        </a>
+        <a href="history.html"
+            class="flex flex-col items-center justify-center text-[#f9f9fd]/40 active:bg-[#1d2024] tap-highlight-transparent">
+            <span class="material-symbols-outlined">timeline</span>
+            <span class="font-['Inter'] text-[10px] uppercase tracking-widest">History</span>
         </a>
     </nav>
 
     <!-- Firebase Realtime Database Integration Script -->
     <script>
+        // Check Authentication - Redirect to login if not authenticated
+        if (localStorage.getItem('gh_auth') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
         // ==================== FIREBASE INITIALIZATION ====================
         // Firebase SDK is loaded via CDN (see head section)
         // This script initializes Firebase and sets up real-time database listeners
@@ -674,34 +761,70 @@
         }
 
         /**
-         * Updates CO2 gauge with new value
+         * Calculates Vapor Pressure Deficit (VPD) in kPa
          */
-        function updateCO2(value) {
-            if (typeof value !== 'number') {
-                console.warn('[Gauge] Invalid CO2 value:', value);
-                return;
-            }
+        function calculateVPD(temp, hum) {
+            // SVP (Saturation Vapor Pressure) in kPa
+            const svp = 0.61078 * Math.exp((17.27 * temp) / (temp + 237.3));
+            // AVP (Actual Vapor Pressure) in kPa
+            const avp = svp * (hum / 100);
+            return svp - avp;
+        }
 
-            const co2Value = Math.round(value);
+        /**
+         * Updates VPD gauge with new values
+         */
+        function updateVPD(temp, hum) {
+            if (typeof temp !== 'number' || typeof hum !== 'number') return;
+
+            const vpdValue = calculateVPD(temp, hum);
+            const vpdFormatted = vpdValue.toFixed(2);
 
             // Update numeric display
-            const co2Displays = document.querySelectorAll('[data-sensor="co2"] .text-2xl');
-            if (co2Displays.length > 0) {
-                co2Displays[0].textContent = co2Value;
+            const vpdDisplay = document.getElementById('vpdValue');
+            if (vpdDisplay) {
+                vpdDisplay.textContent = vpdFormatted;
             }
 
-            // Update circular gauge ring (0-2000 PPM range)
-            const co2Gauges = document.querySelectorAll('[data-sensor="co2"] .gauge-ring');
-            if (co2Gauges.length > 0) {
-                const offset = calculateGaugeOffset(value, 0, 2000);
-                co2Gauges[0].style.strokeDashoffset = offset;
+            // Update circular gauge ring (0 to 3 kPa range)
+            const vpdGauge = document.getElementById('vpdGaugeRing');
+            if (vpdGauge) {
+                const offset = calculateGaugeOffset(vpdValue, 0, 3);
+                vpdGauge.style.strokeDashoffset = offset;
+            }
+
+            // Update icon and gradient based on status
+            const vpdIcon = document.getElementById('vpdIcon');
+            const vpdStart = document.getElementById('vpd-stop-start');
+            const vpdEnd = document.getElementById('vpd-stop-end');
+
+            if (vpdValue < 0.4) {
+                // Blue (Low)
+                if (vpdIcon) vpdIcon.className = "material-symbols-outlined text-primary";
+                if (vpdStart) vpdStart.setAttribute("stop-color", "#81ecff");
+                if (vpdEnd) vpdEnd.setAttribute("stop-color", "#00BCD4");
+            } else if (vpdValue <= 1.2) {
+                // Green (Ideal)
+                if (vpdIcon) vpdIcon.className = "material-symbols-outlined text-secondary";
+                if (vpdStart) vpdStart.setAttribute("stop-color", "#83fba5");
+                if (vpdEnd) vpdEnd.setAttribute("stop-color", "#006d36");
+            } else if (vpdValue <= 1.6) {
+                // Yellow (Moderate)
+                if (vpdIcon) vpdIcon.className = "material-symbols-outlined text-tertiary";
+                if (vpdStart) vpdStart.setAttribute("stop-color", "#ffd16f");
+                if (vpdEnd) vpdEnd.setAttribute("stop-color", "#ffbf00");
+            } else {
+                // Red (High)
+                if (vpdIcon) vpdIcon.className = "material-symbols-outlined text-error";
+                if (vpdStart) vpdStart.setAttribute("stop-color", "#ff716c");
+                if (vpdEnd) vpdEnd.setAttribute("stop-color", "#d7383b");
             }
 
             // Record in history and update bars
-            recordSensorHistory('co2', value);
-            updateHistoricalBars('co2', 0, 2000);
+            recordSensorHistory('vpd', vpdValue);
+            updateHistoricalBars('vpd', 0, 3);
 
-            console.log('[Sensor] CO2 updated:', co2Value + ' PPM', { raw: value, offset: calculateGaugeOffset(value, 0, 2000) });
+            console.log('[Sensor] VPD updated:', vpdFormatted + ' kPa');
         }
 
         // ==================== HISTORICAL DATA TRACKING ====================
@@ -711,7 +834,7 @@
             temperature: [],
             humidity: [],
             soilMoisture: [],
-            co2: []
+            vpd: []
         };
 
         // Time interval between bars in milliseconds (5 seconds)
@@ -829,7 +952,7 @@
         /**
          * Updates bar heights for a sensor based on historical data
          * Also applies color adjustments based on value trends
-         * @param {string} sensorType - 'temperature', 'humidity', 'soilMoisture', or 'co2'
+         * @param {string} sensorType - 'temperature', 'humidity', 'soilMoisture', or 'vpd'
          * @param {number} minVal - Minimum value for scaling
          * @param {number} maxVal - Maximum value for scaling
          */
@@ -841,9 +964,19 @@
                 temperature: 'primary',
                 humidity: 'secondary',
                 soilMoisture: 'tertiary',
-                co2: 'error'
+                co2: 'error',
+                vpd: 'secondary'
             };
-            const colorBase = colorMap[sensorType];
+            let colorBase = colorMap[sensorType];
+
+            if (sensorType === 'vpd' && sensorHistory.vpd && sensorHistory.vpd.length > 0) {
+                const latestVpd = sensorHistory.vpd[sensorHistory.vpd.length - 1].value;
+                if (latestVpd < 0.4) colorBase = 'primary';
+                else if (latestVpd <= 1.2) colorBase = 'secondary';
+                else if (latestVpd <= 1.6) colorBase = 'tertiary';
+                else colorBase = 'error';
+            }
+
             const colorRGB = getColorRGB(colorBase);
 
             // Update each bar with new height and color
@@ -915,8 +1048,9 @@
                             if (typeof reading.soilMoisture === 'number') {
                                 recordSensorHistory('soilMoisture', reading.soilMoisture);
                             }
-                            if (typeof reading.co2 === 'number') {
-                                recordSensorHistory('co2', reading.co2);
+                            if (typeof reading.temperature === 'number' && typeof reading.humidity === 'number') {
+                                const vpd = calculateVPD(reading.temperature, reading.humidity);
+                                recordSensorHistory('vpd', vpd);
                             }
                         });
 
@@ -924,7 +1058,7 @@
                         updateHistoricalBars('temperature', 0, 50);
                         updateHistoricalBars('humidity', 0, 100);
                         updateHistoricalBars('soilMoisture', 0, 100);
-                        updateHistoricalBars('co2', 0, 2000);
+                        updateHistoricalBars('vpd', 0, 3);
 
                         console.log('[History] Historical data initialization complete');
                     }, (error) => {
@@ -962,8 +1096,8 @@
                             if (sensorData.soilMoisture !== undefined) {
                                 updateSoilMoisture(sensorData.soilMoisture);
                             }
-                            if (sensorData.co2 !== undefined) {
-                                updateCO2(sensorData.co2);
+                            if (sensorData.temperature !== undefined && sensorData.humidity !== undefined) {
+                                updateVPD(sensorData.temperature, sensorData.humidity);
                             }
                         }
                     },
@@ -998,8 +1132,8 @@
                             if (sensorData.soilMoisture !== undefined) {
                                 updateSoilMoisture(sensorData.soilMoisture);
                             }
-                            if (sensorData.co2 !== undefined) {
-                                updateCO2(sensorData.co2);
+                            if (sensorData.temperature !== undefined && sensorData.humidity !== undefined) {
+                                updateVPD(sensorData.temperature, sensorData.humidity);
                             }
                         }
                     },
@@ -1011,7 +1145,7 @@
             // ==================== RECENT ALERTS LISTENER ====================
             // Maintain alert history in localStorage to persist across reloads
             let alertsHistory = JSON.parse(localStorage.getItem('gh_alerts_history')) || [];
-            
+
             // Track previous states to trigger alerts only on change
             let prevTempStatus = null;
             let prevHumStatus = null;
@@ -1071,7 +1205,7 @@
                 if (snapshot.exists()) {
                     const data = snapshot.val();
                     const systemMode = data.systemMode ? data.systemMode.toUpperCase() : 'AUTOMATIC';
-                    
+
                     let newAlertAdded = false;
 
                     // 1. Check Temperature Status
@@ -1130,21 +1264,34 @@
                     }
                     prevHumStatus = currentHumStatus;
 
-                    // 3. Check Reservoir Status
-                    const currentResStatus = (data.reserviorVal !== undefined && data.reserviorVal < 500) ? 'low' : 'optimal';
-                    if (currentResStatus === 'low' && currentResStatus !== prevResStatus) {
-                        addAlert({
-                            title: 'Reservoir Level Critical', 
-                            message: `Main reservoir dropping low. Current: ${data.reserviorVal}L left.`, 
-                            action: 'Please refill tank',
-                            borderColor: 'border-error', 
-                            icon: 'opacity', 
-                            iconColor: 'text-error',
-                            timestamp: Date.now()
-                        });
-                        newAlertAdded = true;
+                    // 3. Check Reservoir Status & Update Reservoir UI widget
+                    if (data.reserviorVal !== undefined) {
+                        const tankLitres = Math.max(0, Math.min(2000, data.reserviorVal));
+                        const tankPercentage = Math.round((tankLitres / 2000) * 100);
+
+                        const bgEl = document.getElementById('tankLevelBg');
+                        const pctEl = document.getElementById('tankPercentage');
+                        const litEl = document.getElementById('tankLitres');
+
+                        if (bgEl) bgEl.style.height = `${tankPercentage}%`;
+                        if (pctEl) pctEl.textContent = `${tankPercentage}%`;
+                        if (litEl) litEl.textContent = tankLitres;
+
+                        const currentResStatus = (tankLitres < 500) ? 'low' : 'optimal';
+                        if (currentResStatus === 'low' && currentResStatus !== prevResStatus) {
+                            addAlert({
+                                title: 'Reservoir Level Critical',
+                                message: `Main reservoir dropping low. Current: ${tankLitres}L left.`,
+                                action: 'Please refill tank',
+                                borderColor: 'border-error',
+                                icon: 'opacity',
+                                iconColor: 'text-error',
+                                timestamp: Date.now()
+                            });
+                            newAlertAdded = true;
+                        }
+                        prevResStatus = currentResStatus;
                     }
-                    prevResStatus = currentResStatus;
 
                     // Update UI if a new alert was added or if it's just the first render
                     renderAlerts(systemMode);

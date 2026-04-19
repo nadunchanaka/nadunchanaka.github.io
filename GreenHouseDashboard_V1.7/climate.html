@@ -499,6 +499,11 @@
     </div>
   </main>
   <script>
+    // Check Authentication - Redirect to login if not authenticated
+    if (localStorage.getItem('gh_auth') !== 'true') {
+        window.location.href = 'login.html';
+    }
+
     // ==================== FIREBASE INITIALIZATION ====================
     const firebaseConfig = {
       apiKey: "AIzaSyCwBriGgolF2ezrNTGaqgKFMrZY2efxIS4",
@@ -1102,26 +1107,26 @@
   <!-- Bottom Navigation Bar (Mobile) -->
   <nav
     class="fixed bottom-0 w-full z-50 bg-slate-950/80 backdrop-blur-xl md:hidden flex justify-around items-center py-4 px-6 border-t border-outline-variant/10">
-    <button class="flex flex-col items-center gap-1 text-slate-400">
+    <a href="index.html" class="flex flex-col items-center gap-1 text-slate-400">
       <span class="material-symbols-outlined">dashboard</span>
       <span class="text-[10px] font-bold">Overview</span>
-    </button>
-    <button class="flex flex-col items-center gap-1 text-cyan-400">
+    </a>
+    <a href="climate.html" class="flex flex-col items-center gap-1 text-cyan-400">
       <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">thermostat</span>
       <span class="text-[10px] font-bold">Climate</span>
-    </button>
-    <button class="flex flex-col items-center gap-1 text-slate-400">
+    </a>
+    <a href="Irrigation.html" class="flex flex-col items-center gap-1 text-slate-400">
       <span class="material-symbols-outlined">water_drop</span>
       <span class="text-[10px] font-bold">Irrigation</span>
-    </button>
-    <button class="flex flex-col items-center gap-1 text-slate-400">
+    </a>
+    <a href="Nutrients.html" class="flex flex-col items-center gap-1 text-slate-400">
       <span class="material-symbols-outlined">science</span>
       <span class="text-[10px] font-bold">Nutrients</span>
-    </button>
-    <button class="flex flex-col items-center gap-1 text-slate-400">
-      <span class="material-symbols-outlined">person</span>
-      <span class="text-[10px] font-bold">Profile</span>
-    </button>
+    </a>
+    <a href="history.html" class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">timeline</span>
+      <span class="text-[10px] font-bold">History</span>
+    </a>
   </nav>
 </body>
 

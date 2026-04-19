@@ -413,6 +413,11 @@ CAPACITY
 </div>
 </main>
 <script>
+// Check Authentication - Redirect to login if not authenticated
+if (localStorage.getItem('gh_auth') !== 'true') {
+    window.location.href = 'login.html';
+}
+
 // ==================== FIREBASE INITIALIZATION ====================
 const firebaseConfig = {
   apiKey: "AIzaSyCwBriGgolF2ezrNTGaqgKFMrZY2efxIS4",
@@ -657,21 +662,25 @@ try {
 </script>
 <!-- BottomNavBar (Mobile Only) -->
 <nav class="md:hidden fixed bottom-0 left-0 w-full bg-slate-950/80 backdrop-blur-xl border-t border-white/5 px-6 py-4 flex justify-around items-center z-50">
-<button class="text-slate-400 flex flex-col items-center gap-1">
-<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-<span class="text-[10px] font-medium">Overview</span>
-</button>
-<button class="text-cyan-400 flex flex-col items-center gap-1">
-<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
-<span class="text-[10px] font-medium">Water</span>
-</button>
-<button class="text-slate-400 flex flex-col items-center gap-1">
-<span class="material-symbols-outlined" data-icon="thermostat">thermostat</span>
-<span class="text-[10px] font-medium">Climate</span>
-</button>
-<button class="text-slate-400 flex flex-col items-center gap-1">
-<span class="material-symbols-outlined" data-icon="science">science</span>
-<span class="text-[10px] font-medium">Lab</span>
-</button>
+  <a href="index.html" class="text-slate-400 flex flex-col items-center gap-1">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span class="text-[10px] font-medium">Overview</span>
+  </a>
+  <a href="climate.html" class="text-slate-400 flex flex-col items-center gap-1">
+    <span class="material-symbols-outlined">thermostat</span>
+    <span class="text-[10px] font-medium">Climate</span>
+  </a>
+  <a href="Irrigation.html" class="text-cyan-400 flex flex-col items-center gap-1">
+    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+    <span class="text-[10px] font-medium">Irrigation</span>
+  </a>
+  <a href="Nutrients.html" class="text-slate-400 flex flex-col items-center gap-1">
+    <span class="material-symbols-outlined">science</span>
+    <span class="text-[10px] font-medium">Nutrients</span>
+  </a>
+  <a href="history.html" class="text-slate-400 flex flex-col items-center gap-1">
+    <span class="material-symbols-outlined">timeline</span>
+    <span class="text-[10px] font-medium">History</span>
+  </a>
 </nav>
 </body></html>

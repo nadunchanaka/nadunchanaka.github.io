@@ -230,18 +230,18 @@
             style="width:0%"></div>
         </div>
       </div>
-      <!-- CO2 -->
+      <!-- Vapor Pressure Deficit -->
       <div class="bg-surface-container-low p-6 rounded-xl relative overflow-hidden group">
         <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
           <span class="material-symbols-outlined text-6xl">cloud</span>
         </div>
-        <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">Average CO2</p>
+        <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">Vapor Pressure Deficit</p>
         <div class="flex items-baseline gap-2">
-          <h3 id="histAvgCO2" class="font-headline text-4xl font-bold text-on-surface">--<span
-              class="text-lg font-normal ml-1">ppm</span></h3>
+          <h3 id="histAvgVPD" class="font-headline text-4xl font-bold text-on-surface">--<span
+              class="text-lg font-normal ml-1">kPa</span></h3>
         </div>
         <div class="mt-4 h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
-          <div id="histCO2Bar" class="h-full bg-gradient-to-r from-tertiary to-tertiary-dim" style="width:0%"></div>
+          <div id="histVPDBar" class="h-full bg-gradient-to-r from-tertiary to-tertiary-dim" style="width:0%"></div>
         </div>
       </div>
     </div>
@@ -261,10 +261,6 @@
             <span class="w-3 h-3 rounded-full bg-secondary ring-4 ring-secondary/10"></span>
             <span class="text-xs font-medium text-slate-300">Humidity</span>
           </div>
-          <div class="flex items-center gap-2">
-            <span class="w-3 h-3 rounded-full bg-tertiary ring-4 ring-tertiary/10"></span>
-            <span class="text-xs font-medium text-slate-300">CO2 (scaled)</span>
-          </div>
         </div>
       </div>
       <div class="w-full h-[360px] relative">
@@ -279,10 +275,6 @@
             <linearGradient id="hg-humFill" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stop-color="#83fba5" stop-opacity="0.22" />
               <stop offset="100%" stop-color="#83fba5" stop-opacity="0" />
-            </linearGradient>
-            <linearGradient id="hg-co2Fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#ffd16f" stop-opacity="0.22" />
-              <stop offset="100%" stop-color="#ffd16f" stop-opacity="0" />
             </linearGradient>
             <!-- Glow filters -->
             <filter id="hg-tempGlow" x="-20%" y="-20%" width="140%" height="140%">
@@ -315,18 +307,13 @@
           <!-- Shaded fill areas -->
           <path id="hg-tempFillPath" d="" fill="url(#hg-tempFill)" />
           <path id="hg-humFillPath" d="" fill="url(#hg-humFill)" />
-          <path id="hg-co2FillPath" d="" fill="url(#hg-co2Fill)" />
-          <!-- Series lines -->
           <path id="hg-tempPath" d="" fill="none" stroke="#81ecff" stroke-width="2.5" stroke-linecap="round"
             stroke-linejoin="round" filter="url(#hg-tempGlow)" />
           <path id="hg-humPath" d="" fill="none" stroke="#83fba5" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round" stroke-dasharray="6 3" filter="url(#hg-humGlow)" />
-          <path id="hg-co2Path" d="" fill="none" stroke="#ffd16f" stroke-width="2" stroke-linecap="round"
-            stroke-linejoin="round" stroke-dasharray="3 3" filter="url(#hg-co2Glow)" />
           <!-- Live dots -->
           <circle id="hg-tempDot" r="5" fill="#81ecff" stroke="#0c0e11" stroke-width="2" opacity="0" />
           <circle id="hg-humDot" r="4" fill="#83fba5" stroke="#0c0e11" stroke-width="2" opacity="0" />
-          <circle id="hg-co2Dot" r="4" fill="#ffd16f" stroke="#0c0e11" stroke-width="2" opacity="0" />
         </svg>
         <!-- X-Axis Labels -->
         <div id="historyTimelineLabels"
@@ -531,38 +518,31 @@
     function hgRedraw() {
       const tempPath = document.getElementById('hg-tempPath');
       const humPath = document.getElementById('hg-humPath');
-      const co2Path = document.getElementById('hg-co2Path');
       const tempFill = document.getElementById('hg-tempFillPath');
       const humFill = document.getElementById('hg-humFillPath');
-      const co2Fill = document.getElementById('hg-co2FillPath');
       const tempDot = document.getElementById('hg-tempDot');
       const humDot = document.getElementById('hg-humDot');
-      const co2Dot = document.getElementById('hg-co2Dot');
-      if (!tempPath || !humPath || !co2Path) return;
+      if (!tempPath || !humPath) return;
 
       const filled = hgBuckets.filter(b => b.count > 0);
       if (filled.length < 2) { console.warn('[History Graph] Not enough data:', filled.length); return; }
 
-      const tempPts = [], humPts = [], co2Pts = [];
+      const tempPts = [], humPts = [];
       filled.forEach((b, i) => {
         const x = hgX(i, filled.length);
         tempPts.push({ x, y: hgY(b.tempSum / b.count, hgConfig.tempMin, hgConfig.tempMax) });
         humPts.push({ x, y: hgY(b.humSum / b.count, hgConfig.humMin, hgConfig.humMax) });
-        co2Pts.push({ x, y: hgY(b.co2Sum / b.count, hgConfig.co2Min, hgConfig.co2Max) });
       });
 
-      const td = hgSmoothPath(tempPts), hd = hgSmoothPath(humPts), cd = hgSmoothPath(co2Pts);
-      tempPath.setAttribute('d', td); humPath.setAttribute('d', hd); co2Path.setAttribute('d', cd);
+      const td = hgSmoothPath(tempPts), hd = hgSmoothPath(humPts);
+      tempPath.setAttribute('d', td); humPath.setAttribute('d', hd);
 
       const B = hgConfig.graphBottom;
       if (tempFill) tempFill.setAttribute('d', `${td} L${tempPts[tempPts.length - 1].x},${B} L${tempPts[0].x},${B} Z`);
       if (humFill) humFill.setAttribute('d', `${hd} L${humPts[humPts.length - 1].x},${B} L${humPts[0].x},${B} Z`);
-      if (co2Fill) co2Fill.setAttribute('d', `${cd} L${co2Pts[co2Pts.length - 1].x},${B} L${co2Pts[0].x},${B} Z`);
 
       const setDot = (el, pts) => { if (el) { const lp = pts[pts.length - 1]; el.setAttribute('cx', lp.x); el.setAttribute('cy', lp.y); el.setAttribute('opacity', '1'); } };
-      setDot(tempDot, tempPts); setDot(humDot, humPts); setDot(co2Dot, co2Pts);
-
-      console.log(`[History Graph] Drawn: ${filled.length} buckets`);
+      setDot(tempDot, tempPts); setDot(humDot, humPts);
     }
 
     // ==================== STAT CARD UPDATER ====================
@@ -570,21 +550,29 @@
       if (!readings.length) return;
       const avgTemp = readings.reduce((s, r) => s + r.temperature, 0) / readings.length;
       const avgHum = readings.reduce((s, r) => s + r.humidity, 0) / readings.length;
-      const avgCO2 = readings.reduce((s, r) => s + (r.co2 || 0), 0) / readings.length;
+      
+      // Calculate Average VPD
+      let vpdSum = 0;
+      readings.forEach(r => {
+        const svp = 0.61078 * Math.exp((17.27 * r.temperature) / (r.temperature + 237.3));
+        const avp = svp * (r.humidity / 100);
+        vpdSum += (svp - avp);
+      });
+      const avgVPD = vpdSum / readings.length;
 
       const tEl = document.getElementById('histAvgTemp');
       const hEl = document.getElementById('histAvgHum');
-      const cEl = document.getElementById('histAvgCO2');
+      const vEl = document.getElementById('histAvgVPD');
       const tBar = document.getElementById('histTempBar');
       const hBar = document.getElementById('histHumBar');
-      const cBar = document.getElementById('histCO2Bar');
+      const vBar = document.getElementById('histVPDBar');
 
       if (tEl) tEl.innerHTML = `${avgTemp.toFixed(1)}<span class="text-lg font-normal ml-1">°C</span>`;
       if (hEl) hEl.innerHTML = `${Math.round(avgHum)}<span class="text-lg font-normal ml-1">%</span>`;
-      if (cEl) cEl.innerHTML = `${Math.round(avgCO2)}<span class="text-lg font-normal ml-1">ppm</span>`;
+      if (vEl) vEl.innerHTML = `${avgVPD.toFixed(2)}<span class="text-lg font-normal ml-1">kPa</span>`;
       if (tBar) tBar.style.width = Math.min(100, (avgTemp / 50) * 100) + '%';
       if (hBar) hBar.style.width = Math.min(100, avgHum) + '%';
-      if (cBar) cBar.style.width = Math.min(100, (avgCO2 / 2000) * 100) + '%';
+      if (vBar) vBar.style.width = Math.min(100, (avgVPD / 2.5) * 100) + '%';
     }
 
     // ==================== DATABASE LISTENER ====================
@@ -597,7 +585,7 @@
           if (d && typeof d.temperature === 'number' && typeof d.humidity === 'number' && d.timestamp) {
             const tsMs = new Date(d.timestamp).getTime();
             if (!isNaN(tsMs)) {
-              allReadings.push({ temperature: d.temperature, humidity: d.humidity, co2: d.co2 || 0, timestampMs: tsMs });
+              allReadings.push({ temperature: d.temperature, humidity: d.humidity, timestampMs: tsMs });
               if (tsMs > latestMs) latestMs = tsMs;
             }
           }
@@ -693,6 +681,30 @@
       });
     }
   </script>
+  <!-- Bottom Navigation Bar (Mobile) -->
+  <nav
+    class="fixed bottom-0 w-full z-50 bg-slate-950/80 backdrop-blur-xl md:hidden flex justify-around items-center py-4 px-6 border-t border-outline-variant/10">
+    <a href="index.html" class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">dashboard</span>
+      <span class="text-[10px] font-bold">Overview</span>
+    </a>
+    <a href="climate.html" class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">thermostat</span>
+      <span class="text-[10px] font-bold">Climate</span>
+    </a>
+    <a href="Irrigation.html" class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">water_drop</span>
+      <span class="text-[10px] font-bold">Irrigation</span>
+    </a>
+    <a href="Nutrients.html" class="flex flex-col items-center gap-1 text-slate-400">
+      <span class="material-symbols-outlined">science</span>
+      <span class="text-[10px] font-bold">Nutrients</span>
+    </a>
+    <a href="history.html" class="flex flex-col items-center gap-1 text-cyan-400">
+      <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">timeline</span>
+      <span class="text-[10px] font-bold">History</span>
+    </a>
+  </nav>
 </body>
 
 </html>
