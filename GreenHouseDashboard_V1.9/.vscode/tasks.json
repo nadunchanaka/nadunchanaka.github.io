@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run AI Live Server (GreenAI venv)",
+      "type": "shell",
+      "command": "D:\\Project\\IOT Dashboard\\AI Model\\GreenAI\\Scripts\\python.exe",
+      "args": [
+        "${workspaceFolder}\\track3.py"
+      ],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    }
+    
+  ]
+}

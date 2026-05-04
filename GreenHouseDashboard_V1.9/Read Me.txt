@@ -1,0 +1,3 @@
+To run track3.py >> run below command in CMD or run the track3.py file in code editor
+
+"d:/Project/IOT Dashboard/AI Model/GreenAI/Scripts/python.exe" "d:/Project/IOT Dashboard/IOT Dashboard V1.0/GreenHouseDashboard_V1.9/track3.py"
