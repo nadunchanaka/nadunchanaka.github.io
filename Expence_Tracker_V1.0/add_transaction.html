@@ -340,11 +340,21 @@ Save & Connect
     recalculateBatchTotal();
   }
 
+  function getActiveCategoryList() {
+    if (typeof getCustomCategories === 'function') {
+      const custom = getCustomCategories();
+      if (custom) {
+        return currentType === 'expense' ? custom.expense : custom.income;
+      }
+    }
+    return currentType === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+  }
+
   function renderCategoryChips() {
     const container = document.getElementById('category-chips-row');
     if (!container) return;
 
-    const list = currentType === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+    const list = getActiveCategoryList();
     container.innerHTML = '';
 
     list.forEach((cat, idx) => {

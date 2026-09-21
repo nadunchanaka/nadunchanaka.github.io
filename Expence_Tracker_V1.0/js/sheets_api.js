@@ -235,3 +235,71 @@ async function deleteTransactionFromGoogleSheet(transactionId) {
     }
 }
 
+/**
+ * Test Google Sheets Web App Connection
+ * @param {string} [customUrl] 
+ * @returns {Promise<{success: boolean, message: string, sheetUrl?: string, transactionsCount?: number}>}
+ */
+async function testGoogleSheetConnection(customUrl) {
+    const url = (customUrl || getGoogleSheetUrl() || '').trim();
+    if (!url) {
+        return {
+            success: false,
+            message: "Please enter a valid Google Apps Script Web App URL."
+        };
+    }
+
+    try {
+        const response = await fetch(url, { method: 'GET', mode: 'cors' });
+        if (!response.ok) {
+            throw new Error(`Endpoint returned HTTP ${response.status}`);
+        }
+        const data = await response.json();
+        if (data && data.status === 'success') {
+            setGoogleSheetUrl(url);
+            if (data.sheetUrl) {
+                localStorage.setItem(SPREADSHEET_LINK_KEY, data.sheetUrl);
+            }
+            if (data.transactions && Array.isArray(data.transactions)) {
+                localStorage.setItem('KOSH_LOCAL_TRANSACTIONS', JSON.stringify(data.transactions));
+            }
+            return {
+                success: true,
+                message: `Connection Successful! Verified read & write access to database.`,
+                sheetUrl: data.sheetUrl || getConfirmedSheetUrl(),
+                transactionsCount: data.transactions ? data.transactions.length : 0
+            };
+        } else {
+            return {
+                success: false,
+                message: (data && data.message) ? data.message : "Failed to verify Google Sheet connection."
+            };
+        }
+    } catch (err) {
+        console.error("Test Connection error:", err);
+        return {
+            success: false,
+            message: `Connection Failed: ${err.message || 'Could not reach endpoint'}. Verify Web App URL and deployment permissions (Who has access: Anyone).`
+        };
+    }
+}
+
+/**
+ * Category Management Helpers
+ */
+const CATEGORY_STORAGE_KEY = 'KOSH_CUSTOM_CATEGORIES';
+
+function getCustomCategories() {
+    const raw = localStorage.getItem(CATEGORY_STORAGE_KEY);
+    if (!raw) return null;
+    try {
+        return JSON.parse(raw);
+    } catch (e) {
+        return null;
+    }
+}
+
+function saveCustomCategories(categoriesObj) {
+    localStorage.setItem(CATEGORY_STORAGE_KEY, JSON.stringify(categoriesObj));
+}
+
