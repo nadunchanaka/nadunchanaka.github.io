@@ -110,7 +110,9 @@ async function fetchTransactionsFromGoogleSheet() {
     }
 
     try {
-        const response = await fetch(url, { method: 'GET' });
+        // Cache-busting URL to force fresh live fetch across all devices
+        const fetchUrl = url + (url.includes('?') ? '&' : '?') + '_t=' + Date.now();
+        const response = await fetch(fetchUrl, { method: 'GET', mode: 'cors' });
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}`);
         }

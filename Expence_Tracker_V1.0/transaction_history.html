@@ -344,30 +344,50 @@ UNDO
   });
 
   async function loadHistoryData() {
+    const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
+    if (localRaw) {
+      try {
+        const cachedTxns = JSON.parse(localRaw);
+        if (Array.isArray(cachedTxns) && cachedTxns.length > 0) {
+          allTransactions = cachedTxns;
+          if (!window.userHasPickedMonth && allTransactions.length > 0) {
+            const latestDateStr = allTransactions[allTransactions.length - 1].date;
+            if (latestDateStr && latestDateStr.includes('-')) {
+              const parts = latestDateStr.split('-');
+              if (parts.length >= 2) {
+                selectedYear = parseInt(parts[0]);
+                selectedMonth = parseInt(parts[1]) - 1;
+              }
+            }
+          }
+          populateMonthPickerOptions();
+          renderHistoryPage();
+        }
+      } catch (e) {
+        console.warn("Error parsing local transaction cache:", e);
+      }
+    }
+
     try {
       const res = await fetchTransactionsFromGoogleSheet();
       if (res && res.transactions) {
         allTransactions = res.transactions;
+        if (!window.userHasPickedMonth && allTransactions.length > 0) {
+          const latestDateStr = allTransactions[allTransactions.length - 1].date;
+          if (latestDateStr && latestDateStr.includes('-')) {
+            const parts = latestDateStr.split('-');
+            if (parts.length >= 2) {
+              selectedYear = parseInt(parts[0]);
+              selectedMonth = parseInt(parts[1]) - 1;
+            }
+          }
+        }
+        populateMonthPickerOptions();
+        renderHistoryPage();
       }
     } catch (e) {
       console.warn("Could not fetch sheet transactions:", e);
-      const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
-      allTransactions = localRaw ? JSON.parse(localRaw) : [];
     }
-
-    if (allTransactions.length > 0 && !window.userHasPickedMonth) {
-      const latestDateStr = allTransactions[allTransactions.length - 1].date;
-      if (latestDateStr && latestDateStr.includes('-')) {
-        const parts = latestDateStr.split('-');
-        if (parts.length >= 2) {
-          selectedYear = parseInt(parts[0]);
-          selectedMonth = parseInt(parts[1]) - 1;
-        }
-      }
-    }
-
-    populateMonthPickerOptions();
-    renderHistoryPage();
   }
 
   function toggleMonthPicker() {
