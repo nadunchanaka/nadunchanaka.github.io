@@ -343,36 +343,26 @@ UNDO
     loadHistoryData();
   });
 
-  async function loadHistoryData() {
-    const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
-    if (localRaw) {
-      try {
-        const cachedTxns = JSON.parse(localRaw);
-        if (Array.isArray(cachedTxns) && cachedTxns.length > 0) {
-          allTransactions = cachedTxns;
-          if (!window.userHasPickedMonth && allTransactions.length > 0) {
-            const latestDateStr = allTransactions[allTransactions.length - 1].date;
-            if (latestDateStr && latestDateStr.includes('-')) {
-              const parts = latestDateStr.split('-');
-              if (parts.length >= 2) {
-                selectedYear = parseInt(parts[0]);
-                selectedMonth = parseInt(parts[1]) - 1;
-              }
-            }
-          }
-          populateMonthPickerOptions();
-          renderHistoryPage();
-        }
-      } catch (e) {
-        console.warn("Error parsing local transaction cache:", e);
+  function getTxnYearMonth(dateStr) {
+    if (!dateStr) return '';
+    const str = String(dateStr).trim();
+    if (str.includes('-')) {
+      const parts = str.split('-');
+      if (parts.length >= 2) {
+        const y = parts[0];
+        const m = parts[1].padStart(2, '0');
+        return `${y}-${m}`;
       }
     }
+    return '';
+  }
 
+  async function loadHistoryData() {
     try {
       const res = await fetchTransactionsFromGoogleSheet();
-      if (res && res.transactions) {
+      if (res && res.success && Array.isArray(res.transactions)) {
         allTransactions = res.transactions;
-        if (!window.userHasPickedMonth && allTransactions.length > 0) {
+        if (allTransactions.length > 0 && !window.userHasPickedMonth) {
           const latestDateStr = allTransactions[allTransactions.length - 1].date;
           if (latestDateStr && latestDateStr.includes('-')) {
             const parts = latestDateStr.split('-');
@@ -382,12 +372,18 @@ UNDO
             }
           }
         }
-        populateMonthPickerOptions();
-        renderHistoryPage();
+      } else {
+        const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
+        allTransactions = localRaw ? JSON.parse(localRaw) : [];
       }
     } catch (e) {
       console.warn("Could not fetch sheet transactions:", e);
+      const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
+      allTransactions = localRaw ? JSON.parse(localRaw) : [];
     }
+
+    populateMonthPickerOptions();
+    renderHistoryPage();
   }
 
   function toggleMonthPicker() {

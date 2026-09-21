@@ -314,21 +314,24 @@ View All
     if (ayubowanElem) ayubowanElem.textContent = `Ayubowan, Nadun`;
   }
 
-  async function loadDashboardData() {
-    // Render local cache first for instant UI response
-    const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
-    if (localRaw) {
-      try {
-        allTransactions = JSON.parse(localRaw);
-        populateMonthPickerOptions();
-        renderDashboard();
-      } catch (e) {}
+  function getTxnYearMonth(dateStr) {
+    if (!dateStr) return '';
+    const str = String(dateStr).trim();
+    if (str.includes('-')) {
+      const parts = str.split('-');
+      if (parts.length >= 2) {
+        const y = parts[0];
+        const m = parts[1].padStart(2, '0');
+        return `${y}-${m}`;
+      }
     }
+    return '';
+  }
 
-    // Immediately fetch live source of truth from Google Sheets
+  async function loadDashboardData() {
     try {
       const res = await fetchTransactionsFromGoogleSheet();
-      if (res && res.transactions) {
+      if (res && res.success && Array.isArray(res.transactions)) {
         allTransactions = res.transactions;
         if (allTransactions.length > 0 && !window.userHasPickedMonth) {
           const latestDateStr = allTransactions[allTransactions.length - 1].date;
@@ -340,12 +343,18 @@ View All
             }
           }
         }
-        populateMonthPickerOptions();
-        renderDashboard();
+      } else {
+        const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
+        allTransactions = localRaw ? JSON.parse(localRaw) : [];
       }
     } catch (e) {
       console.warn("Could not fetch sheet transactions:", e);
+      const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
+      allTransactions = localRaw ? JSON.parse(localRaw) : [];
     }
+
+    populateMonthPickerOptions();
+    renderDashboard();
   }
 
   function toggleMonthPicker() {
@@ -362,10 +371,8 @@ View All
     periodsSet.add(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`);
     
     allTransactions.forEach(t => {
-      if (t.date && t.date.includes('-')) {
-        const parts = t.date.split('-');
-        periodsSet.add(`${parts[0]}-${parts[1]}`);
-      }
+      const ym = getTxnYearMonth(t.date);
+      if (ym) periodsSet.add(ym);
     });
 
     const periods = Array.from(periodsSet).sort().reverse();
@@ -405,8 +412,8 @@ View All
     const dateRangeSub = document.getElementById('breakdown-date-range');
     if (dateRangeSub) dateRangeSub.textContent = `${MONTH_NAMES[selectedMonth]} ${selectedYear}`;
 
-    // Filter transactions for selected period
-    const filtered = allTransactions.filter(t => t.date && t.date.startsWith(targetPeriod));
+    // Filter transactions for selected period using normalized year-month comparison
+    const filtered = allTransactions.filter(t => getTxnYearMonth(t.date) === targetPeriod);
 
     let totalIncome = 0;
     let totalExpenses = 0;

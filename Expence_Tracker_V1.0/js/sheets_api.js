@@ -7,15 +7,17 @@
 const STORAGE_KEY = 'KOSH_GOOGLE_SHEETS_URL';
 const SPREADSHEET_LINK_KEY = 'KOSH_CONFIRMED_SHEET_URL';
 
-// Fallback script URL for production/GitHub Pages if set globally
-window.GOOGLE_SHEETS_SCRIPT_URL = window.GOOGLE_SHEETS_SCRIPT_URL || '';
+// Fallback script URL for production / GitHub Pages / fresh devices
+window.GOOGLE_SHEETS_SCRIPT_URL = window.GOOGLE_SHEETS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbwJAX61S81JuaujB-ApotjW7Er1ODbZoMx79oe7FnOYIfy9EECun4aYtUYOz-vP3GC_/exec';
 
 // Get current Google Sheets Web App URL
 function getGoogleSheetUrl() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored && stored.trim()) return stored.trim();
-    if (window.GOOGLE_SHEETS_SCRIPT_URL && window.GOOGLE_SHEETS_SCRIPT_URL.trim()) return window.GOOGLE_SHEETS_SCRIPT_URL.trim();
-    return '';
+    if (window.GOOGLE_SHEETS_SCRIPT_URL && window.GOOGLE_SHEETS_SCRIPT_URL.trim()) {
+        return window.GOOGLE_SHEETS_SCRIPT_URL.trim();
+    }
+    return 'https://script.google.com/macros/s/AKfycbwJAX61S81JuaujB-ApotjW7Er1ODbZoMx79oe7FnOYIfy9EECun4aYtUYOz-vP3GC_/exec';
 }
 
 // Set Google Sheets Web App URL
@@ -33,17 +35,39 @@ function getConfirmedSheetUrl() {
 }
 
 /**
- * Send transactions to Google Sheet backend and await explicit confirmation
+ * Standardize YYYY-MM-DD date format
+ */
+function normalizeDateFormat(dateVal) {
+    if (!dateVal) return '';
+    const str = String(dateVal).trim();
+    if (/^\d{4}-\d{1,2}-\d{1,2}/.test(str)) {
+        const parts = str.split('T')[0].split('-');
+        const y = parts[0];
+        const m = parts[1].padStart(2, '0');
+        const d = parts[2].padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+    const dt = new Date(str);
+    if (!isNaN(dt.getTime())) {
+        const y = dt.getFullYear();
+        const m = String(dt.getMonth() + 1).padStart(2, '0');
+        const d = String(dt.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+    return str;
+}
+
+/**
+ * Send new transactions to Google Sheet backend and await explicit confirmation
  * @param {Array} transactions 
  * @returns {Promise<{success: boolean, message: string, sheetUrl?: string}>}
  */
 async function sendTransactionsToGoogleSheet(transactions) {
     const url = getGoogleSheetUrl();
-
     if (!url) {
         return {
             success: false,
-            message: "Google Sheets Web App URL is not connected. Please tap the Google Sheet icon at the top to paste your Web App URL."
+            message: "Google Sheets Web App URL is missing. Please check your settings."
         };
     }
 
@@ -51,99 +75,121 @@ async function sendTransactionsToGoogleSheet(transactions) {
         const response = await fetch(url, {
             method: 'POST',
             mode: 'cors',
-            headers: {
-                'Content-Type': 'text/plain;charset=utf-8'
-            },
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify(transactions)
         });
 
-        if (!response.ok) {
-            throw new Error(`Google Sheets endpoint returned HTTP ${response.status}`);
-        }
-
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
 
         if (data && data.status === 'success') {
             if (data.sheetUrl) {
                 localStorage.setItem(SPREADSHEET_LINK_KEY, data.sheetUrl);
             }
-
-            // Sync with local offline backup store
-            const existing = JSON.parse(localStorage.getItem('KOSH_LOCAL_TRANSACTIONS') || '[]');
-            localStorage.setItem('KOSH_LOCAL_TRANSACTIONS', JSON.stringify([...existing, ...transactions]));
-
+            // Re-fetch live data after posting
+            await fetchTransactionsFromGoogleSheet();
             return {
                 success: true,
-                message: "Entry recorded successfully",
+                message: "Entry recorded successfully in Google Sheet",
                 sheetUrl: data.sheetUrl || getConfirmedSheetUrl()
             };
         } else {
             return {
                 success: false,
-                message: (data && data.message) ? data.message : "Google Sheets failed to record entry."
+                message: (data && data.message) ? data.message : "Failed to write transaction to Google Sheet."
             };
         }
     } catch (err) {
-        console.error("Google Sheets API Connection Failure:", err);
+        console.error("sendTransactionsToGoogleSheet Error:", err);
         return {
             success: false,
-            message: err.message || "Failed to communicate with Google Sheets. Please check your internet connection or Web App URL."
+            message: err.message || "Network error while saving to Google Sheets."
         };
     }
 }
 
 /**
- * Fetch all transactions from Google Sheet endpoint with fallback to local storage
- * @returns {Promise<{success: boolean, transactions: Array, source: string}>}
+ * Fetch all transactions directly from Google Sheet endpoint (Single Source of Truth)
+ * @returns {Promise<{success: boolean, transactions: Array, source: string, error?: string}>}
  */
 async function fetchTransactionsFromGoogleSheet() {
     const url = getGoogleSheetUrl();
-    const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
-    const localTxns = localRaw ? JSON.parse(localRaw) : [];
-
     if (!url) {
-        return {
-            success: true,
-            transactions: localTxns,
-            source: 'local'
-        };
+        return { success: false, transactions: [], source: 'none', error: 'No Sheet URL' };
     }
 
     try {
-        // Cache-busting URL to force fresh live fetch across all devices
+        let transactions = null;
+        let sheetUrl = '';
+
+        // 1. Try GET request with cache-busting timestamp
         const fetchUrl = url + (url.includes('?') ? '&' : '?') + '_t=' + Date.now();
-        const response = await fetch(fetchUrl, { method: 'GET', mode: 'cors' });
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-        const data = await response.json();
-        if (data && data.transactions && Array.isArray(data.transactions)) {
-            // Save to local cache
-            localStorage.setItem('KOSH_LOCAL_TRANSACTIONS', JSON.stringify(data.transactions));
-            if (data.sheetUrl) {
-                localStorage.setItem(SPREADSHEET_LINK_KEY, data.sheetUrl);
+        const getRes = await fetch(fetchUrl, { method: 'GET', mode: 'cors' });
+        if (getRes.ok) {
+            const getData = await getRes.json();
+            if (getData && getData.transactions && Array.isArray(getData.transactions)) {
+                transactions = getData.transactions;
+                sheetUrl = getData.sheetUrl || '';
             }
+        }
+
+        // 2. If GET did not return transactions array (e.g. backend POST fallback), try POST action: "read"
+        if (!transactions) {
+            const postRes = await fetch(url, {
+                method: 'POST',
+                mode: 'cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: "read" })
+            });
+            if (postRes.ok) {
+                const postData = await postRes.json();
+                if (postData && postData.transactions && Array.isArray(postData.transactions)) {
+                    transactions = postData.transactions;
+                    sheetUrl = postData.sheetUrl || '';
+                }
+            }
+        }
+
+        if (transactions && Array.isArray(transactions)) {
+            // Normalize transactions
+            const normalized = transactions.map(t => ({
+                transactionId: t.transactionId || t.id || `TXN-${Date.now()}`,
+                date: normalizeDateFormat(t.date),
+                type: (t.type || 'Expense').trim(),
+                category: (t.category || 'General').trim(),
+                amount: parseFloat(t.amount) || 0,
+                description: (t.description || t.note || '').trim(),
+                accountType: (t.accountType || 'Cash Wallet').trim(),
+                createdAt: t.createdAt || ''
+            }));
+
+            // Sync with local storage cache for offline backup
+            localStorage.setItem('KOSH_LOCAL_TRANSACTIONS', JSON.stringify(normalized));
+            if (sheetUrl) {
+                localStorage.setItem(SPREADSHEET_LINK_KEY, sheetUrl);
+            }
+
             return {
                 success: true,
-                transactions: data.transactions,
+                transactions: normalized,
                 source: 'sheet'
             };
         } else {
-            throw new Error(data.message || 'Invalid sheet response structure');
+            throw new Error("Google Sheet returned empty or incompatible transaction structure.");
         }
     } catch (err) {
-        console.warn("Sheet fetch error, using local fallback transactions:", err);
+        console.warn("fetchTransactionsFromGoogleSheet Live Fetch Error:", err);
         return {
-            success: true,
-            transactions: localTxns,
-            source: 'local_fallback',
+            success: false,
+            transactions: [],
+            source: 'error',
             error: err.message
         };
     }
 }
 
 /**
- * Update an existing transaction in Google Sheet and local cache
+ * Update an existing transaction in Google Sheet by transactionId
  * @param {Object} txn 
  * @returns {Promise<{success: boolean, message: string}>}
  */
@@ -153,48 +199,57 @@ async function updateTransactionInGoogleSheet(txn) {
         return { success: false, message: "Transaction ID is missing." };
     }
 
-    // Always update local cache immediately
-    const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
-    let localTxns = localRaw ? JSON.parse(localRaw) : [];
-    const idx = localTxns.findIndex(t => (t.transactionId === targetId || t.id === targetId));
-    if (idx !== -1) {
-        localTxns[idx] = { ...localTxns[idx], ...txn };
-    } else {
-        localTxns.unshift(txn);
-    }
-    localStorage.setItem('KOSH_LOCAL_TRANSACTIONS', JSON.stringify(localTxns));
-
     const url = getGoogleSheetUrl();
     if (!url) {
-        return { success: true, message: "Updated locally. Connect Google Sheet for cloud sync." };
+        return { success: false, message: "Google Sheet URL is not connected." };
     }
 
     try {
-        const payload = { action: "update", ...txn };
+        const payload = {
+            action: "update",
+            transactionId: targetId,
+            date: normalizeDateFormat(txn.date),
+            type: txn.type,
+            category: txn.category,
+            amount: parseFloat(txn.amount) || 0,
+            description: txn.description || txn.note || '',
+            accountType: txn.accountType || 'Cash Wallet'
+        };
+
         const response = await fetch(url, {
             method: 'POST',
             mode: 'cors',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify(payload)
         });
+
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        const isOk = data && data.status === 'success';
-        return {
-            success: isOk,
-            message: data ? data.message : "Failed to update Google Sheet."
-        };
+
+        if (data && data.status === 'success') {
+            // Re-fetch live dataset immediately
+            await fetchTransactionsFromGoogleSheet();
+            return {
+                success: true,
+                message: "Entry updated successfully in Google Sheet"
+            };
+        } else {
+            return {
+                success: false,
+                message: (data && data.message) ? data.message : "Failed to update row in Google Sheet."
+            };
+        }
     } catch (err) {
-        console.error("Update sheet failed:", err);
+        console.error("updateTransactionInGoogleSheet Error:", err);
         return {
             success: false,
-            message: err.message || "Failed to communicate with Google Sheets. Please check your internet connection or Web App URL."
+            message: err.message || "Failed to communicate with Google Sheets endpoint."
         };
     }
 }
 
 /**
- * Delete a transaction from Google Sheet and local cache
+ * Delete a transaction from Google Sheet by transactionId
  * @param {string} transactionId 
  * @returns {Promise<{success: boolean, message: string}>}
  */
@@ -203,36 +258,41 @@ async function deleteTransactionFromGoogleSheet(transactionId) {
         return { success: false, message: "Transaction ID is missing." };
     }
 
-    // Remove from local cache immediately
-    const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
-    let localTxns = localRaw ? JSON.parse(localRaw) : [];
-    localTxns = localTxns.filter(t => (t.transactionId !== transactionId && t.id !== transactionId));
-    localStorage.setItem('KOSH_LOCAL_TRANSACTIONS', JSON.stringify(localTxns));
-
     const url = getGoogleSheetUrl();
     if (!url) {
-        return { success: true, message: "Deleted locally. Connect Google Sheet for cloud sync." };
+        return { success: false, message: "Google Sheet URL is not connected." };
     }
 
     try {
-        const payload = { action: "delete", transactionId: transactionId };
+        const payload = { action: "delete", transactionId: String(transactionId).trim() };
         const response = await fetch(url, {
             method: 'POST',
             mode: 'cors',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify(payload)
         });
+
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        return {
-            success: data.status === 'success',
-            message: data.message || "Entry deleted successfully"
-        };
+
+        if (data && data.status === 'success') {
+            // Re-fetch live dataset immediately
+            await fetchTransactionsFromGoogleSheet();
+            return {
+                success: true,
+                message: data.message || "Entry deleted successfully from Google Sheet"
+            };
+        } else {
+            return {
+                success: false,
+                message: (data && data.message) ? data.message : "Failed to delete row from Google Sheet."
+            };
+        }
     } catch (err) {
-        console.error("Delete sheet failed:", err);
+        console.error("deleteTransactionFromGoogleSheet Error:", err);
         return {
-            success: true,
-            message: "Deleted from local cache (Sheet sync pending)"
+            success: false,
+            message: err.message || "Failed to send delete request to Google Sheet."
         };
     }
 }
@@ -257,7 +317,7 @@ async function testGoogleSheetConnection(customUrl) {
             throw new Error(`Endpoint returned HTTP ${response.status}`);
         }
         const data = await response.json();
-        if (data && data.status === 'success') {
+        if (data && (data.status === 'success' || data.status === 'online')) {
             setGoogleSheetUrl(url);
             if (data.sheetUrl) {
                 localStorage.setItem(SPREADSHEET_LINK_KEY, data.sheetUrl);
@@ -267,7 +327,7 @@ async function testGoogleSheetConnection(customUrl) {
             }
             return {
                 success: true,
-                message: `Connection Successful! Verified read & write access to database.`,
+                message: `Connection Successful! Verified read & write access to Google Sheet.`,
                 sheetUrl: data.sheetUrl || getConfirmedSheetUrl(),
                 transactionsCount: data.transactions ? data.transactions.length : 0
             };
@@ -304,4 +364,3 @@ function getCustomCategories() {
 function saveCustomCategories(categoriesObj) {
     localStorage.setItem(CATEGORY_STORAGE_KEY, JSON.stringify(categoriesObj));
 }
-
