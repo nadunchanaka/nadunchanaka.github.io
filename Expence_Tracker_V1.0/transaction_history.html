@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<meta content="mobile_tab" name="shell-type"/>
+<title>Expenses Dashboard - Transaction History</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+.no-scrollbar::-webkit-scrollbar{display:none;}
+.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none;}
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-tint": "#4d44e3", "secondary-fixed": "#6ffbbe", "surface-container": "#eaedff", "tertiary-fixed-dim": "#ffb2b7", "on-secondary-container": "#00714d", "on-primary-fixed": "#0f0069", "secondary-container": "#6cf8bb", "surface-container-low": "#f2f3ff", "surface-dim": "#d2d9f4", "outline-variant": "#c7c4d8", "surface-variant": "#dae2fd", "on-background": "#131b2e", "on-secondary-fixed-variant": "#005236", "error-container": "#ffdad6", "on-primary-fixed-variant": "#3323cc", "on-tertiary": "#ffffff", "inverse-surface": "#283044", "surface-container-high": "#e2e7ff", "primary-fixed": "#e2dfff", "on-primary-container": "#dad7ff", "on-error": "#ffffff", "tertiary": "#95002b", "primary": "#3525cd", "surface": "#faf8ff", "on-surface-variant": "#464555", "primary-container": "#4f46e5", "tertiary-fixed": "#ffdadb", "tertiary-container": "#bf0f3c", "inverse-on-surface": "#eef0ff", "surface-container-lowest": "#ffffff", "outline": "#777587", "surface-bright": "#faf8ff", "on-secondary-fixed": "#002113", "on-tertiary-fixed-variant": "#92002a", "background": "#faf8ff", "primary-fixed-dim": "#c3c0ff", "secondary-fixed-dim": "#4edea3", "on-secondary": "#ffffff", "secondary": "#006c49", "inverse-primary": "#c3c0ff", "on-tertiary-container": "#ffd0d2", "on-error-container": "#93000a", "surface-container-highest": "#dae2fd", "on-primary": "#ffffff", "on-tertiary-fixed": "#40000d", "on-surface": "#131b2e", "error": "#ba1a1a" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1rem", "space-md": "1rem", "space-xs": "0.25rem", "space-xl": "2rem", "margin": "1.25rem", "space-sm": "0.5rem", "space-lg": "1.5rem" }, "fontFamily": { "title-md": ["Plus Jakarta Sans"], "stat-numeric-lg": ["Plus Jakarta Sans"], "display-hero": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "stat-numeric-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"] }, "fontSize": { "title-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "stat-numeric-lg": ["36px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "display-hero": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "800" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "stat-numeric-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }] } } } }
+</script>
+<script src="js/sheets_api.js"></script>
+</head>
+
+<body class="bg-background font-body-md text-on-surface flex flex-col min-h-screen">
+<header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] pt-safe">
+<div class="h-16 px-margin flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<img alt="Expenses Dashboard Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEDOHzQ1qBqlsy278Q3Mtw8_ieQi92Tg409O5AtX-whZGtJoTBta3dwgSoBOfRqoczx_eB3vQEe6HnYZO10_R9uAiCFSI0H4gixnHsco-Lag-gY0sqhmviZXrKKQ541i3ru4YM1NpUUFGPpDypn_X2Uq-hUWwLtIeID4PZT_rUmUzls_3OH1E-UZStsD6nyv8wycneNjt6Lbrsu6JNQAi79Q7jXt7yumVB9gTZ11XJsN4EzKB7BXNB"/>
+<span class="font-title-md text-title-md font-extrabold tracking-tight text-on-surface leading-none">Expenses Dashboard</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button id="btn-month-selector" aria-label="Change month filter" class="min-h-[44px] px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center gap-1.5 transition-colors cursor-pointer" onclick="toggleMonthPicker()" type="button">
+<span id="month-selector-text" class="font-label-md text-label-md font-semibold text-on-surface">September 2026</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">keyboard_arrow_down</span>
+</button>
+<div class="relative flex items-center justify-center">
+<button aria-label="Open profile &amp; settings" class="min-h-[44px] min-w-[44px] flex items-center justify-center p-1 focus:outline-none cursor-pointer" onclick="window.location.href='app_settings.html'" type="button">
+<div class="relative">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-sm border border-surface">
+<span class="material-symbols-outlined text-[20px]">account_circle</span>
+</div>
+<span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-secondary rounded-full ring-2 ring-surface"></span>
+</div>
+</button>
+</div>
+</div>
+</div>
+</header>
+
+<!-- Month Selector Modal -->
+<div id="month-picker-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/40 backdrop-blur-sm p-4">
+<div class="w-full max-w-xs rounded-3xl bg-surface-container-lowest p-5 shadow-2xl flex flex-col gap-3">
+<div class="flex items-center justify-between border-b border-surface-container-low pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">calendar_month</span>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Select Period</h3>
+</div>
+<button type="button" onclick="toggleMonthPicker()" class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div id="month-picker-options" class="flex flex-col gap-1 max-h-64 overflow-y-auto">
+<!-- Dynamic Options -->
+</div>
+</div>
+</div>
+
+<main class="flex flex-col relative w-full pt-16 pb-28 bg-surface">
+<div class="flex flex-col w-full">
+
+<!-- Top Action & Search Section -->
+<section class="px-margin pt-3 pb-3 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Transaction History</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Expense Tracker Database • LKR Account</p>
+</div>
+<div class="flex items-center gap-1.5">
+<button aria-label="Export Financial Statement" class="min-h-[44px] px-3.5 py-2 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-primary font-label-md text-label-md flex items-center gap-1.5 transition-transform active:scale-95 shadow-sm cursor-pointer" id="exportStatementBtn" onclick="exportStatementCSV()" type="button">
+<span class="material-symbols-outlined text-[18px]">file_download</span>
+<span>Statement</span>
+</button>
+</div>
+</div>
+
+<!-- Monthly Summary Stat Ribbon -->
+<div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary via-primary-container to-surface-tint p-4 text-on-primary shadow-[0_10px_25px_-5px_rgba(79,70,229,0.25)]">
+<div class="relative z-10 flex items-center justify-between">
+<div class="flex flex-col">
+<span id="summary-flow-title" class="font-label-sm text-label-sm uppercase tracking-wider text-on-primary-container">Net Monthly Flow</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="font-title-md text-title-md font-medium text-on-primary-container">LKR</span>
+<span id="summary-net-flow" class="font-stat-numeric-md text-stat-numeric-md font-extrabold text-on-primary">+0.00</span>
+</div>
+<span id="summary-count-label" class="font-body-sm text-body-sm text-on-primary-container/90 mt-1 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-container inline-block"></span>
+Showing 0 transactions
+</span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span id="summary-health-badge" class="px-2.5 py-1 rounded-full bg-white/15 backdrop-blur-md text-on-primary font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary-container">trending_up</span>
+Surplus
+</span>
+<span id="summary-sync-status" class="font-label-sm text-label-sm text-on-primary-container/80">Google Sheet Live</span>
+</div>
+</div>
+<div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-white/10 blur-xl pointer-events-none"></div>
+</div>
+
+<!-- Search Input -->
+<div class="relative flex items-center w-full">
+<span class="material-symbols-outlined absolute left-3.5 text-outline text-[20px] pointer-events-none">search</span>
+<input class="w-full h-12 pl-11 pr-10 rounded-2xl bg-surface-container-low text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container transition-all" id="transactionSearch" placeholder="Search by description, vendor, note, or amount..." type="search"/>
+<button aria-label="Clear Search Input" class="absolute right-3 hidden text-outline hover:text-on-surface p-1 cursor-pointer" id="clearSearchBtn" onclick="clearSearchInput()" type="button">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+</button>
+</div>
+</section>
+
+<!-- Filter & Date Selection Chips -->
+<section class="flex flex-col gap-2.5 py-1">
+<!-- Date Horizon Pills -->
+<div class="flex items-center gap-2 overflow-x-auto px-margin no-scrollbar py-0.5" id="horizon-pills-row">
+<button class="horizon-pill flex-shrink-0 min-h-[38px] px-3.5 py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md flex items-center gap-1.5 shadow-sm cursor-pointer" data-horizon="this_month" onclick="setHorizonFilter('this_month')" type="button">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span id="horizon-this-month-text">This Month</span>
+</button>
+<button class="horizon-pill flex-shrink-0 min-h-[38px] px-3.5 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-md text-label-md transition-colors cursor-pointer" data-horizon="last_month" onclick="setHorizonFilter('last_month')" type="button">
+Last Month
+</button>
+<button class="horizon-pill flex-shrink-0 min-h-[38px] px-3.5 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-md text-label-md transition-colors cursor-pointer" data-horizon="last_7_days" onclick="setHorizonFilter('last_7_days')" type="button">
+Last 7 Days
+</button>
+<button class="horizon-pill flex-shrink-0 min-h-[38px] px-3.5 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-md text-label-md transition-colors cursor-pointer" data-horizon="all_time" onclick="setHorizonFilter('all_time')" type="button">
+All Time
+</button>
+</div>
+
+<!-- Category & Type Pills -->
+<div class="flex items-center gap-2 overflow-x-auto px-margin no-scrollbar py-0.5" id="category-pills-row">
+<button class="cat-pill flex-shrink-0 min-h-[34px] px-3.5 py-1 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm font-bold cursor-pointer" data-cat="all" onclick="setCategoryFilter('all')" type="button">
+All Types
+</button>
+<button class="cat-pill flex-shrink-0 min-h-[34px] px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1 cursor-pointer" data-cat="income" onclick="setCategoryFilter('income')" type="button">
+<span class="material-symbols-outlined text-[14px] text-secondary">arrow_downward</span>
+Income Only
+</button>
+<button class="cat-pill flex-shrink-0 min-h-[34px] px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1 cursor-pointer" data-cat="expense" onclick="setCategoryFilter('expense')" type="button">
+<span class="material-symbols-outlined text-[14px] text-tertiary">arrow_upward</span>
+Expense Only
+</button>
+<button class="cat-pill flex-shrink-0 min-h-[34px] px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm cursor-pointer" data-cat="Grocery" onclick="setCategoryFilter('Grocery')" type="button">
+🛒 Grocery
+</button>
+<button class="cat-pill flex-shrink-0 min-h-[34px] px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm cursor-pointer" data-cat="Traveling" onclick="setCategoryFilter('Traveling')" type="button">
+🚗 Traveling
+</button>
+<button class="cat-pill flex-shrink-0 min-h-[34px] px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm cursor-pointer" data-cat="Vehicle" onclick="setCategoryFilter('Vehicle')" type="button">
+⛽ Vehicle
+</button>
+<button class="cat-pill flex-shrink-0 min-h-[34px] px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm cursor-pointer" data-cat="Bakery" onclick="setCategoryFilter('Bakery')" type="button">
+🥐 Bakery
+</button>
+<button class="cat-pill flex-shrink-0 min-h-[34px] px-3 py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm cursor-pointer" data-cat="Salary" onclick="setCategoryFilter('Salary')" type="button">
+💼 Salary
+</button>
+</div>
+</section>
+
+<!-- Hint Notification Bar -->
+<div class="px-margin my-1">
+<div class="flex items-center justify-between p-3 rounded-2xl bg-surface-container-low text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">touch_app</span>
+<span class="font-body-sm text-body-sm">Tap pencil to edit or trash to remove an entry</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Sheet Sync</span>
+</div>
+</div>
+
+<!-- Dynamic Grouped Transaction Feed -->
+<section class="flex flex-col gap-5 px-margin mt-2" id="history-feed-container">
+<!-- Grouped transaction cards rendered dynamically by JS -->
+</section>
+
+<!-- Quick Edit Modal -->
+<div class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm p-4 transition-opacity duration-200" id="quickEditModal">
+<div class="w-full max-w-sm rounded-3xl bg-surface-container-lowest p-5 shadow-2xl flex flex-col gap-4">
+<div class="flex items-center justify-between border-b border-surface-container-low pb-3">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">edit_note</span>
+</div>
+<span class="font-title-md text-title-md font-bold text-on-surface">Edit Transaction</span>
+</div>
+<button aria-label="Close edit modal" class="p-1 rounded-full text-outline hover:text-on-surface cursor-pointer" onclick="closeEditModal()" type="button">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<form class="flex flex-col gap-3" id="editTransactionForm">
+<input id="modalTxnIdInput" type="hidden"/>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-semibold" for="modalVendorInput">Description / Vendor</label>
+<input class="w-full h-11 px-3.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container focus:outline-none" id="modalVendorInput" required="" type="text"/>
+</div>
+<div class="flex gap-2">
+<div class="flex-1 flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-semibold" for="modalAmountInput">Amount (LKR)</label>
+<input class="w-full h-11 px-3.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container focus:outline-none" id="modalAmountInput" required="" step="0.01" type="number"/>
+</div>
+<div class="w-1/2 flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-semibold" for="modalCategoryInput">Category</label>
+<input class="w-full h-11 px-3.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container focus:outline-none" id="modalCategoryInput" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-semibold" for="modalAccountInput">Account Type</label>
+<input class="w-full h-11 px-3.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container focus:outline-none" id="modalAccountInput" type="text"/>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<button class="flex-1 min-h-[44px] rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md cursor-pointer" onclick="closeEditModal()" type="button">
+Cancel
+</button>
+<button class="flex-1 min-h-[44px] rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold shadow-md cursor-pointer" type="submit">
+Save Changes
+</button>
+</div>
+</form>
+</div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="fixed inset-0 z-50 hidden items-center justify-center bg-inverse-surface/40 backdrop-blur-sm p-4" id="deleteConfirmModal">
+  <div class="w-full max-w-xs rounded-3xl bg-surface-container-lowest p-5 shadow-2xl flex flex-col gap-3.5">
+    <div class="flex items-center gap-2 text-error">
+      <div class="w-9 h-9 rounded-full bg-error-container text-on-error-container flex items-center justify-center">
+        <span class="material-symbols-outlined text-[20px]">delete</span>
+      </div>
+      <h3 class="font-title-md text-title-md font-bold text-on-surface">Delete Transaction?</h3>
+    </div>
+    <p class="font-body-sm text-body-sm text-on-surface-variant">
+      Are you sure you want to delete <strong id="delete-modal-desc" class="text-on-surface"></strong> of <strong id="delete-modal-amt" class="text-error"></strong> from your Google Sheet?
+    </p>
+    <div class="flex items-center gap-2 mt-2">
+      <button type="button" onclick="closeDeleteModal()" class="flex-1 min-h-[44px] rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md cursor-pointer">
+        Cancel
+      </button>
+      <button type="button" id="confirmDeleteBtn" onclick="executeDeleteTransaction()" class="flex-1 min-h-[44px] rounded-xl bg-error text-on-error font-label-md text-label-md font-bold shadow-md cursor-pointer">
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Toast -->
+<div class="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 hidden w-[90%] max-w-sm rounded-2xl bg-inverse-surface text-inverse-on-surface p-4 shadow-xl items-center justify-between gap-3" id="deleteConfirmSheet">
+<div class="flex items-center gap-2.5 min-w-0">
+<span class="material-symbols-outlined text-tertiary-fixed text-[22px]">delete_forever</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-bold truncate" id="deleteTargetText">Deleted item</span>
+<span class="font-body-sm text-body-sm text-inverse-on-surface/80">Tap undo within 5s</span>
+</div>
+</div>
+<div class="flex items-center gap-2 flex-shrink-0">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest/20 hover:bg-surface-container-lowest/30 text-inverse-on-surface font-label-sm text-label-sm font-bold cursor-pointer" id="undoDeleteBtn" onclick="undoDeleteTransaction()" type="button">
+UNDO
+</button>
+</div>
+</div>
+
+<!-- Export Toast Notification -->
+<div class="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 hidden w-[90%] max-w-sm rounded-2xl bg-surface-container-lowest text-on-surface p-4 shadow-2xl items-center gap-3 border border-surface-container" id="exportToast">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
+<div class="flex flex-col flex-1">
+<span class="font-title-md text-title-md font-bold">Statement Downloaded</span>
+<span id="exportToastSub" class="font-body-sm text-body-sm text-on-surface-variant">Financial_Statement.csv downloaded.</span>
+</div>
+</div>
+
+</div>
+</main>
+
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.04)]" data-active-classes="text-primary font-bold">
+<div class="h-16 px-gutter flex items-center justify-around">
+<a aria-label="Home Dashboard" class="min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface transition-colors" data-path="dashboard" href="home_dashboard.html">
+<span class="material-symbols-outlined text-[24px]">home</span>
+<span class="font-label-sm text-label-sm tracking-tight">Home</span>
+</a>
+<a aria-label="Add Expense" class="-translate-y-3 min-w-[52px] min-h-[52px] w-13 h-13 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-[0_6px_20px_rgba(79,70,229,0.35)] active:scale-95 transition-all hover:bg-primary" data-path="quick-add" href="add_transaction.html">
+<span class="material-symbols-outlined text-[28px]">add</span>
+</a>
+<a aria-current="page" aria-label="Transaction History" class="min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 transition-colors text-primary font-bold" data-path="transaction-history" href="transaction_history.html">
+<span class="material-symbols-outlined text-[24px]">receipt_long</span>
+<span class="font-label-sm text-label-sm tracking-tight">History</span>
+</a>
+<a aria-label="Preferences and Settings" class="min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface transition-colors" data-path="app-settings" href="app_settings.html">
+<span class="material-symbols-outlined text-[24px]">tune</span>
+<span class="font-label-sm text-label-sm tracking-tight">Settings</span>
+</a>
+</div>
+</nav>
+
+<script>
+  const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  
+  const CATEGORY_CONFIG = {
+    'Grocery': { icon: '🛒', symbol: 'shopping_cart', color: '#006c49', badgeBg: 'bg-secondary-container/40', textCls: 'text-on-secondary-container' },
+    'Traveling': { icon: '🚗', symbol: 'directions_car', color: '#3525cd', badgeBg: 'bg-surface-container', textCls: 'text-primary' },
+    'Bakery': { icon: '🥐', symbol: 'bakery_dining', color: '#d97706', badgeBg: 'bg-amber-100', textCls: 'text-amber-700' },
+    'Vehicle': { icon: '⛽', symbol: 'local_gas_station', color: '#805ad5', badgeBg: 'bg-purple-100', textCls: 'text-purple-700' },
+    'Cosmetics': { icon: '💄', symbol: 'face_3', color: '#ec4899', badgeBg: 'bg-pink-100', textCls: 'text-pink-700' },
+    'Dresses': { icon: '👗', symbol: 'styler', color: '#bf0f3c', badgeBg: 'bg-red-100', textCls: 'text-red-700' },
+    'Gifts': { icon: '🎁', symbol: 'card_giftcard', color: '#0284c7', badgeBg: 'bg-sky-100', textCls: 'text-sky-700' },
+    'Utilities': { icon: '💡', symbol: 'lightbulb', color: '#059669', badgeBg: 'bg-emerald-100', textCls: 'text-emerald-700' },
+    'Salary': { icon: '💼', symbol: 'work', color: '#059669', badgeBg: 'bg-secondary-fixed/50', textCls: 'text-secondary' },
+    'Other Income': { icon: '💰', symbol: 'payments', color: '#10b981', badgeBg: 'bg-secondary-container', textCls: 'text-on-secondary-container' },
+    'Other': { icon: '📦', symbol: 'sell', color: '#64748b', badgeBg: 'bg-surface-container', textCls: 'text-on-surface-variant' }
+  };
+
+  let allTransactions = [];
+  let selectedYear = new Date().getFullYear();
+  let selectedMonth = new Date().getMonth(); // 0-11
+  let activeHorizonFilter = 'this_month';
+  let activeCategoryFilter = 'all';
+  let searchQuery = '';
+  let pendingDeleteTxn = null;
+  let deleteTimeout = null;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setupSearchListener();
+    loadHistoryData();
+  });
+
+  window.addEventListener('pageshow', () => {
+    loadHistoryData();
+  });
+
+  window.addEventListener('focus', () => {
+    loadHistoryData();
+  });
+
+  async function loadHistoryData() {
+    try {
+      const res = await fetchTransactionsFromGoogleSheet();
+      if (res && res.transactions) {
+        allTransactions = res.transactions;
+      }
+    } catch (e) {
+      console.warn("Could not fetch sheet transactions:", e);
+      const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
+      allTransactions = localRaw ? JSON.parse(localRaw) : [];
+    }
+
+    if (allTransactions.length > 0 && !window.userHasPickedMonth) {
+      const latestDateStr = allTransactions[allTransactions.length - 1].date;
+      if (latestDateStr && latestDateStr.includes('-')) {
+        const parts = latestDateStr.split('-');
+        if (parts.length >= 2) {
+          selectedYear = parseInt(parts[0]);
+          selectedMonth = parseInt(parts[1]) - 1;
+        }
+      }
+    }
+
+    populateMonthPickerOptions();
+    renderHistoryPage();
+  }
+
+  function toggleMonthPicker() {
+    const modal = document.getElementById('month-picker-modal');
+    if (modal) modal.classList.toggle('hidden');
+  }
+
+  function populateMonthPickerOptions() {
+    const container = document.getElementById('month-picker-options');
+    if (!container) return;
+
+    const periodsSet = new Set();
+    const now = new Date();
+    periodsSet.add(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`);
+    
+    allTransactions.forEach(t => {
+      if (t.date && t.date.includes('-')) {
+        const parts = t.date.split('-');
+        periodsSet.add(`${parts[0]}-${parts[1]}`);
+      }
+    });
+
+    const periods = Array.from(periodsSet).sort().reverse();
+    container.innerHTML = '';
+
+    periods.forEach(pKey => {
+      const [yrStr, moStr] = pKey.split('-');
+      const yr = parseInt(yrStr);
+      const mo = parseInt(moStr) - 1;
+      const isSelected = (yr === selectedYear && mo === selectedMonth);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = isSelected 
+        ? "w-full py-2.5 px-3 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold flex items-center justify-between cursor-pointer"
+        : "w-full py-2.5 px-3 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-between cursor-pointer";
+      btn.innerHTML = `<span>${MONTH_NAMES[mo]} ${yr}</span>${isSelected ? '<span class="material-symbols-outlined text-[18px]">check</span>' : ''}`;
+      btn.onclick = () => {
+        selectedYear = yr;
+        selectedMonth = mo;
+        window.userHasPickedMonth = true;
+        toggleMonthPicker();
+        activeHorizonFilter = 'this_month';
+        updateHorizonPillUI();
+        renderHistoryPage();
+      };
+      container.appendChild(btn);
+    });
+  }
+
+  function setHorizonFilter(horizon) {
+    activeHorizonFilter = horizon;
+    updateHorizonPillUI();
+    renderHistoryPage();
+  }
+
+  function updateHorizonPillUI() {
+    document.querySelectorAll('.horizon-pill').forEach(btn => {
+      const h = btn.getAttribute('data-horizon');
+      if (h === activeHorizonFilter) {
+        btn.className = "horizon-pill flex-shrink-0 min-h-[38px] px-3.5 py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md font-bold flex items-center gap-1.5 shadow-sm cursor-pointer";
+      } else {
+        btn.className = "horizon-pill flex-shrink-0 min-h-[38px] px-3.5 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-md text-label-md transition-colors cursor-pointer";
+      }
+    });
+
+    const monthText = document.getElementById('horizon-this-month-text');
+    if (monthText) monthText.textContent = `${MONTH_NAMES[selectedMonth]} ${selectedYear}`;
+  }
+
+  function setCategoryFilter(cat) {
+    activeCategoryFilter = cat;
+    document.querySelectorAll('.cat-pill').forEach(btn => {
+      const c = btn.getAttribute('data-cat');
+      if (c === activeCategoryFilter) {
+        btn.className = "cat-pill flex-shrink-0 min-h-[34px] px-3.5 py-1 rounded-full bg-primary-container text-on-primary font-label-sm text-label-sm font-bold cursor-pointer";
+      } else {
+        btn.className = "cat-pill flex-shrink-0 min-h-[34px] px-3 py-1 rounded-full bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-sm text-label-sm cursor-pointer";
+      }
+    });
+    renderHistoryPage();
+  }
+
+  function setupSearchListener() {
+    const input = document.getElementById('transactionSearch');
+    const clearBtn = document.getElementById('clearSearchBtn');
+    if (!input) return;
+
+    input.addEventListener('input', (e) => {
+      searchQuery = e.target.value.toLowerCase().trim();
+      if (clearBtn) clearBtn.style.display = searchQuery.length > 0 ? 'block' : 'none';
+      renderHistoryPage();
+    });
+  }
+
+  function clearSearchInput() {
+    const input = document.getElementById('transactionSearch');
+    const clearBtn = document.getElementById('clearSearchBtn');
+    if (input) input.value = '';
+    if (clearBtn) clearBtn.style.display = 'none';
+    searchQuery = '';
+    renderHistoryPage();
+  }
+
+  function getFilteredTransactions() {
+    const monthStr = String(selectedMonth + 1).padStart(2, '0');
+    const targetPeriod = `${selectedYear}-${monthStr}`;
+
+    const now = new Date();
+    const last7DaysDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+    return allTransactions.filter(t => {
+      // Date Horizon Filter
+      if (activeHorizonFilter === 'this_month') {
+        if (!t.date || !t.date.startsWith(targetPeriod)) return false;
+      } else if (activeHorizonFilter === 'last_month') {
+        let lastMo = selectedMonth - 1;
+        let lastYr = selectedYear;
+        if (lastMo < 0) { lastMo = 11; lastYr -= 1; }
+        const lastMoStr = String(lastMo + 1).padStart(2, '0');
+        if (!t.date || !t.date.startsWith(`${lastYr}-${lastMoStr}`)) return false;
+      } else if (activeHorizonFilter === 'last_7_days') {
+        if (!t.date) return false;
+        const d = new Date(t.date);
+        if (isNaN(d.getTime()) || d < last7DaysDate) return false;
+      }
+
+      // Category / Type Filter
+      const isIncome = String(t.type).toLowerCase() === 'income';
+      if (activeCategoryFilter === 'income') {
+        if (!isIncome) return false;
+      } else if (activeCategoryFilter === 'expense') {
+        if (isIncome) return false;
+      } else if (activeCategoryFilter !== 'all') {
+        if (t.category !== activeCategoryFilter) return false;
+      }
+
+      // Search Query Filter
+      if (searchQuery) {
+        const text = `${t.description || ''} ${t.category || ''} ${t.accountType || ''} ${t.amount || ''} ${t.type || ''}`.toLowerCase();
+        if (!text.includes(searchQuery)) return false;
+      }
+
+      return true;
+    });
+  }
+
+  function renderHistoryPage() {
+    const filtered = getFilteredTransactions();
+
+    // Update Header Text
+    const selectorText = document.getElementById('month-selector-text');
+    if (selectorText) selectorText.textContent = `${MONTH_NAMES[selectedMonth]} ${selectedYear}`;
+
+    // Update Summary Stat Ribbon
+    let totalIncome = 0;
+    let totalExpenses = 0;
+    filtered.forEach(t => {
+      const amt = parseFloat(t.amount) || 0;
+      if (String(t.type).toLowerCase() === 'income') {
+        totalIncome += amt;
+      } else {
+        totalExpenses += amt;
+      }
+    });
+
+    const netFlow = totalIncome - totalExpenses;
+    const summaryNetFlow = document.getElementById('summary-net-flow');
+    const summaryCountLabel = document.getElementById('summary-count-label');
+    const summaryHealthBadge = document.getElementById('summary-health-badge');
+
+    if (summaryNetFlow) {
+      const formatted = Math.abs(netFlow).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      summaryNetFlow.textContent = `${netFlow >= 0 ? '+' : '-'}${formatted}`;
+    }
+    if (summaryCountLabel) {
+      summaryCountLabel.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-secondary-container inline-block"></span> Showing ${filtered.length} transactions`;
+    }
+    if (summaryHealthBadge) {
+      summaryHealthBadge.innerHTML = `<span class="material-symbols-outlined text-[14px] text-secondary-container">${netFlow >= 0 ? 'trending_up' : 'trending_down'}</span> ${netFlow >= 0 ? 'Surplus' : 'Deficit'}`;
+    }
+
+    // Render Grouped Feed
+    renderGroupedFeed(filtered);
+  }
+
+  function renderGroupedFeed(transactions) {
+    const container = document.getElementById('history-feed-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    if (transactions.length === 0) {
+      container.innerHTML = `
+        <div class="p-8 text-center text-on-surface-variant flex flex-col items-center justify-center gap-3 rounded-3xl bg-surface-container-lowest shadow-sm my-4">
+          <span class="material-symbols-outlined text-[42px] text-outline">receipt_long</span>
+          <span class="font-title-md text-title-md font-bold text-on-surface">No Transactions Found</span>
+          <span class="font-body-sm text-body-sm text-outline max-w-xs">No records match your selected month or search filter. Tap + Record to log a new entry.</span>
+        </div>
+      `;
+      return;
+    }
+
+    // Group by Date string
+    const groups = {};
+    transactions.forEach(t => {
+      const dateKey = t.date || 'Today';
+      if (!groups[dateKey]) groups[dateKey] = [];
+      groups[dateKey].push(t);
+    });
+
+    const sortedDates = Object.keys(groups).sort().reverse();
+    const todayStr = new Date().toISOString().split('T')[0];
+    const yesterdayDate = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const yesterdayStr = yesterdayDate.toISOString().split('T')[0];
+
+    sortedDates.forEach(dKey => {
+      const groupTxns = groups[dKey];
+      let dayIncome = 0;
+      let dayExpense = 0;
+
+      groupTxns.forEach(t => {
+        const amt = parseFloat(t.amount) || 0;
+        if (String(t.type).toLowerCase() === 'income') dayIncome += amt;
+        else dayExpense += amt;
+      });
+
+      // Format Date Header Label
+      let displayDateLabel = dKey;
+      if (dKey === todayStr) displayDateLabel = `Today - ${formatPrettyDate(dKey)}`;
+      else if (dKey === yesterdayStr) displayDateLabel = `Yesterday - ${formatPrettyDate(dKey)}`;
+      else displayDateLabel = formatPrettyDate(dKey);
+
+      const groupSection = document.createElement('div');
+      groupSection.className = "flex flex-col gap-2";
+
+      // Group Header
+      groupSection.innerHTML = `
+        <div class="flex items-center justify-between px-1">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+            <h2 class="font-title-md text-title-md font-bold text-on-surface">${displayDateLabel}</h2>
+          </div>
+          <div class="flex items-center gap-2 font-label-sm text-label-sm">
+            ${dayIncome > 0 ? `<span class="text-secondary font-bold">+LKR ${dayIncome.toLocaleString('en-US')}</span>` : ''}
+            ${(dayIncome > 0 && dayExpense > 0) ? `<span class="text-outline">|</span>` : ''}
+            ${dayExpense > 0 ? `<span class="text-tertiary font-bold">-LKR ${dayExpense.toLocaleString('en-US')}</span>` : ''}
+          </div>
+        </div>
+      `;
+
+      // Cards Stack Container
+      const cardsStack = document.createElement('div');
+      cardsStack.className = "flex flex-col gap-2.5";
+
+      groupTxns.reverse().forEach(t => {
+        const isIncome = String(t.type).toLowerCase() === 'income';
+        const config = CATEGORY_CONFIG[t.category] || (isIncome ? CATEGORY_CONFIG['Salary'] : CATEGORY_CONFIG['Other']);
+        const amt = parseFloat(t.amount) || 0;
+        const amtDisplay = isIncome ? `+LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}` : `-LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+        const amtColor = isIncome ? 'text-secondary font-extrabold' : 'text-tertiary font-bold';
+
+        const article = document.createElement('article');
+        article.className = "transaction-item relative bg-surface-container-lowest rounded-2xl p-3.5 shadow-[0_1px_3px_rgba(15,23,42,0.04),0_6px_16px_rgba(15,23,42,0.02)] flex flex-col gap-2 transition-all";
+
+        article.innerHTML = `
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex items-start gap-3 min-w-0">
+              <div class="w-11 h-11 rounded-2xl ${config.badgeBg} flex items-center justify-center ${config.textCls} flex-shrink-0 shadow-sm">
+                <span class="material-symbols-outlined text-[22px]">${config.symbol || 'receipt'}</span>
+              </div>
+              <div class="flex flex-col min-w-0">
+                <span class="font-title-md text-title-md font-bold text-on-surface truncate">${t.description || t.category}</span>
+                <span class="font-body-sm text-body-sm text-on-surface-variant truncate">${t.accountType || 'Cash Wallet'}</span>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="px-2 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant">${t.category}</span>
+                  <span class="font-label-sm text-label-sm text-outline">${t.date || ''}</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-col items-end gap-1.5 flex-shrink-0">
+              <span class="font-stat-numeric-md text-stat-numeric-md ${amtColor}">${amtDisplay}</span>
+              <div class="flex items-center gap-1">
+                <button aria-label="Edit Transaction" class="edit-btn min-h-[36px] min-w-[36px] rounded-full bg-surface-container-low hover:bg-surface-container text-primary flex items-center justify-center transition-transform active:scale-90 cursor-pointer" type="button">
+                  <span class="material-symbols-outlined text-[18px]">edit</span>
+                </button>
+                <button aria-label="Delete Transaction" class="delete-btn min-h-[36px] min-w-[36px] rounded-full bg-error-container hover:bg-red-100 text-on-error-container flex items-center justify-center transition-transform active:scale-90 cursor-pointer" type="button">
+                  <span class="material-symbols-outlined text-[18px]">delete</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Wire Edit Button
+        const editBtn = article.querySelector('.edit-btn');
+        if (editBtn) {
+          editBtn.onclick = (e) => {
+            e.stopPropagation();
+            openAddFormForEdit(t);
+          };
+        }
+
+        // Wire Delete Button
+        const delBtn = article.querySelector('.delete-btn');
+        if (delBtn) {
+          delBtn.onclick = (e) => {
+            e.stopPropagation();
+            promptDeleteTransaction(t);
+          };
+        }
+
+        cardsStack.appendChild(article);
+      });
+
+      groupSection.appendChild(cardsStack);
+      container.appendChild(groupSection);
+    });
+  }
+
+  function formatPrettyDate(dateStr) {
+    if (!dateStr || !dateStr.includes('-')) return dateStr;
+    const parts = dateStr.split('-');
+    if (parts.length < 3) return dateStr;
+    const day = parseInt(parts[2]);
+    const moIdx = parseInt(parts[1]) - 1;
+    const yr = parts[0];
+    return `${day} ${MONTH_NAMES[moIdx].substring(0, 3)} ${yr}`;
+  }
+
+  // Edit in Add Transaction Form Wiring
+  function openAddFormForEdit(txn) {
+    sessionStorage.setItem('KOSH_EDIT_TRANSACTION', JSON.stringify(txn));
+    const targetId = txn.transactionId || txn.id || '';
+    window.location.href = `add_transaction.html?editId=${encodeURIComponent(targetId)}`;
+  }
+
+  // Delete & Confirmation Modal Logic
+  let pendingDeleteTxnId = null;
+
+  function promptDeleteTransaction(txn) {
+    pendingDeleteTxnId = txn.transactionId || txn.id;
+    const modal = document.getElementById('deleteConfirmModal');
+    const descEl = document.getElementById('delete-modal-desc');
+    const amtEl = document.getElementById('delete-modal-amt');
+
+    if (descEl) descEl.textContent = txn.description || txn.category || 'Transaction';
+    if (amtEl) amtEl.textContent = `LKR ${parseFloat(txn.amount || 0).toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
+
+    if (modal) {
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+  }
+
+  function closeDeleteModal() {
+    const modal = document.getElementById('deleteConfirmModal');
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+    pendingDeleteTxnId = null;
+  }
+
+  async function executeDeleteTransaction() {
+    if (!pendingDeleteTxnId) return;
+    const confirmBtn = document.getElementById('confirmDeleteBtn');
+    if (confirmBtn) {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Deleting...';
+    }
+
+    const res = await deleteTransactionFromGoogleSheet(pendingDeleteTxnId);
+    
+    // Remove from local allTransactions array
+    const deletedId = pendingDeleteTxnId;
+    allTransactions = allTransactions.filter(t => (t.transactionId !== deletedId && t.id !== deletedId));
+    localStorage.setItem('KOSH_LOCAL_TRANSACTIONS', JSON.stringify(allTransactions));
+
+    closeDeleteModal();
+    if (confirmBtn) {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Delete';
+    }
+
+    renderHistoryPage();
+
+    // Show toast feedback
+    const toast = document.getElementById('exportToast');
+    const toastSub = document.getElementById('exportToastSub');
+    if (toastSub) toastSub.textContent = res.message || "Entry deleted from Google Sheet.";
+    if (toast) {
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 3000);
+    }
+  }
+
+  // Statement CSV Download Exporter
+  function exportStatementCSV() {
+    const filtered = getFilteredTransactions();
+    if (filtered.length === 0) {
+      alert("No transactions available to export for the selected filter.");
+      return;
+    }
+
+    let csvContent = "Transaction ID,Date,Type,Category,Amount (LKR),Description,Account Type\n";
+    filtered.forEach(t => {
+      const id = `"${t.transactionId || ''}"`;
+      const date = `"${t.date || ''}"`;
+      const type = `"${t.type || 'Expense'}"`;
+      const cat = `"${t.category || ''}"`;
+      const amt = t.amount || 0;
+      const desc = `"${(t.description || '').replace(/"/g, '""')}"`;
+      const acc = `"${t.accountType || 'Cash Wallet'}"`;
+      csvContent += `${id},${date},${type},${cat},${amt},${desc},${acc}\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `Kosh_Statement_${MONTH_NAMES[selectedMonth]}_${selectedYear}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Show export toast feedback
+    const toast = document.getElementById('exportToast');
+    const toastSub = document.getElementById('exportToastSub');
+    if (toastSub) toastSub.textContent = `Kosh_Statement_${MONTH_NAMES[selectedMonth]}_${selectedYear}.csv downloaded.`;
+    if (toast) {
+      toast.classList.remove('hidden');
+      toast.classList.add('flex');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+        toast.classList.remove('flex');
+      }, 3500);
+    }
+  }
+</script>
+</body>
+</html>

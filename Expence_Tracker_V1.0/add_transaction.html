@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-tint": "#4d44e3", "secondary-fixed": "#6ffbbe", "surface-container": "#eaedff", "tertiary-fixed-dim": "#ffb2b7", "on-secondary-container": "#00714d", "on-primary-fixed": "#0f0069", "secondary-container": "#6cf8bb", "surface-container-low": "#f2f3ff", "surface-dim": "#d2d9f4", "outline-variant": "#c7c4d8", "surface-variant": "#dae2fd", "on-background": "#131b2e", "on-secondary-fixed-variant": "#005236", "error-container": "#ffdad6", "on-primary-fixed-variant": "#3323cc", "on-tertiary": "#ffffff", "inverse-surface": "#283044", "surface-container-high": "#e2e7ff", "primary-fixed": "#e2dfff", "on-primary-container": "#dad7ff", "on-error": "#ffffff", "tertiary": "#95002b", "primary": "#3525cd", "surface": "#faf8ff", "on-surface-variant": "#464555", "primary-container": "#4f46e5", "tertiary-fixed": "#ffdadb", "tertiary-container": "#bf0f3c", "inverse-on-surface": "#eef0ff", "surface-container-lowest": "#ffffff", "outline": "#777587", "surface-bright": "#faf8ff", "on-secondary-fixed": "#002113", "on-tertiary-fixed-variant": "#92002a", "background": "#faf8ff", "primary-fixed-dim": "#c3c0ff", "secondary-fixed-dim": "#4edea3", "on-secondary": "#ffffff", "secondary": "#006c49", "inverse-primary": "#c3c0ff", "on-tertiary-container": "#ffd0d2", "on-error-container": "#93000a", "surface-container-highest": "#dae2fd", "on-primary": "#ffffff", "on-tertiary-fixed": "#40000d", "on-surface": "#131b2e", "error": "#ba1a1a" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1rem", "space-md": "1rem", "space-xs": "0.25rem", "space-xl": "2rem", "margin": "1.25rem", "space-sm": "0.5rem", "space-lg": "1.5rem" }, "fontFamily": { "title-md": ["Plus Jakarta Sans"], "stat-numeric-lg": ["Plus Jakarta Sans"], "display-hero": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "stat-numeric-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"] }, "fontSize": { "title-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "stat-numeric-lg": ["36px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "display-hero": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "800" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "stat-numeric-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }] } } } }</script>
+<script src="js/sheets_api.js"></script>
+</head>
+<body class="bg-background font-body-md text-on-surface flex flex-col min-h-screen">
+<header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] pt-safe">
+  <div class="h-16 px-margin flex items-center justify-between gap-space-sm">
+    <div class="flex items-center gap-space-sm">
+      <button aria-label="Go back" class="min-h-[44px] min-w-[44px] flex items-center justify-center text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container-low transition-colors cursor-pointer" onclick="window.location.href='home_dashboard.html'" type="button">
+        <span class="material-symbols-outlined text-[24px]">arrow_back</span>
+      </button>
+      <img alt="Kosh Expense Tracker Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEDOHzQ1qBqlsy278Q3Mtw8_ieQi92Tg409O5AtX-whZGtJoTBta3dwgSoBOfRqoczx_eB3vQEe6HnYZO10_R9uAiCFSI0H4gixnHsco-Lag-gY0sqhmviZXrKKQ541i3ru4YM1NpUUFGPpDypn_X2Uq-hUWwLtIeID4PZT_rUmUzls_3OH1E-UZStsD6nyv8wycneNjt6Lbrsu6JNQAi79Q7jXt7yumVB9gTZ11XJsN4EzKB7BXNB"/>
+      <h1 class="font-title-md text-title-md font-bold tracking-tight text-on-surface">New Record</h1>
+    </div>
+    <div class="flex items-center gap-space-sm">
+      <button aria-label="Configure Google Sheet" class="w-10 h-10 rounded-full bg-surface-container-high text-primary flex items-center justify-center cursor-pointer hover:bg-surface-container transition-all" onclick="openSheetUrlModal()" title="Google Sheet Database Settings" type="button">
+        <span class="material-symbols-outlined text-[20px]">table_chart</span>
+      </button>
+      <button aria-label="Profile" class="cursor-pointer focus:outline-none" onclick="window.location.href='app_settings.html'" type="button">
+        <img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwW5DVLjf71vNANoVtEUjViQaE5vuMoM0VLUtFWGKSJEr2fVdWkqnr_TW5E_fGih3UrIQHvc62RYo08tU2gWWD8YPUDVRG2BSGXBsqhvu15WmksXrll7Fr-HHVYjWhVgplpe302acHF2fsnVDFmnzFvKRq-JDnSgIM29O8u3ub60fTTHSu5nncMrElk78Zulklf623OcgTiEsisPI3Ng5BQAFIsTtnUuDWk6fx6i3MJCmYd5hrZYKu"/>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="flex flex-col relative w-full pt-16 pb-36 bg-surface">
+<div class="flex flex-col w-full pb-12">
+<!-- Header Intro Banner -->
+<div class="px-margin pt-4 pb-2 flex items-center justify-between">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold" id="page-title-heading">Log Expense</span>
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold">Google Sheet Database</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5" id="page-title-sub">Record single or multiple entries directly to your sheet</p>
+</div>
+</div>
+
+<!-- Type Selector Segmented Pill (Expense vs Income) -->
+<div class="px-margin mt-2">
+<div class="p-1 rounded-full bg-surface-container-high flex items-center shadow-inner relative" id="type-segmented-control">
+<button class="flex-1 py-2 px-4 rounded-full flex items-center justify-center gap-space-xs font-label-md text-label-md transition-all duration-200 bg-surface-container-lowest text-tertiary shadow-sm font-bold cursor-pointer" id="btn-type-expense" onclick="switchType('expense')" type="button">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">arrow_outward</span>
+<span>Expense</span>
+</button>
+<button class="flex-1 py-2 px-4 rounded-full flex items-center justify-center gap-space-xs font-label-md text-label-md transition-all duration-200 text-on-surface-variant hover:text-on-surface cursor-pointer" id="btn-type-income" onclick="switchType('income')" type="button">
+<span class="material-symbols-outlined text-[18px]">south_west</span>
+<span>Income</span>
+</button>
+</div>
+</div>
+
+<!-- Sticky Category Selection Bar (Stays visible on scroll) -->
+<div class="sticky top-16 z-30 bg-surface/95 backdrop-blur-md pt-3 pb-3 shadow-[0_4px_16px_rgba(0,0,0,0.03)] border-b border-surface-container-low transition-all mt-3">
+<div class="px-margin flex items-center justify-between mb-2">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold" id="active-entry-label">Assign to Entry #1</span>
+<span class="font-body-sm text-body-sm text-primary font-semibold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[15px]">tips_and_updates</span> Tap category chip to assign
+</span>
+</div>
+<!-- Chips Scroll Area -->
+<div class="flex gap-2.5 overflow-x-auto px-margin no-scrollbar py-1" id="category-chips-row">
+<!-- Populated dynamically via JS -->
+</div>
+</div>
+
+<!-- Multi-Entry Transaction Cards Stack -->
+<div class="px-margin mt-4 flex flex-col gap-4" id="cards-stack">
+<!-- ENTRY CARD #1 -->
+<div class="entry-card rounded-3xl bg-surface-container-lowest p-space-md shadow-md transition-all duration-200 ring-2 ring-primary/40" data-amount="0" data-category="Grocery" data-icon="🛒" id="entry-row-1" onclick="setActiveCard(1)">
+<!-- Card Top Bar -->
+<div class="flex items-center justify-between pb-3">
+<div class="flex items-center gap-2">
+<span class="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-on-primary font-label-md text-label-md font-bold" id="card-1-num">1</span>
+<span class="font-title-md text-title-md font-bold text-on-surface">Entry #1</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold" id="card-1-focus-badge">Active Focus</span>
+</div>
+<button aria-label="Delete entry #1" class="w-8 h-8 rounded-full flex items-center justify-center text-outline hover:text-error hover:bg-error-container/40 transition-colors" onclick="deleteEntryCard('entry-row-1', event)" type="button">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+
+<!-- Category Selector Pill Display inside Card -->
+<div class="bg-surface-container-low p-2.5 rounded-2xl flex items-center justify-between mb-3.5">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-xl bg-surface-container-lowest flex items-center justify-center text-lg shadow-sm" id="card-1-icon">🛒</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Category</div>
+<div class="font-label-md text-label-md font-bold text-on-surface" id="card-1-category-name">Grocery</div>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-semibold px-2.5 py-1 bg-surface-container rounded-xl">Auto Tag</span>
+</div>
+
+<!-- Numeric Amount Input -->
+<div class="bg-surface-container-low rounded-2xl p-3.5 mb-3 flex flex-col justify-center" id="amount-box-1">
+<div class="flex items-baseline justify-between mb-1">
+<label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold" for="amount-entry-1">Amount (LKR) *</label>
+<span class="font-label-sm text-label-sm text-tertiary font-semibold flex items-center gap-1" id="card-1-type-tag">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary" id="card-1-type-dot"></span> <span id="card-1-type-label">Expense</span>
+</span>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<span class="font-headline-md text-headline-md font-extrabold text-on-surface-variant tracking-tight">LKR</span>
+<input class="amount-input w-full bg-transparent font-stat-numeric-lg text-stat-numeric-lg font-extrabold text-on-surface tracking-tight outline-none focus:text-primary transition-colors" id="amount-entry-1" oninput="updateCardAmount('entry-row-1', this.value)" placeholder="0.00" type="number" step="0.01" value=""/>
+</div>
+</div>
+
+<!-- Description Field -->
+<div class="mb-3" id="desc-box-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant mb-1 block font-semibold" id="desc-label-1" for="desc-entry-1">Description / Merchant *</label>
+<div class="flex items-center gap-2.5 bg-surface-container-low px-3.5 py-2.5 rounded-2xl focus-within:bg-surface-container-lowest focus-within:shadow-sm transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]" id="desc-icon-1">storefront</span>
+<input class="desc-input w-full bg-transparent font-body-md text-body-md text-on-surface outline-none placeholder:text-outline" id="desc-entry-1" placeholder="e.g. Keells Supermarket, Fuel, Lunch" type="text" value=""/>
+</div>
+</div>
+
+<!-- Date and Account Type Row -->
+<div class="grid grid-cols-2 gap-2.5">
+<!-- Date Input -->
+<div class="flex flex-col gap-1 bg-surface-container-low p-2.5 rounded-2xl">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-semibold flex items-center gap-1" for="date-entry-1">
+<span class="material-symbols-outlined text-primary text-[16px]">calendar_today</span> Date
+</label>
+<input class="date-input bg-transparent font-body-sm text-body-sm font-semibold text-on-surface outline-none cursor-pointer" id="date-entry-1" type="date"/>
+</div>
+
+<!-- Account Type Dropdown -->
+<div class="flex flex-col gap-1 bg-surface-container-low p-2.5 rounded-2xl">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-semibold flex items-center gap-1" for="account-entry-1">
+<span class="material-symbols-outlined text-secondary text-[16px]">account_balance_wallet</span> Account
+</label>
+<select class="account-select bg-transparent font-body-sm text-body-sm font-semibold text-on-surface outline-none cursor-pointer" id="account-entry-1">
+<option value="Commercial Bank">Commercial Bank</option>
+<option value="Cash Wallet">Cash Wallet</option>
+<option value="Savings Account">Savings Account</option>
+<option value="Visa Credit Card">Visa Credit Card</option>
+<option value="LankaQR / Digital">LankaQR / Digital</option>
+</select>
+</div>
+</div>
+</div>
+
+<!-- Button: "+ Add New Entry" -->
+<button class="w-full py-4 px-4 rounded-3xl bg-surface-container-low text-primary hover:bg-surface-container flex items-center justify-center gap-2 transition-all active:scale-[0.99] group cursor-pointer" onclick="addNewEntrySlot()" type="button">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center group-hover:rotate-90 transition-transform duration-200 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+</div>
+<span class="font-title-md text-title-md font-bold">+ Add New Entry</span>
+</button>
+</div>
+
+<!-- Floating Fixed Bottom Dock: Total Summary + Clear Submit CTA -->
+<div class="fixed bottom-16 left-0 right-0 z-40 bg-surface/95 backdrop-blur-xl shadow-2xl border-t border-surface-container-low">
+<div class="max-w-md mx-auto px-margin pt-3 pb-3 flex flex-col gap-2">
+<!-- Total Calculation Ribbon -->
+<div class="flex items-center justify-between px-2">
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-semibold" id="entries-count-label">1 Entry added</span>
+</div>
+<div class="flex items-baseline gap-1.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold">Total</span>
+<span class="font-title-md text-title-md font-extrabold text-on-surface tracking-tight" id="entries-total-amount">LKR 0.00</span>
+</div>
+</div>
+<!-- Primary Action CTA Submit Button -->
+<button class="w-full py-4 px-6 rounded-2xl bg-primary text-on-primary font-title-md text-title-md font-bold shadow-lg shadow-primary/30 flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer" id="btn-submit-batch" onclick="submitTransactionsBatch()" type="button">
+<span class="material-symbols-outlined text-[22px]">send</span>
+<span id="btn-submit-text">Submit Expense Entry</span>
+</button>
+</div>
+</div>
+
+<!-- Delight Toast Banner -->
+<div class="fixed top-20 left-1/2 -translate-x-1/2 z-50 transform -translate-y-8 opacity-0 pointer-events-none transition-all duration-300 px-4 py-2.5 rounded-full bg-inverse-surface text-inverse-on-surface flex items-center gap-2 shadow-xl font-label-md text-label-md" id="delight-toast">
+<span class="material-symbols-outlined text-secondary-container text-[18px]" id="toast-icon">verified</span>
+<span id="toast-message">Ready</span>
+</div>
+
+<!-- Connection / Retry Error Modal -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/40 backdrop-blur-sm p-4" id="error-modal">
+<div class="w-full max-w-sm rounded-3xl bg-surface-container-lowest p-5 shadow-2xl flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-error-container text-on-error-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]">warning</span>
+</div>
+<div class="flex flex-col">
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Submission Notice</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant" id="error-modal-msg">Sync issue encountered.</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 pt-2">
+<button class="w-full py-3 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold cursor-pointer" onclick="retrySubmission()" type="button">
+Retry Submit
+</button>
+<button class="w-full py-2.5 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md cursor-pointer" onclick="openSheetUrlModal()" type="button">
+Configure Google Sheet URL
+</button>
+<button class="w-full py-2 text-on-surface-variant font-label-sm text-label-sm cursor-pointer" onclick="closeErrorModal()" type="button">
+Close
+</button>
+</div>
+</div>
+</div>
+
+<!-- Configure Sheet URL Modal -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/40 backdrop-blur-sm p-4" id="sheet-url-modal">
+<div class="w-full max-w-md rounded-3xl bg-surface-container-lowest p-6 shadow-2xl flex flex-col gap-4">
+<div class="flex items-center justify-between pb-2 border-b border-surface-container-low">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[24px]">table_chart</span>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Google Sheet Settings</h3>
+</div>
+<button aria-label="Close settings" class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant" onclick="closeSheetUrlModal()" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Paste your Google Apps Script Web App URL below to send transaction rows directly to your <b>Expense Tracker Database</b> Google Sheet tab.</p>
+<div class="flex flex-col gap-1.5">
+<label class="font-label-sm text-label-sm text-on-surface-variant font-bold">Google Apps Script Web App URL</label>
+<input class="w-full h-11 px-3.5 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary outline-none" id="input-sheet-url" placeholder="https://script.google.com/macros/s/.../exec" type="text"/>
+</div>
+<div class="flex items-center gap-2 pt-2">
+<button class="flex-1 py-3 rounded-xl bg-surface-container-low text-on-surface font-label-md text-label-md cursor-pointer" onclick="closeSheetUrlModal()" type="button">
+Cancel
+</button>
+<button class="flex-1 py-3 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold cursor-pointer" onclick="saveSheetUrl()" type="button">
+Save & Connect
+</button>
+</div>
+</div>
+</div>
+
+</main>
+
+<script>
+  let entryCount = 1;
+  let activeCardIndex = 1;
+  let currentType = 'expense';
+  let selectedCategory = 'Grocery';
+  let selectedIcon = '🛒';
+  let isSubmitting = false;
+
+  const EXPENSE_CATEGORIES = [
+    { name: 'Grocery', icon: '🛒' },
+    { name: 'Traveling', icon: '🚗' },
+    { name: 'Bakery', icon: '🥐' },
+    { name: 'Vehicle', icon: '⛽' },
+    { name: 'Cosmetics', icon: '💄' },
+    { name: 'Dresses', icon: '👗' },
+    { name: 'Gifts', icon: '🎁' },
+    { name: 'Utilities', icon: '💡' },
+    { name: 'Other', icon: '📦' }
+  ];
+
+  const INCOME_CATEGORIES = [
+    { name: 'Salary', icon: '💼' },
+    { name: 'Other Income', icon: '💰' }
+  ];
+
+  let isEditMode = false;
+  let editingTransaction = null;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const firstDateInput = document.getElementById('date-entry-1');
+    if (firstDateInput) firstDateInput.value = todayStr;
+
+    // Check for Edit Mode via URL param or sessionStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    const editId = urlParams.get('editId');
+    const storedEdit = sessionStorage.getItem('KOSH_EDIT_TRANSACTION');
+
+    if (storedEdit) {
+      try {
+        const parsed = JSON.parse(storedEdit);
+        if (!editId || parsed.transactionId === editId || parsed.id === editId) {
+          editingTransaction = parsed;
+          isEditMode = true;
+        }
+      } catch (e) {}
+    }
+
+    if (!isEditMode && editId) {
+      const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
+      const localTxns = localRaw ? JSON.parse(localRaw) : [];
+      const found = localTxns.find(t => (t.transactionId === editId || t.id === editId));
+      if (found) {
+        editingTransaction = found;
+        isEditMode = true;
+      }
+    }
+
+    if (isEditMode && editingTransaction) {
+      initEditMode(editingTransaction);
+    } else {
+      renderCategoryChips();
+    }
+  });
+
+  function initEditMode(txn) {
+    const heading = document.getElementById('page-title-heading');
+    const sub = document.getElementById('page-title-sub');
+    if (heading) heading.textContent = 'Edit Record';
+    if (sub) sub.textContent = `Updating transaction ${txn.transactionId || ''} in Google Sheets`;
+
+    // Hide add extra entry button in edit mode
+    const addBtn = document.querySelector('button[onclick="addNewEntrySlot()"]');
+    if (addBtn) addBtn.style.display = 'none';
+
+    // Switch type to match transaction type
+    const typeStr = (txn.type || 'Expense').toLowerCase();
+    switchType(typeStr);
+
+    // Populate card 1 fields
+    const card1 = document.getElementById('entry-row-1');
+    if (card1) {
+      const amountInput = card1.querySelector('.amount-input');
+      const descInput = card1.querySelector('.desc-input');
+      const dateInput = card1.querySelector('.date-input');
+      const accountSelect = card1.querySelector('.account-select');
+
+      if (amountInput) amountInput.value = txn.amount || '';
+      if (descInput) descInput.value = txn.description || '';
+      if (dateInput) dateInput.value = txn.date || new Date().toISOString().split('T')[0];
+      if (accountSelect) accountSelect.value = txn.accountType || 'Commercial Bank';
+
+      if (txn.category) {
+        const allCats = [...EXPENSE_CATEGORIES, ...INCOME_CATEGORIES];
+        const foundCat = allCats.find(c => c.name.toLowerCase() === txn.category.toLowerCase());
+        const catName = foundCat ? foundCat.name : txn.category;
+        const catIcon = foundCat ? foundCat.icon : '📦';
+        selectChipCategory(catName, catIcon);
+      }
+    }
+
+    recalculateBatchTotal();
+  }
+
+  function renderCategoryChips() {
+    const container = document.getElementById('category-chips-row');
+    if (!container) return;
+
+    const list = currentType === 'expense' ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
+    container.innerHTML = '';
+
+    list.forEach((cat, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.setAttribute('data-category', cat.name);
+      btn.setAttribute('data-icon', cat.icon);
+      btn.className = idx === 0 
+        ? "cat-chip active shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-primary text-on-primary shadow-md shadow-primary/20 transition-all cursor-pointer scale-[1.02]"
+        : "cat-chip shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-surface-container-lowest text-on-surface shadow-sm hover:bg-surface-container-high transition-all cursor-pointer";
+      
+      btn.innerHTML = `<span class="text-[17px]">${cat.icon}</span><span class="font-label-md text-label-md ${idx === 0 ? 'font-bold' : 'font-medium'}">${cat.name}</span>`;
+      btn.onclick = () => selectChipCategory(cat.name, cat.icon, btn);
+      container.appendChild(btn);
+    });
+
+    // Custom Category Button
+    const customBtn = document.createElement('button');
+    customBtn.type = 'button';
+    customBtn.className = "shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-surface-container-high text-primary hover:bg-primary-fixed transition-colors cursor-pointer";
+    customBtn.innerHTML = `<span class="material-symbols-outlined text-[18px]">add_circle</span><span class="font-label-md text-label-md font-bold whitespace-nowrap">+ Custom</span>`;
+    customBtn.onclick = triggerNewCategoryModal;
+    container.appendChild(customBtn);
+
+    // Default select first item for active mode
+    if (list.length > 0) {
+      selectedCategory = list[0].name;
+      selectedIcon = list[0].icon;
+    }
+  }
+
+  function switchType(type) {
+    currentType = type;
+    const expenseBtn = document.getElementById('btn-type-expense');
+    const incomeBtn = document.getElementById('btn-type-income');
+    const heading = document.getElementById('page-title-heading');
+    const sub = document.getElementById('page-title-sub');
+
+    if (type === 'expense') {
+      expenseBtn.className = "flex-1 py-2 px-4 rounded-full flex items-center justify-center gap-space-xs font-label-md text-label-md transition-all duration-200 bg-surface-container-lowest text-tertiary shadow-sm font-bold cursor-pointer";
+      incomeBtn.className = "flex-1 py-2 px-4 rounded-full flex items-center justify-center gap-space-xs font-label-md text-label-md transition-all duration-200 text-on-surface-variant hover:text-on-surface cursor-pointer";
+      if (heading) heading.textContent = 'Log Expense';
+      if (sub) sub.textContent = 'Record single or multiple expense entries directly to your sheet';
+    } else {
+      incomeBtn.className = "flex-1 py-2 px-4 rounded-full flex items-center justify-center gap-space-xs font-label-md text-label-md transition-all duration-200 bg-surface-container-lowest text-secondary shadow-sm font-bold cursor-pointer";
+      expenseBtn.className = "flex-1 py-2 px-4 rounded-full flex items-center justify-center gap-space-xs font-label-md text-label-md transition-all duration-200 text-on-surface-variant hover:text-on-surface cursor-pointer";
+      if (heading) heading.textContent = 'Log Income';
+      if (sub) sub.textContent = 'Record salary, freelance, or other income sources to your sheet';
+    }
+
+    renderCategoryChips();
+
+    // Update existing cards for current type
+    document.querySelectorAll('.entry-card').forEach((card, idx) => {
+      const cardNum = idx + 1;
+      updateCardForType(cardNum);
+    });
+
+    recalculateBatchTotal();
+    showToast(`Switched to ${type === 'expense' ? 'Expense' : 'Income'} logging`);
+  }
+
+  function updateCardForType(cardNum) {
+    const card = document.getElementById(`entry-row-${cardNum}`);
+    if (!card) return;
+
+    card.setAttribute('data-category', selectedCategory);
+    card.setAttribute('data-icon', selectedIcon);
+
+    const nameEl = document.getElementById(`card-${cardNum}-category-name`);
+    const iconEl = document.getElementById(`card-${cardNum}-icon`);
+    const dot = document.getElementById(`card-${cardNum}-type-dot`);
+    const label = document.getElementById(`card-${cardNum}-type-label`);
+    const descLabel = document.getElementById(`desc-label-${cardNum}`);
+    const descInput = document.getElementById(`desc-entry-${cardNum}`);
+    const descIcon = document.getElementById(`desc-icon-${cardNum}`);
+
+    if (nameEl) nameEl.textContent = selectedCategory;
+    if (iconEl) iconEl.textContent = selectedIcon;
+
+    if (currentType === 'expense') {
+      if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-tertiary';
+      if (label) {
+        label.textContent = 'Expense';
+        label.parentElement.className = 'font-label-sm text-label-sm text-tertiary font-semibold flex items-center gap-1';
+      }
+      if (descLabel) descLabel.textContent = 'Description / Merchant *';
+      if (descInput) descInput.placeholder = 'e.g. Keells Supermarket, Fuel, Lunch';
+      if (descIcon) descIcon.textContent = 'storefront';
+    } else {
+      if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-secondary';
+      if (label) {
+        label.textContent = 'Income';
+        label.parentElement.className = 'font-label-sm text-label-sm text-secondary font-semibold flex items-center gap-1';
+      }
+      if (descLabel) descLabel.textContent = 'Source / Memo *';
+      if (descInput) descInput.placeholder = 'e.g. Monthly Salary, Client Project, Dividend';
+      if (descIcon) descIcon.textContent = 'payments';
+    }
+  }
+
+  function setActiveCard(index) {
+    activeCardIndex = index;
+    document.querySelectorAll('.entry-card').forEach((card, idx) => {
+      const cardNum = idx + 1;
+      const badge = document.getElementById(`card-${cardNum}-focus-badge`);
+      if (cardNum === index) {
+        card.classList.add('ring-2', 'ring-primary/40');
+        if (badge) {
+          badge.textContent = 'Active Focus';
+          badge.className = 'px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm font-semibold';
+        }
+      } else {
+        card.classList.remove('ring-2', 'ring-primary/40');
+        if (badge) {
+          badge.textContent = 'Tap to focus';
+          badge.className = 'px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm';
+        }
+      }
+    });
+
+    const activeLabel = document.getElementById('active-entry-label');
+    if (activeLabel) activeLabel.textContent = `Assign to Entry #${index}`;
+  }
+
+  function selectChipCategory(name, icon, chipEl) {
+    selectedCategory = name;
+    selectedIcon = icon;
+
+    document.querySelectorAll('.cat-chip').forEach(c => {
+      c.className = "cat-chip shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-surface-container-lowest text-on-surface shadow-sm hover:bg-surface-container-high transition-all cursor-pointer";
+    });
+    if (chipEl) chipEl.className = "cat-chip active shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-primary text-on-primary shadow-md shadow-primary/20 transition-all cursor-pointer scale-[1.02]";
+
+    const card = document.getElementById(`entry-row-${activeCardIndex}`);
+    if (card) {
+      card.setAttribute('data-category', name);
+      card.setAttribute('data-icon', icon);
+      const nameEl = document.getElementById(`card-${activeCardIndex}-category-name`);
+      const iconEl = document.getElementById(`card-${activeCardIndex}-icon`);
+      if (nameEl) nameEl.textContent = name;
+      if (iconEl) iconEl.textContent = icon;
+      showToast(`Category set to ${name} for Entry #${activeCardIndex}`);
+    }
+  }
+
+  function updateCardAmount(cardId, rawValue) {
+    const card = document.getElementById(cardId);
+    if (!card) return;
+    const num = parseFloat(rawValue) || 0;
+    card.setAttribute('data-amount', num);
+    recalculateBatchTotal();
+  }
+
+  function recalculateBatchTotal() {
+    const cards = document.querySelectorAll('.entry-card');
+    let sum = 0;
+    cards.forEach(c => {
+      const input = c.querySelector('.amount-input');
+      const val = parseFloat(input ? input.value : c.getAttribute('data-amount')) || 0;
+      sum += val;
+    });
+
+    const count = cards.length;
+    const typeTitle = currentType === 'expense' ? 'Expense' : 'Income';
+    const typePlural = currentType === 'expense' ? 'Expenses' : 'Incomes';
+
+    document.getElementById('entries-count-label').textContent = isEditMode ? 'Editing 1 Entry' : `${count} ${count === 1 ? 'Entry' : 'Entries'} added`;
+    document.getElementById('entries-total-amount').textContent = 'LKR ' + sum.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    
+    const submitText = document.getElementById('btn-submit-text');
+    if (submitText) {
+      submitText.textContent = isEditMode 
+        ? 'Update Entry in Google Sheet' 
+        : `Submit ${count === 1 ? typeTitle + ' Entry' : 'All (' + count + ' ' + typePlural + ')'}`;
+    }
+  }
+
+  function deleteEntryCard(cardId, e) {
+    if (e) e.stopPropagation();
+    const cards = document.querySelectorAll('.entry-card');
+    if (cards.length <= 1) {
+      showToast('At least one entry card is required');
+      return;
+    }
+
+    const card = document.getElementById(cardId);
+    if (card) {
+      card.classList.add('opacity-0', 'scale-95');
+      setTimeout(() => {
+        card.remove();
+        recalculateBatchTotal();
+        setActiveCard(1);
+        showToast('Entry removed');
+      }, 200);
+    }
+  }
+
+  function addNewEntrySlot() {
+    entryCount++;
+    const stack = document.getElementById('cards-stack');
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    const isExpense = currentType === 'expense';
+    const typeLabel = isExpense ? 'Expense' : 'Income';
+    const dotClass = isExpense ? 'bg-tertiary' : 'bg-secondary';
+    const textClass = isExpense ? 'text-tertiary' : 'text-secondary';
+    const descTitle = isExpense ? 'Description / Merchant *' : 'Source / Memo *';
+    const descPlaceholder = isExpense ? 'e.g. Tuk Tuk, Supermarket, Bill' : 'e.g. Monthly Salary, Freelance project';
+    const descIconName = isExpense ? 'storefront' : 'payments';
+
+    const newCard = document.createElement('div');
+    newCard.id = `entry-row-${entryCount}`;
+    newCard.setAttribute('data-amount', '0');
+    newCard.setAttribute('data-category', selectedCategory);
+    newCard.setAttribute('data-icon', selectedIcon);
+    newCard.className = 'entry-card rounded-3xl bg-surface-container-lowest p-space-md shadow-md transition-all duration-200 opacity-0 scale-95';
+    newCard.setAttribute('onclick', `setActiveCard(${entryCount})`);
+
+    newCard.innerHTML = `
+      <div class="flex items-center justify-between pb-3">
+        <div class="flex items-center gap-2">
+          <span class="flex items-center justify-center w-7 h-7 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md font-bold" id="card-${entryCount}-num">${entryCount}</span>
+          <span class="font-title-md text-title-md font-bold text-on-surface">Entry #${entryCount}</span>
+          <span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm" id="card-${entryCount}-focus-badge">Tap to focus</span>
+        </div>
+        <button type="button" onclick="deleteEntryCard('entry-row-${entryCount}', event)" class="w-8 h-8 rounded-full flex items-center justify-center text-outline hover:text-error hover:bg-error-container/40 transition-colors" aria-label="Delete entry">
+          <span class="material-symbols-outlined text-[20px]">delete</span>
+        </button>
+      </div>
+
+      <div class="bg-surface-container-low p-2.5 rounded-2xl flex items-center justify-between mb-3.5">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-surface-container-lowest flex items-center justify-center text-lg shadow-sm" id="card-${entryCount}-icon">${selectedIcon}</div>
+          <div>
+            <div class="font-label-sm text-label-sm text-on-surface-variant">Category</div>
+            <div class="font-label-md text-label-md font-bold text-on-surface" id="card-${entryCount}-category-name">${selectedCategory}</div>
+          </div>
+        </div>
+        <span class="font-label-sm text-label-sm text-primary font-semibold px-2.5 py-1 bg-surface-container rounded-xl">Auto Tag</span>
+      </div>
+
+      <div class="bg-surface-container-low rounded-2xl p-3.5 mb-3" id="amount-box-${entryCount}">
+        <div class="flex items-baseline justify-between mb-1">
+          <label class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-bold" for="amount-entry-${entryCount}">Amount (LKR) *</label>
+          <span class="font-label-sm text-label-sm ${textClass} font-semibold flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full ${dotClass}"></span> ${typeLabel}
+          </span>
+        </div>
+        <div class="flex items-center gap-2 pt-1">
+          <span class="font-headline-md text-headline-md font-extrabold text-on-surface-variant tracking-tight">LKR</span>
+          <input type="number" step="0.01" id="amount-entry-${entryCount}" oninput="updateCardAmount('entry-row-${entryCount}', this.value)" class="amount-input w-full bg-transparent font-stat-numeric-lg text-stat-numeric-lg font-extrabold text-on-surface tracking-tight outline-none focus:text-primary transition-colors" placeholder="0.00" value="">
+        </div>
+      </div>
+
+      <div class="mb-3" id="desc-box-${entryCount}">
+        <label class="font-label-sm text-label-sm text-on-surface-variant mb-1 block font-semibold" id="desc-label-${entryCount}">${descTitle}</label>
+        <div class="flex items-center gap-2.5 bg-surface-container-low px-3.5 py-2.5 rounded-2xl focus-within:bg-surface-container-lowest focus-within:shadow-sm transition-all">
+          <span class="material-symbols-outlined text-on-surface-variant text-[20px]" id="desc-icon-${entryCount}">${descIconName}</span>
+          <input type="text" id="desc-entry-${entryCount}" class="desc-input w-full bg-transparent font-body-md text-body-md text-on-surface outline-none placeholder:text-outline" placeholder="${descPlaceholder}" value="">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5">
+        <div class="flex flex-col gap-1 bg-surface-container-low p-2.5 rounded-2xl">
+          <label class="font-label-sm text-label-sm text-on-surface-variant font-semibold flex items-center gap-1" for="date-entry-${entryCount}">
+            <span class="material-symbols-outlined text-primary text-[16px]">calendar_today</span> Date
+          </label>
+          <input type="date" id="date-entry-${entryCount}" value="${todayStr}" class="date-input bg-transparent font-body-sm text-body-sm font-semibold text-on-surface outline-none cursor-pointer">
+        </div>
+
+        <div class="flex flex-col gap-1 bg-surface-container-low p-2.5 rounded-2xl">
+          <label class="font-label-sm text-label-sm text-on-surface-variant font-semibold flex items-center gap-1" for="account-entry-${entryCount}">
+            <span class="material-symbols-outlined text-secondary text-[16px]">account_balance_wallet</span> Account
+          </label>
+          <select id="account-entry-${entryCount}" class="account-select bg-transparent font-body-sm text-body-sm font-semibold text-on-surface outline-none cursor-pointer">
+            <option value="Commercial Bank">Commercial Bank</option>
+            <option value="Cash Wallet">Cash Wallet</option>
+            <option value="Savings Account">Savings Account</option>
+            <option value="Visa Credit Card">Visa Credit Card</option>
+            <option value="LankaQR / Digital">LankaQR / Digital</option>
+          </select>
+        </div>
+      </div>
+    `;
+
+    const addButton = stack.querySelector('button[onclick="addNewEntrySlot()"]');
+    stack.insertBefore(newCard, addButton);
+
+    requestAnimationFrame(() => {
+      newCard.classList.remove('opacity-0', 'scale-95');
+      setActiveCard(entryCount);
+    });
+
+    recalculateBatchTotal();
+    showToast(`Created Entry #${entryCount}`);
+  }
+
+  function validateEntries() {
+    const cards = document.querySelectorAll('.entry-card');
+    let isValid = true;
+    let firstErrorMsg = '';
+
+    cards.forEach((card, idx) => {
+      const cardNum = idx + 1;
+      const amountInput = card.querySelector('.amount-input');
+      const descInput = card.querySelector('.desc-input');
+      const amountVal = parseFloat(amountInput ? amountInput.value : 0) || 0;
+      const descVal = descInput ? descInput.value.trim() : '';
+
+      const amountBox = card.querySelector(`#amount-box-${cardNum}`) || card.querySelector('.amount-input').closest('.bg-surface-container-low');
+      const descBox = card.querySelector(`#desc-box-${cardNum}`) || card.querySelector('.desc-input').closest('.mb-3');
+
+      if (amountVal <= 0) {
+        isValid = false;
+        if (!firstErrorMsg) firstErrorMsg = `Please enter a valid amount for Entry #${cardNum}`;
+        if (amountBox) amountBox.classList.add('ring-2', 'ring-error');
+      } else {
+        if (amountBox) amountBox.classList.remove('ring-2', 'ring-error');
+      }
+
+      if (!descVal) {
+        isValid = false;
+        if (!firstErrorMsg) firstErrorMsg = `Please enter a ${currentType === 'expense' ? 'description' : 'source'} for Entry #${cardNum}`;
+        if (descBox) descBox.classList.add('ring-2', 'ring-error');
+      } else {
+        if (descBox) descBox.classList.remove('ring-2', 'ring-error');
+      }
+    });
+
+    if (!isValid) {
+      showToast(firstErrorMsg, 'error');
+    }
+
+    return isValid;
+  }
+
+  async function submitTransactionsBatch() {
+    if (isSubmitting) return;
+
+    if (!validateEntries()) {
+      return;
+    }
+
+    const submitBtn = document.getElementById('btn-submit-batch');
+    const submitText = document.getElementById('btn-submit-text');
+    isSubmitting = true;
+    submitBtn.disabled = true;
+    submitBtn.classList.add('opacity-80');
+    submitText.textContent = isEditMode ? 'Updating in Google Sheet...' : 'Sending to Google Sheet...';
+
+    if (isEditMode && editingTransaction) {
+      const card = document.getElementById('entry-row-1');
+      const amountVal = parseFloat(card.querySelector('.amount-input')?.value || 0) || 0;
+      const descVal = card.querySelector('.desc-input')?.value.trim() || '';
+      const dateVal = card.querySelector('.date-input')?.value || new Date().toISOString().split('T')[0];
+      const accountVal = card.querySelector('.account-select')?.value || 'Commercial Bank';
+      const categoryVal = card.getAttribute('data-category') || (currentType === 'expense' ? 'Grocery' : 'Salary');
+
+      const updatedRecord = {
+        transactionId: editingTransaction.transactionId || editingTransaction.id,
+        date: dateVal,
+        type: currentType === 'expense' ? 'Expense' : 'Income',
+        category: categoryVal,
+        amount: amountVal,
+        description: descVal,
+        accountType: accountVal,
+        createdAt: editingTransaction.createdAt || new Date().toISOString()
+      };
+
+      const result = await updateTransactionInGoogleSheet(updatedRecord);
+
+      if (result.success) {
+        showToast('Entry updated successfully', 'verified');
+        sessionStorage.removeItem('KOSH_EDIT_TRANSACTION');
+        setTimeout(() => {
+          window.location.href = 'transaction_history.html';
+        }, 1200);
+      } else {
+        isSubmitting = false;
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-80');
+        recalculateBatchTotal();
+        openErrorModal(result.message);
+      }
+      return;
+    }
+
+    const cards = document.querySelectorAll('.entry-card');
+    const records = [];
+    const nowIso = new Date().toISOString();
+
+    cards.forEach((card, idx) => {
+      const cardNum = idx + 1;
+      const amountVal = parseFloat(card.querySelector('.amount-input')?.value || 0) || 0;
+      const descVal = card.querySelector('.desc-input')?.value.trim() || '';
+      const dateVal = card.querySelector('.date-input')?.value || new Date().toISOString().split('T')[0];
+      const accountVal = card.querySelector('.account-select')?.value || 'Commercial Bank';
+      const categoryVal = card.getAttribute('data-category') || (currentType === 'expense' ? 'Grocery' : 'Salary');
+
+      records.push({
+        transactionId: `TXN-${Date.now()}-${cardNum}`,
+        date: dateVal,
+        type: currentType === 'expense' ? 'Expense' : 'Income',
+        category: categoryVal,
+        amount: amountVal,
+        description: descVal,
+        accountType: accountVal,
+        createdAt: nowIso
+      });
+    });
+
+    const result = await sendTransactionsToGoogleSheet(records);
+
+    if (result.success) {
+      showToast('Entry recorded successfully', 'verified');
+      
+      resetFormState();
+
+      setTimeout(() => {
+        window.location.href = 'home_dashboard.html';
+      }, 1500);
+    } else {
+      isSubmitting = false;
+      submitBtn.disabled = false;
+      submitBtn.classList.remove('opacity-80');
+      recalculateBatchTotal();
+      openErrorModal(result.message);
+    }
+  }
+
+  function resetFormState() {
+    const stack = document.getElementById('cards-stack');
+    const cards = document.querySelectorAll('.entry-card');
+    cards.forEach((c, idx) => {
+      if (idx > 0) c.remove();
+    });
+
+    entryCount = 1;
+    activeCardIndex = 1;
+    
+    const card1 = document.getElementById('entry-row-1');
+    if (card1) {
+      card1.querySelector('.amount-input').value = '';
+      card1.querySelector('.desc-input').value = '';
+      card1.querySelector('.date-input').value = new Date().toISOString().split('T')[0];
+      card1.setAttribute('data-amount', '0');
+    }
+
+    recalculateBatchTotal();
+    setActiveCard(1);
+    isSubmitting = false;
+    const submitBtn = document.getElementById('btn-submit-batch');
+    if (submitBtn) submitBtn.disabled = false;
+  }
+
+  function openErrorModal(msg) {
+    const modal = document.getElementById('error-modal');
+    const msgEl = document.getElementById('error-modal-msg');
+    if (msgEl) msgEl.textContent = msg || 'Could not connect to Google Sheet backend.';
+    if (modal) modal.classList.remove('hidden');
+  }
+
+  function closeErrorModal() {
+    const modal = document.getElementById('error-modal');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  function retrySubmission() {
+    closeErrorModal();
+    submitTransactionsBatch();
+  }
+
+  function triggerNewCategoryModal() {
+    showToast('Custom Category creator ready');
+  }
+
+  function openSheetUrlModal() {
+    const modal = document.getElementById('sheet-url-modal');
+    const input = document.getElementById('input-sheet-url');
+    if (input) input.value = getGoogleSheetUrl();
+    if (modal) modal.classList.remove('hidden');
+  }
+
+  function closeSheetUrlModal() {
+    const modal = document.getElementById('sheet-url-modal');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  function saveSheetUrl() {
+    const input = document.getElementById('input-sheet-url');
+    if (input) {
+      setGoogleSheetUrl(input.value);
+      showToast('Google Sheet Web App URL saved!');
+    }
+    closeSheetUrlModal();
+  }
+
+  function showToast(msg, iconName = 'verified') {
+    const toast = document.getElementById('delight-toast');
+    const label = document.getElementById('toast-message');
+    const icon = document.getElementById('toast-icon');
+    if (!toast || !label) return;
+
+    label.textContent = msg;
+    if (icon) icon.textContent = iconName === 'error' ? 'error' : 'verified';
+
+    toast.classList.remove('opacity-0', '-translate-y-8', 'pointer-events-none');
+    toast.classList.add('opacity-100', 'translate-y-0');
+
+    setTimeout(() => {
+      toast.classList.add('opacity-0', '-translate-y-8', 'pointer-events-none');
+      toast.classList.remove('opacity-100', 'translate-y-0');
+    }, 2800);
+  }
+</script>
+
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.04)]" data-active-classes="text-primary font-bold">
+  <div class="h-16 px-gutter flex items-center justify-around">
+    <a aria-label="Home Dashboard" class="min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface transition-colors" data-path="dashboard" href="home_dashboard.html">
+      <span class="material-symbols-outlined text-[24px]">home</span>
+      <span class="font-label-sm text-label-sm tracking-tight">Home</span>
+    </a>
+    <a aria-current="page" aria-label="Add Expense" class="-translate-y-3 min-w-[52px] min-h-[52px] w-13 h-13 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-[0_6px_20px_rgba(79,70,229,0.5)] ring-4 ring-primary/30 active:scale-95 transition-all" data-path="quick-add" href="add_transaction.html">
+      <span class="material-symbols-outlined text-[28px]">add</span>
+    </a>
+    <a aria-label="Transaction History" class="min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface transition-colors" data-path="transaction-history" href="transaction_history.html">
+      <span class="material-symbols-outlined text-[24px]">receipt_long</span>
+      <span class="font-label-sm text-label-sm tracking-tight">History</span>
+    </a>
+    <a aria-label="Preferences and Settings" class="min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface transition-colors" data-path="app-settings" href="app_settings.html">
+      <span class="material-symbols-outlined text-[24px]">tune</span>
+      <span class="font-label-sm text-label-sm tracking-tight">Settings</span>
+    </a>
+  </div>
+</nav>
+
+</body>
+</html>
