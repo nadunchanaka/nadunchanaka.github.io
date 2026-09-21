@@ -7,14 +7,20 @@
 const STORAGE_KEY = 'KOSH_GOOGLE_SHEETS_URL';
 const SPREADSHEET_LINK_KEY = 'KOSH_CONFIRMED_SHEET_URL';
 
+// Fallback script URL for production/GitHub Pages if set globally
+window.GOOGLE_SHEETS_SCRIPT_URL = window.GOOGLE_SHEETS_SCRIPT_URL || '';
+
 // Get current Google Sheets Web App URL
 function getGoogleSheetUrl() {
-    return localStorage.getItem(STORAGE_KEY) || window.GOOGLE_SHEETS_SCRIPT_URL || '';
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored && stored.trim()) return stored.trim();
+    if (window.GOOGLE_SHEETS_SCRIPT_URL && window.GOOGLE_SHEETS_SCRIPT_URL.trim()) return window.GOOGLE_SHEETS_SCRIPT_URL.trim();
+    return '';
 }
 
 // Set Google Sheets Web App URL
 function setGoogleSheetUrl(url) {
-    if (url) {
+    if (url && url.trim()) {
         localStorage.setItem(STORAGE_KEY, url.trim());
     } else {
         localStorage.removeItem(STORAGE_KEY);
