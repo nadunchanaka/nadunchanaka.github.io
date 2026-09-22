@@ -78,7 +78,7 @@ tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-t
 <div class="flex items-center gap-1.5">
 <button aria-label="Export Financial Statement" class="min-h-[44px] px-3.5 py-2 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-primary font-label-md text-label-md flex items-center gap-1.5 transition-transform active:scale-95 shadow-sm cursor-pointer" id="exportStatementBtn" onclick="exportStatementCSV()" type="button">
 <span class="material-symbols-outlined text-[18px]">file_download</span>
-<span id="export-statement-btn-text">Nadun's_Statement_(September_2026)</span>
+<span id="export-statement-btn-text">Statement_(September_2026)</span>
 </button>
 </div>
 </div>
@@ -556,7 +556,7 @@ UNDO
     if (selectorText) selectorText.textContent = `${MONTH_NAMES[selectedMonth]} ${selectedYear}`;
 
     const exportBtnText = document.getElementById('export-statement-btn-text');
-    if (exportBtnText) exportBtnText.textContent = `Nadun's_Statement_(${MONTH_NAMES[selectedMonth]}_${selectedYear})`;
+    if (exportBtnText) exportBtnText.textContent = `Statement_(${MONTH_NAMES[selectedMonth]}_${selectedYear})`;
 
     // Update Summary Stat Ribbon
     let totalIncome = 0;
@@ -829,7 +829,7 @@ UNDO
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `Nadun's_Statement_(${MONTH_NAMES[selectedMonth]}_${selectedYear}).csv`);
+    link.setAttribute("download", `Statement_(${MONTH_NAMES[selectedMonth]}_${selectedYear}).csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
