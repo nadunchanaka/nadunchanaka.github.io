@@ -19,8 +19,11 @@
 tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-tint": "#4d44e3", "secondary-fixed": "#6ffbbe", "surface-container": "#eaedff", "tertiary-fixed-dim": "#ffb2b7", "on-secondary-container": "#00714d", "on-primary-fixed": "#0f0069", "secondary-container": "#6cf8bb", "surface-container-low": "#f2f3ff", "surface-dim": "#d2d9f4", "outline-variant": "#c7c4d8", "surface-variant": "#dae2fd", "on-background": "#131b2e", "on-secondary-fixed-variant": "#005236", "error-container": "#ffdad6", "on-primary-fixed-variant": "#3323cc", "on-tertiary": "#ffffff", "inverse-surface": "#283044", "surface-container-high": "#e2e7ff", "primary-fixed": "#e2dfff", "on-primary-container": "#dad7ff", "on-error": "#ffffff", "tertiary": "#95002b", "primary": "#3525cd", "surface": "#faf8ff", "on-surface-variant": "#464555", "primary-container": "#4f46e5", "tertiary-fixed": "#ffdadb", "tertiary-container": "#bf0f3c", "inverse-on-surface": "#eef0ff", "surface-container-lowest": "#ffffff", "outline": "#777587", "surface-bright": "#faf8ff", "on-secondary-fixed": "#002113", "on-tertiary-fixed-variant": "#92002a", "background": "#faf8ff", "primary-fixed-dim": "#c3c0ff", "secondary-fixed-dim": "#4edea3", "on-secondary": "#ffffff", "secondary": "#006c49", "inverse-primary": "#c3c0ff", "on-tertiary-container": "#ffd0d2", "on-error-container": "#93000a", "surface-container-highest": "#dae2fd", "on-primary": "#ffffff", "on-tertiary-fixed": "#40000d", "on-surface": "#131b2e", "error": "#ba1a1a" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1rem", "space-md": "1rem", "space-xs": "0.25rem", "space-xl": "2rem", "margin": "1.25rem", "space-sm": "0.5rem", "space-lg": "1.5rem" }, "fontFamily": { "title-md": ["Plus Jakarta Sans"], "stat-numeric-lg": ["Plus Jakarta Sans"], "display-hero": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "stat-numeric-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"] }, "fontSize": { "title-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "stat-numeric-lg": ["36px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "display-hero": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "800" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "stat-numeric-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }] } } } }
 </script>
 <script src="js/sheets_api.js"></script>
+<script src="js/html2canvas.min.js"></script>
+<script>if (typeof html2canvas === 'undefined') { document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>'); }</script>
+<script src="js/jspdf.umd.min.js"></script>
+<script>if (typeof window.jspdf === 'undefined' && typeof jsPDF === 'undefined') { document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\/script>'); }</script>
 <script src="js/html2pdf.bundle.min.js"></script>
-<script>if (typeof html2pdf === 'undefined') { document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>'); }</script>
 </head>
 
 <body class="bg-background font-body-md text-on-surface flex flex-col min-h-screen">
@@ -909,13 +912,30 @@ UNDO
     }
   }
 
-  // Professional PDF Statement Exporter with Radial Breakdown
+  // Professional PDF Statement Exporter with Home Dashboard Widgets & Infographics
   async function exportStatementPDF() {
     closeExportDropdown();
 
-    if (typeof html2pdf === 'undefined') {
-      alert("PDF generator library is still loading. Please check your internet connection or try again in a moment.");
+    const hasHtml2Canvas = typeof html2canvas !== 'undefined';
+    const hasJsPDF = (typeof window.jspdf !== 'undefined' && typeof window.jspdf.jsPDF !== 'undefined') || typeof window.jsPDF !== 'undefined';
+    const hasHtml2Pdf = typeof html2pdf !== 'undefined';
+
+    if (!hasHtml2Canvas && !hasHtml2Pdf && !hasJsPDF) {
+      alert("PDF generator libraries are still loading. Please check your internet connection or try again in a moment.");
       return;
+    }
+
+    // Check local storage if memory cache is not yet initialized
+    if (allTransactions.length === 0) {
+      const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
+      if (localRaw) {
+        try {
+          const cached = JSON.parse(localRaw);
+          if (Array.isArray(cached) && cached.length > 0) {
+            allTransactions = cached;
+          }
+        } catch (e) {}
+      }
     }
 
     // Target selected month & year (Read-only data from Google Sheets)
@@ -923,6 +943,9 @@ UNDO
     let txns = allTransactions.filter(t => getTxnYearMonth(t.date) === targetPeriod);
     if (txns.length === 0) {
       txns = getFilteredTransactions();
+    }
+    if (txns.length === 0 && allTransactions.length > 0) {
+      txns = allTransactions.slice();
     }
     if (txns.length === 0) {
       alert(`No transactions found for ${MONTH_NAMES[selectedMonth]} ${selectedYear} to generate statement.`);
@@ -935,30 +958,52 @@ UNDO
     // Calculate executive figures
     let totalIncome = 0;
     let totalExpenses = 0;
+    let incomeCount = 0;
+    let expenseCount = 0;
     const categoryTotals = {};
+    const categoryCounts = {};
 
     txns.forEach(t => {
-      const amt = parseFloat(t.amount) || 0;
-      const isInc = String(t.type).toLowerCase() === 'income';
+      const amt = Math.abs(parseFloat(t.amount) || 0);
+      const isInc = String(t.type || '').toLowerCase() === 'income';
       if (isInc) {
         totalIncome += amt;
+        incomeCount++;
       } else {
         totalExpenses += amt;
+        expenseCount++;
         const cat = t.category || 'Other';
         categoryTotals[cat] = (categoryTotals[cat] || 0) + amt;
+        categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
       }
     });
 
     const netBalance = totalIncome - totalExpenses;
+    const isSurplus = netBalance >= 0;
+    const netSign = isSurplus ? '+' : '-';
+    const netColor = isSurplus ? '#059669' : '#ba1a1a';
+    const netHeroTrendText = isSurplus ? '+100% Net' : 'Deficit';
+    const netStatusBadge = isSurplus ? 'SURPLUS' : 'DEFICIT';
+
     const monthName = MONTH_NAMES[selectedMonth];
     const generatedDateStr = new Date().toLocaleDateString('en-US', {
       year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
     });
+    const refNumber = `REF: EXP-STMT-${selectedYear}${String(selectedMonth+1).padStart(2,'0')}-${Math.floor(1000 + Math.random() * 9000)}`;
 
-    // Radial Donut Chart Slices (Clean SVG)
-    const circumference = 2 * Math.PI * 38; // ~238.76
-    let accumulatedOffset = 0;
+    const savingsRate = totalIncome > 0 ? ((netBalance / totalIncome) * 100).toFixed(1) : (totalExpenses === 0 ? '100.0' : '-100.0');
+    const expensePercentOfIncome = totalIncome > 0 ? ((totalExpenses / totalIncome) * 100).toFixed(1) : (totalExpenses > 0 ? '100+' : '0');
+    const avgExpense = expenseCount > 0 ? (totalExpenses / expenseCount) : 0;
+
+    // Sort categories descending by amount
     const sortedCats = Object.keys(categoryTotals).sort((a, b) => categoryTotals[b] - categoryTotals[a]);
+    const topCat = sortedCats.length > 0 ? sortedCats[0] : 'None';
+    const topCatAmt = sortedCats.length > 0 ? categoryTotals[topCat] : 0;
+    const topCatPct = totalExpenses > 0 ? ((topCatAmt / totalExpenses) * 100).toFixed(1) : '0';
+
+    // SVG Donut Chart Slices (Clean SVG with explicit geometry)
+    const circumference = 2 * Math.PI * 38; // ~238.761
+    let accumulatedOffset = 0;
     let donutSlicesHtml = '';
     if (totalExpenses > 0) {
       sortedCats.forEach(cat => {
@@ -967,16 +1012,16 @@ UNDO
         const strokeLength = fraction * circumference;
         const config = CATEGORY_CONFIG[cat] || CATEGORY_CONFIG['Other'] || { color: '#64748b' };
         donutSlicesHtml += `
-          <circle cx="50" cy="50" r="38" fill="none" stroke="${config.color}" stroke-width="10"
+          <circle cx="50" cy="50" r="38" fill="none" stroke="${config.color}" stroke-width="11"
             stroke-dasharray="${strokeLength.toFixed(2)} ${circumference.toFixed(2)}"
             stroke-dashoffset="-${accumulatedOffset.toFixed(2)}"
-            transform="rotate(-90 50 50)" stroke-linecap="round" />
+            transform="rotate(-90 50 50)" />
         `;
         accumulatedOffset += strokeLength;
       });
     }
 
-    // Category progress bars & percentages
+    // Category progress bars & percentages matching Home Dashboard
     let categoryRowsHtml = '';
     if (sortedCats.length > 0 && totalExpenses > 0) {
       sortedCats.forEach(cat => {
@@ -984,234 +1029,346 @@ UNDO
         const pct = ((amt / totalExpenses) * 100).toFixed(1);
         const config = CATEGORY_CONFIG[cat] || CATEGORY_CONFIG['Other'] || { icon: '📦', color: '#64748b' };
         categoryRowsHtml += `
-          <div style="display:flex; flex-direction:column; gap:3px; margin-bottom:8px; page-break-inside:avoid;">
+          <div style="display:flex; flex-direction:column; gap:4px; margin-bottom:10px; page-break-inside:avoid;">
             <div style="display:flex; align-items:center; justify-content:space-between; font-size:11px;">
-              <span style="font-weight:600; color:#131b2e; display:flex; align-items:center; gap:5px;">
-                <span>${config.icon || '🏷️'}</span>
+              <span style="font-weight:700; color:#131b2e; display:flex; align-items:center; gap:6px;">
+                <span style="font-size:14px;">${config.icon || '🏷️'}</span>
                 <span>${cat}</span>
               </span>
               <span style="font-weight:700; color:#131b2e;">
                 LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                <span style="font-size:10px; font-weight:500; color:#64748b; margin-left:4px;">(${pct}%)</span>
+                <span style="font-size:10px; font-weight:600; color:#4f46e5; background-color:#eaedff; padding:1px 6px; border-radius:8px; margin-left:6px;">${pct}%</span>
               </span>
             </div>
-            <div style="width:100%; height:6px; background-color:#eaedff; border-radius:3px; overflow:hidden;">
-              <div style="width:${pct}%; height:100%; background-color:${config.color}; border-radius:3px;"></div>
+            <div style="width:100%; height:7px; background-color:#eaedff; border-radius:4px; overflow:hidden;">
+              <div style="width:${pct}%; height:100%; background-color:${config.color}; border-radius:4px;"></div>
             </div>
           </div>
         `;
       });
     } else {
-      categoryRowsHtml = `<div style="font-size:12px; color:#64748b; padding:12px 0;">No expense categories recorded for this month.</div>`;
+      categoryRowsHtml = `<div style="font-size:12px; color:#64748b; padding:16px 0; text-align:center;">No expense categories recorded for this statement period.</div>`;
     }
 
     // Transaction rows
     let txnRowsHtml = '';
     txns.forEach((t, idx) => {
-      const amt = parseFloat(t.amount) || 0;
-      const isInc = String(t.type).toLowerCase() === 'income';
+      const amt = Math.abs(parseFloat(t.amount) || 0);
+      const isInc = String(t.type || '').toLowerCase() === 'income';
       const config = CATEGORY_CONFIG[t.category] || CATEGORY_CONFIG['Other'] || { color: '#64748b', icon: '📦' };
       const rowBg = idx % 2 === 0 ? '#ffffff' : '#f8faff';
       const typeBadge = isInc 
-        ? `<span style="display:inline-block; padding:2px 8px; border-radius:12px; background-color:#dcfce7; color:#15803d; font-size:9px; font-weight:700; letter-spacing:0.02em;">INCOME</span>`
-        : `<span style="display:inline-block; padding:2px 8px; border-radius:12px; background-color:#fee2e2; color:#b91c1c; font-size:9px; font-weight:700; letter-spacing:0.02em;">EXPENSE</span>`;
+        ? `<span style="display:inline-block; padding:3px 8px; border-radius:12px; background-color:#dcfce7; color:#15803d; font-size:9px; font-weight:800; letter-spacing:0.04em;">INCOME</span>`
+        : `<span style="display:inline-block; padding:3px 8px; border-radius:12px; background-color:#fee2e2; color:#b91c1c; font-size:9px; font-weight:800; letter-spacing:0.04em;">EXPENSE</span>`;
       const amtDisplay = isInc
-        ? `<span style="color:#006c49; font-weight:700;">+ LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`
-        : `<span style="color:#131b2e; font-weight:700;">- LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
+        ? `<span style="color:#006c49; font-weight:800;">+ LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`
+        : `<span style="color:#131b2e; font-weight:800;">- LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
 
       txnRowsHtml += `
         <tr style="background-color:${rowBg}; border-bottom:1px solid #eef2ff; page-break-inside:avoid;">
-          <td style="padding:7px 10px; font-size:11px; color:#464555; white-space:nowrap;">${t.date || ''}</td>
-          <td style="padding:7px 10px; font-size:12px; font-weight:600; color:#131b2e;">
+          <td style="padding:8px 10px; font-size:11px; color:#464555; white-space:nowrap;">${t.date || ''}</td>
+          <td style="padding:8px 10px; font-size:12px; font-weight:600; color:#131b2e;">
             ${t.description || t.category || 'Transaction'}
-            ${t.transactionId ? `<div style="font-size:9px; color:#94a3b8; font-family:monospace;">ID: ${t.transactionId}</div>` : ''}
+            ${t.transactionId ? `<div style="font-size:9px; color:#94a3b8; font-family:monospace; margin-top:1px;">ID: ${t.transactionId}</div>` : ''}
           </td>
-          <td style="padding:7px 10px; font-size:11px; color:#131b2e;">
-            <span style="display:inline-flex; align-items:center; gap:4px;">
+          <td style="padding:8px 10px; font-size:11px; color:#131b2e;">
+            <span style="display:inline-flex; align-items:center; gap:5px;">
               <span>${config.icon || ''}</span>
-              <span>${t.category || 'Other'}</span>
+              <span style="font-weight:600;">${t.category || 'Other'}</span>
             </span>
           </td>
-          <td style="padding:7px 10px; font-size:11px; color:#64748b;">${t.accountType || 'Cash Wallet'}</td>
-          <td style="padding:7px 10px; text-align:center;">${typeBadge}</td>
-          <td style="padding:7px 10px; font-size:12px; text-align:right; white-space:nowrap;">${amtDisplay}</td>
+          <td style="padding:8px 10px; font-size:11px; color:#64748b; white-space:nowrap;">${t.accountType || 'Cash Wallet'}</td>
+          <td style="padding:8px 10px; text-align:center;">${typeBadge}</td>
+          <td style="padding:8px 10px; font-size:12px; text-align:right; white-space:nowrap;">${amtDisplay}</td>
         </tr>
       `;
     });
 
-    const isSurplus = netBalance >= 0;
-    const netSign = isSurplus ? '+' : '';
-    const netColor = isSurplus ? '#3525cd' : '#95002b';
-    const netBg = isSurplus ? '#f5f3ff' : '#fff1f2';
-    const netBorder = isSurplus ? '#c7d2fe' : '#fecdd3';
-    const netBadge = isSurplus ? 'SURPLUS' : 'DEFICIT';
-    const netBadgeBg = isSurplus ? '#dcfce7' : '#fee2e2';
-    const netBadgeColor = isSurplus ? '#15803d' : '#b91c1c';
-
-    // PDF container — style is set below, just before appending to DOM
+    // PDF container with full inline styling
     const pdfContainer = document.createElement('div');
     pdfContainer.id = 'pdf-statement-template';
 
     pdfContainer.innerHTML = `
       <!-- Header Banner -->
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #eef2ff; padding-bottom:18px; margin-bottom:18px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #eef2ff; padding-bottom:16px; margin-bottom:16px;">
         <div style="display:flex; flex-direction:column;">
-          <div style="display:flex; align-items:center; gap:10px; margin-bottom:5px;">
-            <div style="width:32px; height:32px; border-radius:9px; background:linear-gradient(135deg,#3525cd,#4f46e5); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:16px;">N</div>
-            <span style="margin:0; font-size:19px; font-weight:800; color:#131b2e; letter-spacing:-0.02em;">MONTHLY FINANCIAL STATEMENT</span>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+            <div style="width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,#3525cd,#4f46e5); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:18px;">K</div>
+            <span style="margin:0; font-size:20px; font-weight:800; color:#131b2e; letter-spacing:-0.02em;">EXPENSES DASHBOARD</span>
           </div>
-          <span style="font-size:12px; color:#464555; font-weight:500;">Personal Finance Ledger &bull; LKR Account</span>
-          <span style="font-size:11px; color:#006c49; font-weight:600; margin-top:2px;">&bull; Google Sheets Live Synchronized</span>
+          <span style="font-size:12px; color:#464555; font-weight:600;">Monthly Financial Statement &bull; LKR Account</span>
+          <span style="font-size:11px; color:#006c49; font-weight:700; margin-top:3px; display:flex; align-items:center; gap:5px;">
+            <span style="display:inline-block; width:6px; height:6px; border-radius:50%; background-color:#006c49;"></span>
+            Google Sheet Live Synchronized Ledger
+          </span>
         </div>
-        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
-          <div style="background:linear-gradient(135deg,#3525cd,#4f46e5); color:#fff; padding:5px 16px; border-radius:20px; font-size:12px; font-weight:700; letter-spacing:0.04em;">
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:3px;">
+          <div style="background:linear-gradient(135deg,#3525cd,#4f46e5); color:#fff; padding:6px 18px; border-radius:20px; font-size:13px; font-weight:800; letter-spacing:0.04em;">
             ${monthName.toUpperCase()} ${selectedYear}
           </div>
-          <span style="font-size:10px; color:#64748b;">Generated: ${generatedDateStr}</span>
-          <span style="font-size:10px; color:#94a3b8; font-family:monospace;">REF: STMT-${selectedYear}${String(selectedMonth+1).padStart(2,'0')}</span>
+          <span style="font-size:10px; color:#64748b; margin-top:2px;">Generated: ${generatedDateStr}</span>
+          <span style="font-size:10px; color:#94a3b8; font-family:monospace;">${refNumber}</span>
         </div>
       </div>
 
-      <!-- Top Summary Metrics (3 Cards) -->
-      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:20px;">
-        <div style="background-color:${netBg}; border:1px solid ${netBorder}; border-radius:14px; padding:14px 16px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <span style="font-size:10px; font-weight:700; color:#464555; letter-spacing:0.04em; text-transform:uppercase;">Net Monthly Balance</span>
-            <span style="background-color:${netBadgeBg}; color:${netBadgeColor}; font-size:9px; font-weight:800; padding:2px 7px; border-radius:8px;">${netBadge}</span>
+      <!-- Net Balance Hero Card Widget (Matching Home Dashboard) -->
+      <div style="background:linear-gradient(135deg, #3525cd 0%, #4f46e5 50%, #4338ca 100%); border-radius:20px; padding:20px; color:#ffffff; margin-bottom:16px; box-shadow:0 8px 24px rgba(79,70,229,0.25);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-size:15px;">👛</span>
+            <span style="font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#dad7ff;">NET BALANCE</span>
           </div>
-          <div style="font-size:18px; font-weight:800; color:${netColor}; margin-bottom:4px;">${netSign}LKR ${netBalance.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
-          <span style="font-size:10px; color:#64748b;">Period flow: ${txns.length} records</span>
+          <span style="background:rgba(255,255,255,0.2); color:#6ffbbe; font-size:11px; font-weight:800; padding:4px 12px; border-radius:12px; letter-spacing:0.02em;">
+            ${netHeroTrendText}
+          </span>
         </div>
-        <div style="background-color:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:14px 16px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <span style="font-size:10px; font-weight:700; color:#15803d; letter-spacing:0.04em; text-transform:uppercase;">Total Income</span>
-            <span style="background-color:#dcfce7; color:#15803d; font-size:9px; font-weight:800; padding:2px 7px; border-radius:8px;">INCOME</span>
-          </div>
-          <div style="font-size:18px; font-weight:800; color:#15803d; margin-bottom:4px;">+ LKR ${totalIncome.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
-          <span style="font-size:10px; color:#16a34a;">${monthName.substring(0,3)} Inflow</span>
+        <div style="font-size:11px; color:#dad7ff; font-weight:500;">Sri Lankan Rupee (LKR)</div>
+        <div style="font-size:30px; font-weight:800; letter-spacing:-0.03em; margin:2px 0 16px 0; color:#ffffff;">
+          LKR ${Math.abs(netBalance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </div>
-        <div style="background-color:#fef2f2; border:1px solid #fecaca; border-radius:14px; padding:14px 16px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <span style="font-size:10px; font-weight:700; color:#b91c1c; letter-spacing:0.04em; text-transform:uppercase;">Total Expenses</span>
-            <span style="background-color:#fee2e2; color:#b91c1c; font-size:9px; font-weight:800; padding:2px 7px; border-radius:8px;">EXPENSES</span>
+        
+        <!-- Sub-Pill Flow Breakdown (Income vs Expenses) -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div style="background:rgba(255,255,255,0.12); border-radius:14px; padding:12px 14px;">
+            <div style="display:flex; align-items:center; gap:5px; margin-bottom:3px; color:#6ffbbe; font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase;">
+              <span>↗</span>
+              <span>Income</span>
+            </div>
+            <div style="font-size:17px; font-weight:800; color:#ffffff;">
+              + LKR ${totalIncome.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </div>
+            <div style="font-size:10px; color:#6ffbbe; margin-top:2px;">Month inflow &bull; ${incomeCount} transactions</div>
           </div>
-          <div style="font-size:18px; font-weight:800; color:#b91c1c; margin-bottom:4px;">- LKR ${totalExpenses.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
-          <span style="font-size:10px; color:#dc2626;">${sortedCats.length} category allocations</span>
+          <div style="background:rgba(255,255,255,0.12); border-radius:14px; padding:12px 14px;">
+            <div style="display:flex; align-items:center; gap:5px; margin-bottom:3px; color:#ffb2b7; font-size:11px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase;">
+              <span>↙</span>
+              <span>Expenses</span>
+            </div>
+            <div style="font-size:17px; font-weight:800; color:#ffffff;">
+              - LKR ${totalExpenses.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </div>
+            <div style="font-size:10px; color:#ffd0d2; margin-top:2px;">${expensePercentOfIncome}% of inflow &bull; ${expenseCount} transactions</div>
+          </div>
         </div>
       </div>
 
-      <!-- Radial Breakdown Section -->
-      <div style="background-color:#faf8ff; border:1px solid #eaedff; border-radius:16px; padding:18px; margin-bottom:20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-          <span style="font-size:13px; font-weight:700; color:#131b2e;">EXPENSE BREAKDOWN &amp; CATEGORY ALLOCATION</span>
-          <span style="font-size:10px; color:#4f46e5; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Radial Analytics</span>
+      <!-- 4 Executive Infographic Metric Tiles -->
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:16px;">
+        <div style="background:#faf8ff; border:1px solid #eaedff; border-radius:14px; padding:12px 14px;">
+          <div style="font-size:10px; font-weight:700; color:#464555; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;">Savings Rate</div>
+          <div style="font-size:16px; font-weight:800; color:${netColor};">${savingsRate}%</div>
+          <div style="font-size:9px; color:#64748b; margin-top:2px;">Retained Inflow</div>
+        </div>
+        <div style="background:#faf8ff; border:1px solid #eaedff; border-radius:14px; padding:12px 14px;">
+          <div style="font-size:10px; font-weight:700; color:#464555; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;">Total Records</div>
+          <div style="font-size:16px; font-weight:800; color:#3525cd;">${txns.length}</div>
+          <div style="font-size:9px; color:#64748b; margin-top:2px;">${incomeCount} in / ${expenseCount} out</div>
+        </div>
+        <div style="background:#faf8ff; border:1px solid #eaedff; border-radius:14px; padding:12px 14px;">
+          <div style="font-size:10px; font-weight:700; color:#464555; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;">Avg Outflow</div>
+          <div style="font-size:16px; font-weight:800; color:#131b2e;">LKR ${Math.round(avgExpense).toLocaleString('en-US')}</div>
+          <div style="font-size:9px; color:#64748b; margin-top:2px;">Per expense txn</div>
+        </div>
+        <div style="background:#faf8ff; border:1px solid #eaedff; border-radius:14px; padding:12px 14px;">
+          <div style="font-size:10px; font-weight:700; color:#464555; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;">Top Category</div>
+          <div style="font-size:16px; font-weight:800; color:#131b2e; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${topCat}</div>
+          <div style="font-size:9px; color:#4f46e5; margin-top:2px;">${topCatPct}% of spending</div>
+        </div>
+      </div>
+
+      <!-- Expense Breakdown & Dynamic SVG Donut Chart Widget (Matching Home Dashboard) -->
+      <div style="background-color:#faf8ff; border:1px solid #eaedff; border-radius:18px; padding:18px; margin-bottom:18px; page-break-inside:avoid;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <div>
+            <span style="font-size:14px; font-weight:800; color:#131b2e;">Expense Breakdown &bull; Category Allocation</span>
+            <div style="font-size:10px; color:#64748b; margin-top:1px;">${monthName} ${selectedYear}</div>
+          </div>
+          <span style="font-size:10px; color:#3525cd; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; background-color:#eaedff; padding:3px 10px; border-radius:12px;">
+            ${sortedCats.length} Categories
+          </span>
         </div>
         <div style="display:flex; align-items:flex-start; gap:24px;">
-          <!-- SVG Donut -->
-          <div style="width:160px; height:160px; flex-shrink:0;">
-            <svg width="160" height="160" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="38" fill="none" stroke="#eaedff" stroke-width="10"></circle>
+          <!-- SVG Donut Chart -->
+          <div style="width:160px; height:160px; flex-shrink:0; position:relative; display:flex; align-items:center; justify-content:center;">
+            <svg width="160" height="160" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="50" r="38" fill="none" stroke="#eaedff" stroke-width="11" />
               ${donutSlicesHtml}
-              <text x="50" y="45" text-anchor="middle" font-size="6" font-weight="600" fill="#64748b" font-family="Arial,sans-serif">TOTAL SPENT</text>
-              <text x="50" y="54" text-anchor="middle" font-size="7.5" font-weight="800" fill="#131b2e" font-family="Arial,sans-serif">LKR ${Math.round(totalExpenses).toLocaleString('en-US')}</text>
-              <text x="50" y="62" text-anchor="middle" font-size="5.5" font-weight="600" fill="#4f46e5" font-family="Arial,sans-serif">${sortedCats.length} Categories</text>
+              <text x="50" y="44" text-anchor="middle" font-size="6" font-weight="700" fill="#64748b" font-family="-apple-system, sans-serif">TOTAL SPENT</text>
+              <text x="50" y="53" text-anchor="middle" font-size="7.5" font-weight="800" fill="#131b2e" font-family="-apple-system, sans-serif">LKR ${Math.round(totalExpenses).toLocaleString('en-US')}</text>
+              <text x="50" y="61" text-anchor="middle" font-size="5.5" font-weight="700" fill="#4f46e5" font-family="-apple-system, sans-serif">${sortedCats.length} Categories</text>
             </svg>
           </div>
-          <!-- Category Legend -->
-          <div style="flex:1; padding-top:8px;">
+          <!-- Category Legend with Progress Bars -->
+          <div style="flex:1; padding-top:4px;">
             ${categoryRowsHtml}
           </div>
         </div>
       </div>
 
-      <!-- Transaction Ledger -->
+      <!-- Transaction Ledger Table -->
       <div style="margin-bottom:18px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <span style="font-size:13px; font-weight:700; color:#131b2e;">TRANSACTION LEDGER</span>
-          <span style="font-size:11px; color:#64748b;">${txns.length} records</span>
+          <span style="font-size:14px; font-weight:800; color:#131b2e;">TRANSACTION LEDGER</span>
+          <span style="font-size:11px; font-weight:600; color:#64748b;">Showing ${txns.length} records</span>
         </div>
-        <table style="width:100%; border-collapse:collapse; border:1px solid #e2e7ff;">
+        <table style="width:100%; border-collapse:collapse; border:1px solid #e2e7ff; background:#ffffff; border-radius:12px; overflow:hidden;">
           <thead>
             <tr style="background-color:#f1f4ff;">
-              <th style="padding:8px 8px; font-size:10px; font-weight:700; color:#464555; text-align:left; border-bottom:2px solid #e2e7ff; letter-spacing:0.03em;">DATE</th>
-              <th style="padding:8px 8px; font-size:10px; font-weight:700; color:#464555; text-align:left; border-bottom:2px solid #e2e7ff; letter-spacing:0.03em;">DESCRIPTION</th>
-              <th style="padding:8px 8px; font-size:10px; font-weight:700; color:#464555; text-align:left; border-bottom:2px solid #e2e7ff; letter-spacing:0.03em;">CATEGORY</th>
-              <th style="padding:8px 8px; font-size:10px; font-weight:700; color:#464555; text-align:left; border-bottom:2px solid #e2e7ff; letter-spacing:0.03em;">ACCOUNT</th>
-              <th style="padding:8px 8px; font-size:10px; font-weight:700; color:#464555; text-align:center; border-bottom:2px solid #e2e7ff; letter-spacing:0.03em;">TYPE</th>
-              <th style="padding:8px 8px; font-size:10px; font-weight:700; color:#464555; text-align:right; border-bottom:2px solid #e2e7ff; letter-spacing:0.03em;">AMOUNT (LKR)</th>
+              <th style="padding:9px 10px; font-size:10px; font-weight:800; color:#464555; text-align:left; border-bottom:2px solid #e2e7ff; letter-spacing:0.04em;">DATE</th>
+              <th style="padding:9px 10px; font-size:10px; font-weight:800; color:#464555; text-align:left; border-bottom:2px solid #e2e7ff; letter-spacing:0.04em;">DESCRIPTION</th>
+              <th style="padding:9px 10px; font-size:10px; font-weight:800; color:#464555; text-align:left; border-bottom:2px solid #e2e7ff; letter-spacing:0.04em;">CATEGORY</th>
+              <th style="padding:9px 10px; font-size:10px; font-weight:800; color:#464555; text-align:left; border-bottom:2px solid #e2e7ff; letter-spacing:0.04em;">ACCOUNT</th>
+              <th style="padding:9px 10px; font-size:10px; font-weight:800; color:#464555; text-align:center; border-bottom:2px solid #e2e7ff; letter-spacing:0.04em;">TYPE</th>
+              <th style="padding:9px 10px; font-size:10px; font-weight:800; color:#464555; text-align:right; border-bottom:2px solid #e2e7ff; letter-spacing:0.04em;">AMOUNT (LKR)</th>
             </tr>
           </thead>
           <tbody>
             ${txnRowsHtml}
           </tbody>
+          <tfoot>
+            <tr style="background-color:#f8faff; border-top:2px solid #e2e7ff; font-weight:800;">
+              <td colspan="4" style="padding:10px; font-size:11px; color:#131b2e;">Period Totals: Income (+LKR ${totalIncome.toLocaleString('en-US',{minimumFractionDigits:2})}) &bull; Expenses (-LKR ${totalExpenses.toLocaleString('en-US',{minimumFractionDigits:2})})</td>
+              <td style="padding:10px; text-align:center; font-size:10px; color:${netColor}; font-weight:800;">${netStatusBadge}</td>
+              <td style="padding:10px; text-align:right; font-size:12px; color:${netColor}; font-weight:800;">${netSign} LKR ${Math.abs(netBalance).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
+            </tr>
+          </tfoot>
         </table>
       </div>
 
-      <!-- Footer -->
-      <div style="border-top:1px solid #eef2ff; padding-top:10px; display:flex; justify-content:space-between; font-size:10px; color:#94a3b8;">
-        <span>CONFIDENTIAL &bull; Monthly Financial Statement</span>
-        <span>Expense Tracker V1.0 &bull; Google Sheets Ledger</span>
+      <!-- Statement Document Footer -->
+      <div style="border-top:1px solid #eef2ff; padding-top:12px; display:flex; justify-content:space-between; font-size:10px; color:#94a3b8; page-break-inside:avoid;">
+        <span>CONFIDENTIAL &bull; Monthly Financial Statement &bull; Expense Tracker V2.0</span>
+        <span>Google Sheets Database Live Synchronized</span>
       </div>
     `;
 
-    // ── Loading overlay (hides the PDF container from user while html2canvas captures it) ──
+    // Visual Loading Indicator for User Experience
     const genLoader = document.createElement('div');
     genLoader.id = 'pdf-gen-loader';
-    genLoader.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(53,37,205,0.96);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:sans-serif;';
+    genLoader.style.cssText = 'position:fixed;inset:0;z-index:100000;background:rgba(53,37,205,0.96);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;';
     genLoader.innerHTML = `
-      <div style="width:44px;height:44px;border:4px solid rgba(255,255,255,0.25);border-top:4px solid #fff;border-radius:50%;animation:pdfSpin 0.7s linear infinite;"></div>
-      <p style="margin:0;color:#fff;font-size:15px;font-weight:700;letter-spacing:-0.01em;">Generating PDF Statement...</p>
-      <p style="margin:0;color:rgba(255,255,255,0.65);font-size:12px;font-weight:500;">Reading from Google Sheets data</p>
+      <div style="width:48px;height:48px;border:4px solid rgba(255,255,255,0.25);border-top:4px solid #fff;border-radius:50%;animation:pdfSpin 0.7s linear infinite;"></div>
+      <p style="margin:0;color:#fff;font-size:16px;font-weight:800;letter-spacing:-0.01em;">Generating PDF Statement...</p>
+      <p style="margin:0;color:rgba(255,255,255,0.75);font-size:13px;font-weight:500;">Rendering widgets, charts & ledger</p>
       <style>@keyframes pdfSpin{to{transform:rotate(360deg)}}</style>
     `;
     document.body.appendChild(genLoader);
 
-    // ── Place PDF container at real document position 0,0 so html2canvas can capture it ──
-    // Loader overlay hides it from the user (z-index 10001 > container z-index 1)
+    // Place container into DOM with full opacity and solid background for html2canvas
     pdfContainer.style.cssText = [
-      'position: absolute',
+      'position: fixed',
       'top: 0',
       'left: 0',
-      'width: 780px',
+      'width: 800px',
+      'min-height: 1120px',
       'background-color: #ffffff',
       'color: #131b2e',
-      "font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-      'padding: 28px 32px',
+      "font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+      'padding: 32px 36px',
       'box-sizing: border-box',
-      'z-index: 1'
+      'z-index: 99999',
+      'opacity: 1',
+      'visibility: visible',
+      'pointer-events: none'
     ].join(';');
 
     document.body.appendChild(pdfContainer);
 
-    // Scroll to top so container is inside the viewport
-    window.scrollTo(0, 0);
-
-    // Wait two animation frames + an extra 400ms for full browser layout & font render
+    // Allow browser layout and fonts to fully paint
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-    await new Promise(r => setTimeout(r, 400));
+    await new Promise(r => setTimeout(r, 450));
 
     const filename = `Statement_${monthName}_${selectedYear}.pdf`;
-    const opt = {
-      margin: [8, 8, 8, 8],
-      filename: filename,
-      image: { type: 'jpeg', quality: 0.97 },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        logging: false,
-        scrollX: 0,
-        scrollY: 0,
-        windowWidth: 836,
-        windowHeight: window.innerHeight
-      },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
 
     try {
-      await html2pdf().set(opt).from(pdfContainer).save();
+      if (hasHtml2Canvas) {
+        // High-resolution direct rendering with html2canvas
+        const canvas = await html2canvas(pdfContainer, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          logging: false,
+          width: 800,
+          windowWidth: 800
+        });
 
-      // Show success toast
+        const jsPDFClass = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : (window.jsPDF || null);
+
+        if (jsPDFClass) {
+          const pdf = new jsPDFClass('p', 'mm', 'a4');
+          const pageWidth = 210; // A4 width mm
+          const pageHeight = 297; // A4 height mm
+          const margin = 10; // mm
+          const printWidth = pageWidth - (margin * 2); // 190 mm
+          const printHeight = pageHeight - (margin * 2); // 277 mm
+
+          const imgWidth = canvas.width;
+          const imgHeight = canvas.height;
+          const scaleRatio = printWidth / imgWidth;
+          const totalHeightMm = imgHeight * scaleRatio;
+
+          if (totalHeightMm <= printHeight) {
+            // Fits cleanly on a single page
+            const imgData = canvas.toDataURL('image/jpeg', 0.98);
+            pdf.addImage(imgData, 'JPEG', margin, margin, printWidth, totalHeightMm);
+          } else {
+            // Multi-page slicing: cleanly divide canvas across A4 pages without clipping
+            let currentY = 0;
+            const pageCanvasHeight = Math.floor(printHeight / scaleRatio);
+            let pageNum = 0;
+
+            while (currentY < imgHeight) {
+              const sliceHeight = Math.min(pageCanvasHeight, imgHeight - currentY);
+              const pageCanvas = document.createElement('canvas');
+              pageCanvas.width = imgWidth;
+              pageCanvas.height = sliceHeight;
+              const ctx = pageCanvas.getContext('2d');
+              ctx.fillStyle = '#ffffff';
+              ctx.fillRect(0, 0, imgWidth, sliceHeight);
+              ctx.drawImage(canvas, 0, currentY, imgWidth, sliceHeight, 0, 0, imgWidth, sliceHeight);
+
+              const sliceHeightMm = sliceHeight * scaleRatio;
+              const imgData = pageCanvas.toDataURL('image/jpeg', 0.98);
+
+              if (pageNum > 0) {
+                pdf.addPage('a4', 'portrait');
+              }
+              pdf.addImage(imgData, 'JPEG', margin, margin, printWidth, sliceHeightMm);
+
+              currentY += sliceHeight;
+              pageNum++;
+            }
+          }
+
+          pdf.save(filename);
+        } else if (typeof html2pdf !== 'undefined') {
+          // Fallback to html2pdf if jsPDF class is unavailable
+          const opt = {
+            margin: [10, 10, 10, 10],
+            filename: filename,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff', logging: false },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          };
+          await html2pdf().set(opt).from(pdfContainer).save();
+        } else {
+          throw new Error("No PDF rendering library available.");
+        }
+      } else if (typeof html2pdf !== 'undefined') {
+        const opt = {
+          margin: [10, 10, 10, 10],
+          filename: filename,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff', logging: false },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        await html2pdf().set(opt).from(pdfContainer).save();
+      } else {
+        throw new Error("PDF libraries could not be loaded.");
+      }
+
+      // Show success toast notification
       const toast = document.getElementById('exportToast');
       const toastSub = document.getElementById('exportToastSub');
       if (toastSub) toastSub.textContent = `${filename} downloaded successfully.`;
@@ -1227,10 +1384,9 @@ UNDO
       console.error('PDF generation error:', err);
       alert('An error occurred while generating the PDF statement. Please try again.');
     } finally {
-      // Remove loader and PDF container
+      // Remove loader and PDF container from DOM
       if (genLoader.parentNode) genLoader.parentNode.removeChild(genLoader);
       if (pdfContainer.parentNode) pdfContainer.parentNode.removeChild(pdfContainer);
-      window.scrollTo({ top: 0, behavior: 'instant' });
     }
   }
 </script>
