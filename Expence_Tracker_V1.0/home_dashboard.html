@@ -329,32 +329,51 @@ View All
   }
 
   async function loadDashboardData() {
-    try {
-      const res = await fetchTransactionsFromGoogleSheet();
-      if (res && res.success && Array.isArray(res.transactions)) {
-        allTransactions = res.transactions;
-        if (allTransactions.length > 0 && !window.userHasPickedMonth) {
-          const latestDateStr = allTransactions[allTransactions.length - 1].date;
-          if (latestDateStr && latestDateStr.includes('-')) {
-            const parts = latestDateStr.split('-');
-            if (parts.length >= 2) {
-              selectedYear = parseInt(parts[0]);
-              selectedMonth = parseInt(parts[1]) - 1;
-            }
-          }
+    // 1. Display cached transactions immediately if present
+    const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
+    let hasCache = false;
+    if (localRaw) {
+      try {
+        const cached = JSON.parse(localRaw);
+        if (Array.isArray(cached) && cached.length > 0) {
+          allTransactions = cached;
+          hasCache = true;
+          populateMonthPickerOptions();
+          renderDashboard();
         }
-      } else {
-        const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
-        allTransactions = localRaw ? JSON.parse(localRaw) : [];
-      }
-    } catch (e) {
-      console.warn("Could not fetch sheet transactions:", e);
-      const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
-      allTransactions = localRaw ? JSON.parse(localRaw) : [];
+      } catch (e) {}
     }
 
-    populateMonthPickerOptions();
-    renderDashboard();
+    // 2. Perform lightweight change detection (or initial fetch if no cache)
+    try {
+      if (!hasCache) {
+        const res = await fetchTransactionsFromGoogleSheet();
+        if (res && res.success && Array.isArray(res.transactions)) {
+          allTransactions = res.transactions;
+          if (allTransactions.length > 0 && !window.userHasPickedMonth) {
+            const latestDateStr = allTransactions[allTransactions.length - 1].date;
+            if (latestDateStr && latestDateStr.includes('-')) {
+              const parts = latestDateStr.split('-');
+              if (parts.length >= 2) {
+                selectedYear = parseInt(parts[0]);
+                selectedMonth = parseInt(parts[1]) - 1;
+              }
+            }
+          }
+          populateMonthPickerOptions();
+          renderDashboard();
+        }
+      } else {
+        const checkRes = await checkForSheetUpdates();
+        if (checkRes.changed && Array.isArray(checkRes.transactions)) {
+          allTransactions = checkRes.transactions;
+          populateMonthPickerOptions();
+          renderDashboard();
+        }
+      }
+    } catch (e) {
+      console.warn("Sync check error:", e);
+    }
   }
 
   function toggleMonthPicker() {

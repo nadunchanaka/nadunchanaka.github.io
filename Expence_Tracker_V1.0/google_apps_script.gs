@@ -102,14 +102,16 @@ function getAllTransactions(sheet) {
       var row = data[i];
       var rawId = row[0] ? String(row[0]).trim() : "";
       var rawDate = row[1];
-      var rawAmount = row[4];
-      if (rawId || rawDate || rawAmount !== "") {
+      var rawAmount = parseFloat(row[4]);
+      
+      // Strict filter: Exclude zero or negative amounts, and header/empty rows
+      if (rawId && !isNaN(rawAmount) && rawAmount > 0) {
         transactions.push({
-          transactionId: rawId || ("TXN-" + i),
+          transactionId: rawId,
           date: formatDateString(rawDate),
           type: row[2] ? String(row[2]).trim() : "Expense",
           category: row[3] ? String(row[3]).trim() : "General",
-          amount: parseFloat(rawAmount) || 0,
+          amount: rawAmount,
           description: row[5] ? String(row[5]).trim() : "",
           accountType: row[6] ? String(row[6]).trim() : "Cash Wallet",
           createdAt: row[7] ? (row[7] instanceof Date ? row[7].toISOString() : String(row[7])) : ""
@@ -135,20 +137,24 @@ function doPost(e) {
 
     var requestData = JSON.parse(e.postData.contents);
 
-    // Read action via POST
-    if (!Array.isArray(requestData) && requestData.action === "read") {
+    // 1. Action: Lightweight sync check via POST
+    if (!Array.isArray(requestData) && requestData.action === "sync_check") {
       var txns = getAllTransactions(sheet);
+      var lastTxn = txns.length > 0 ? txns[txns.length - 1] : null;
       return ContentService.createTextOutput(JSON.stringify({
         status: "success",
-        message: "Expense Tracker Database Connected",
-        sheetUrl: spreadsheetUrl,
-        transactions: txns
+        count: txns.length,
+        lastTransactionId: lastTxn ? lastTxn.transactionId : "",
+        sheetUrl: spreadsheetUrl
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    // Delete action
+    // 2. Action: Delete Row by Transaction ID
     if (!Array.isArray(requestData) && requestData.action === "delete") {
       var targetId = String(requestData.transactionId || requestData.id || "").trim();
+      if (!targetId) {
+        throw new Error("Delete failed: Missing Transaction ID.");
+      }
       var data = sheet.getDataRange().getValues();
       var deleted = false;
       for (var i = data.length - 1; i >= 1; i--) {
@@ -162,18 +168,24 @@ function doPost(e) {
         status: "success",
         action: "delete",
         deleted: deleted,
-        message: deleted ? "Entry deleted from Google Sheet" : "Entry not found in sheet",
+        message: deleted ? "Entry deleted from sheet" : "Transaction ID not found in sheet",
         sheetUrl: spreadsheetUrl
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    // Update action
+    // 3. Action: Update Existing Row by Transaction ID ONLY
     if (!Array.isArray(requestData) && requestData.action === "update") {
       var item = requestData;
       var targetId = String(item.transactionId || item.id || "").trim();
+      var amt = parseFloat(item.amount);
+
       if (!targetId) {
-        throw new Error("Cannot update transaction: Missing Transaction ID.");
+        throw new Error("Update failed: Missing Transaction ID.");
       }
+      if (isNaN(amt) || amt <= 0) {
+        throw new Error("Update failed: Amount must be greater than 0.");
+      }
+
       var data = sheet.getDataRange().getValues();
       var updated = false;
       for (var i = 1; i < data.length; i++) {
@@ -182,39 +194,49 @@ function doPost(e) {
           sheet.getRange(rowIdx, 2).setValue(item.date || new Date().toISOString().split('T')[0]);
           sheet.getRange(rowIdx, 3).setValue(item.type || "Expense");
           sheet.getRange(rowIdx, 4).setValue(item.category || "General");
-          sheet.getRange(rowIdx, 5).setValue(parseFloat(item.amount) || 0);
+          sheet.getRange(rowIdx, 5).setValue(amt);
           sheet.getRange(rowIdx, 6).setValue(item.description || item.note || "");
           sheet.getRange(rowIdx, 7).setValue(item.accountType || "Cash Wallet");
           updated = true;
           break;
         }
       }
+
       if (!updated) {
-        return ContentService.createTextOutput(JSON.stringify({
-          status: "error",
-          action: "update",
-          message: "Transaction ID (" + targetId + ") not found in sheet for updating.",
-          sheetUrl: spreadsheetUrl
-        })).setMimeType(ContentService.MimeType.JSON);
+        throw new Error("Update failed: Transaction ID (" + targetId + ") not found in Google Sheet.");
       }
+
       return ContentService.createTextOutput(JSON.stringify({
         status: "success",
         action: "update",
         updated: true,
-        message: "Entry updated successfully",
+        message: "Entry updated in Google Sheet",
         sheetUrl: spreadsheetUrl
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    // Default: Append new entries
+    // Prohibit silent creates or read requests via POST
+    if (!Array.isArray(requestData) && requestData.action && requestData.action !== "add") {
+      throw new Error("Invalid POST action: '" + requestData.action + "'. Writes are prohibited for read or check operations.");
+    }
+
     var entries = Array.isArray(requestData) ? requestData : [requestData];
+
+    // STRICT VALIDATION: Reject any row with zero or missing amount
+    entries.forEach(function(item, idx) {
+      var valAmt = parseFloat(item.amount);
+      if (isNaN(valAmt) || valAmt <= 0) {
+        throw new Error("Validation Failed: Entry #" + (idx + 1) + " amount must be greater than 0. Zero-amount rows are prohibited.");
+      }
+    });
+
     entries.forEach(function(item) {
       sheet.appendRow([
         item.transactionId || item.id || ("TXN-" + Date.now()),
         item.date || new Date().toISOString().split('T')[0],
         item.type || "Expense",
         item.category || "General",
-        parseFloat(item.amount) || 0,
+        parseFloat(item.amount),
         item.description || item.note || "",
         item.accountType || "Cash Wallet",
         item.createdAt || new Date().toISOString()
@@ -243,12 +265,28 @@ function doGet(e) {
     var db = getOrCreateDatabase();
     var sheet = db.sheet;
     var txns = getAllTransactions(sheet);
+    var lastTxn = txns.length > 0 ? txns[txns.length - 1] : null;
+
+    // Lightweight sync check parameter support (?mode=check)
+    var isCheckOnly = e && e.parameter && (e.parameter.mode === "check" || e.parameter.check === "1");
+    if (isCheckOnly) {
+      return ContentService.createTextOutput(JSON.stringify({
+        status: "success",
+        mode: "check",
+        count: txns.length,
+        lastTransactionId: lastTxn ? lastTxn.transactionId : "",
+        sheetUrl: db.url,
+        spreadsheetId: db.ss.getId()
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
 
     return ContentService.createTextOutput(JSON.stringify({
       status: "success",
       message: "Expense Tracker Database Connected",
       sheetUrl: db.url,
       spreadsheetId: db.ss.getId(),
+      count: txns.length,
+      lastTransactionId: lastTxn ? lastTxn.transactionId : "",
       transactions: txns
     })).setMimeType(ContentService.MimeType.JSON);
   } catch (err) {

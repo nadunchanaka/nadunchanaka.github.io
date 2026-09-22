@@ -1,23 +1,22 @@
 /**
  * Google Sheets API Helper for Kosh Expense Tracker
- * Handles sending transactions to Google Apps Script Web App endpoint,
- * checking confirmation from Google Sheets, and managing sheet URL state.
+ * Single Source of Truth architecture with lightweight change detection
+ * and zero-amount row prevention.
  */
 
 const STORAGE_KEY = 'KOSH_GOOGLE_SHEETS_URL';
 const SPREADSHEET_LINK_KEY = 'KOSH_CONFIRMED_SHEET_URL';
+const SYNC_META_KEY = 'KOSH_SYNC_META';
+const LOCAL_TXNS_KEY = 'KOSH_LOCAL_TRANSACTIONS';
 
-// Fallback script URL for production / GitHub Pages / fresh devices
+// Hardcoded Web App URL default for seamless out-of-the-box multi-device sync
 window.GOOGLE_SHEETS_SCRIPT_URL = window.GOOGLE_SHEETS_SCRIPT_URL || 'https://script.google.com/macros/s/AKfycbwJAX61S81JuaujB-ApotjW7Er1ODbZoMx79oe7FnOYIfy9EECun4aYtUYOz-vP3GC_/exec';
 
 // Get current Google Sheets Web App URL
 function getGoogleSheetUrl() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored && stored.trim()) return stored.trim();
-    if (window.GOOGLE_SHEETS_SCRIPT_URL && window.GOOGLE_SHEETS_SCRIPT_URL.trim()) {
-        return window.GOOGLE_SHEETS_SCRIPT_URL.trim();
-    }
-    return 'https://script.google.com/macros/s/AKfycbwJAX61S81JuaujB-ApotjW7Er1ODbZoMx79oe7FnOYIfy9EECun4aYtUYOz-vP3GC_/exec';
+    return (window.GOOGLE_SHEETS_SCRIPT_URL || '').trim();
 }
 
 // Set Google Sheets Web App URL
@@ -58,7 +57,8 @@ function normalizeDateFormat(dateVal) {
 }
 
 /**
- * Send new transactions to Google Sheet backend and await explicit confirmation
+ * Send new transactions to Google Sheet (Explicit User Submissions ONLY)
+ * Prohibits zero-amount or empty rows
  * @param {Array} transactions 
  * @returns {Promise<{success: boolean, message: string, sheetUrl?: string}>}
  */
@@ -67,8 +67,30 @@ async function sendTransactionsToGoogleSheet(transactions) {
     if (!url) {
         return {
             success: false,
-            message: "Google Sheets Web App URL is missing. Please check your settings."
+            message: "Google Sheets Web App URL is missing. Please check settings."
         };
+    }
+
+    if (!Array.isArray(transactions) || transactions.length === 0) {
+        return { success: false, message: "No transaction records provided for submission." };
+    }
+
+    // STRICT FRONTEND VALIDATION: Prohibit empty or zero amount rows
+    for (let i = 0; i < transactions.length; i++) {
+        const t = transactions[i];
+        const amt = parseFloat(t.amount);
+        if (isNaN(amt) || amt <= 0) {
+            return {
+                success: false,
+                message: `Validation Error: Entry #${i + 1} amount must be greater than 0. Zero-amount rows cannot be submitted.`
+            };
+        }
+        if (!t.description && !t.note) {
+            return {
+                success: false,
+                message: `Validation Error: Entry #${i + 1} description is required.`
+            };
+        }
     }
 
     try {
@@ -86,8 +108,13 @@ async function sendTransactionsToGoogleSheet(transactions) {
             if (data.sheetUrl) {
                 localStorage.setItem(SPREADSHEET_LINK_KEY, data.sheetUrl);
             }
-            // Re-fetch live data after posting
-            await fetchTransactionsFromGoogleSheet();
+            
+            // Update local cache
+            const existingRaw = localStorage.getItem(LOCAL_TXNS_KEY);
+            const existing = existingRaw ? JSON.parse(existingRaw) : [];
+            const updatedList = [...existing, ...transactions];
+            localStorage.setItem(LOCAL_TXNS_KEY, JSON.stringify(updatedList));
+
             return {
                 success: true,
                 message: "Entry recorded successfully in Google Sheet",
@@ -96,7 +123,7 @@ async function sendTransactionsToGoogleSheet(transactions) {
         } else {
             return {
                 success: false,
-                message: (data && data.message) ? data.message : "Failed to write transaction to Google Sheet."
+                message: (data && data.message) ? data.message : "Failed to record entry in Google Sheet."
             };
         }
     } catch (err) {
@@ -109,94 +136,133 @@ async function sendTransactionsToGoogleSheet(transactions) {
 }
 
 /**
- * Fetch all transactions directly from Google Sheet endpoint (Single Source of Truth)
+ * Fetch all transactions directly from Google Sheet via GET endpoint ONLY
+ * Filters out any invalid/zero-amount rows and caches locally.
  * @returns {Promise<{success: boolean, transactions: Array, source: string, error?: string}>}
  */
 async function fetchTransactionsFromGoogleSheet() {
     const url = getGoogleSheetUrl();
     if (!url) {
-        return { success: false, transactions: [], source: 'none', error: 'No Sheet URL' };
+        const localRaw = localStorage.getItem(LOCAL_TXNS_KEY);
+        return { success: true, transactions: localRaw ? JSON.parse(localRaw) : [], source: 'local' };
     }
 
     try {
-        let transactions = null;
-        let sheetUrl = '';
-
-        // 1. Try GET request with cache-busting timestamp
+        // Cache-busting GET request
         const fetchUrl = url + (url.includes('?') ? '&' : '?') + '_t=' + Date.now();
-        const getRes = await fetch(fetchUrl, { method: 'GET', mode: 'cors' });
-        if (getRes.ok) {
-            const getData = await getRes.json();
-            if (getData && getData.transactions && Array.isArray(getData.transactions)) {
-                transactions = getData.transactions;
-                sheetUrl = getData.sheetUrl || '';
-            }
-        }
+        const response = await fetch(fetchUrl, { method: 'GET', mode: 'cors' });
+        
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
 
-        // 2. If GET did not return transactions array (e.g. backend POST fallback), try POST action: "read"
-        if (!transactions) {
-            const postRes = await fetch(url, {
-                method: 'POST',
-                mode: 'cors',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                body: JSON.stringify({ action: "read" })
-            });
-            if (postRes.ok) {
-                const postData = await postRes.json();
-                if (postData && postData.transactions && Array.isArray(postData.transactions)) {
-                    transactions = postData.transactions;
-                    sheetUrl = postData.sheetUrl || '';
-                }
-            }
-        }
+        if (data && data.transactions && Array.isArray(data.transactions)) {
+            // Normalize and filter out invalid/zero-amount rows
+            const validTxns = data.transactions
+                .filter(t => {
+                    const amt = parseFloat(t.amount);
+                    return !isNaN(amt) && amt > 0 && (t.transactionId || t.id);
+                })
+                .map(t => ({
+                    transactionId: String(t.transactionId || t.id).trim(),
+                    date: normalizeDateFormat(t.date),
+                    type: (t.type || 'Expense').trim(),
+                    category: (t.category || 'General').trim(),
+                    amount: parseFloat(t.amount) || 0,
+                    description: (t.description || t.note || '').trim(),
+                    accountType: (t.accountType || 'Cash Wallet').trim(),
+                    createdAt: t.createdAt || ''
+                }));
 
-        if (transactions && Array.isArray(transactions)) {
-            // Normalize transactions
-            const normalized = transactions.map(t => ({
-                transactionId: t.transactionId || t.id || `TXN-${Date.now()}`,
-                date: normalizeDateFormat(t.date),
-                type: (t.type || 'Expense').trim(),
-                category: (t.category || 'General').trim(),
-                amount: parseFloat(t.amount) || 0,
-                description: (t.description || t.note || '').trim(),
-                accountType: (t.accountType || 'Cash Wallet').trim(),
-                createdAt: t.createdAt || ''
-            }));
-
-            // Sync with local storage cache for offline backup
-            localStorage.setItem('KOSH_LOCAL_TRANSACTIONS', JSON.stringify(normalized));
-            if (sheetUrl) {
-                localStorage.setItem(SPREADSHEET_LINK_KEY, sheetUrl);
+            // Save to local cache
+            localStorage.setItem(LOCAL_TXNS_KEY, JSON.stringify(validTxns));
+            if (data.sheetUrl) {
+                localStorage.setItem(SPREADSHEET_LINK_KEY, data.sheetUrl);
             }
+
+            // Save sync metadata for lightweight change detection
+            const lastTxn = validTxns.length > 0 ? validTxns[validTxns.length - 1] : null;
+            const syncMeta = {
+                count: validTxns.length,
+                lastTransactionId: lastTxn ? lastTxn.transactionId : '',
+                timestamp: Date.now()
+            };
+            localStorage.setItem(SYNC_META_KEY, JSON.stringify(syncMeta));
 
             return {
                 success: true,
-                transactions: normalized,
+                transactions: validTxns,
                 source: 'sheet'
             };
         } else {
-            throw new Error("Google Sheet returned empty or incompatible transaction structure.");
+            throw new Error("Invalid response format from Google Sheets GET endpoint.");
         }
     } catch (err) {
-        console.warn("fetchTransactionsFromGoogleSheet Live Fetch Error:", err);
+        console.warn("fetchTransactionsFromGoogleSheet GET Error:", err);
+        const localRaw = localStorage.getItem(LOCAL_TXNS_KEY);
         return {
-            success: false,
-            transactions: [],
-            source: 'error',
+            success: true,
+            transactions: localRaw ? JSON.parse(localRaw) : [],
+            source: 'local_fallback',
             error: err.message
         };
     }
 }
 
 /**
- * Update an existing transaction in Google Sheet by transactionId
+ * Lightweight Sync Check
+ * Checks if Google Sheet count or last transaction ID has changed without re-downloading the full sheet payload.
+ * @returns {Promise<{changed: boolean, transactions: Array}>}
+ */
+async function checkForSheetUpdates() {
+    const localRaw = localStorage.getItem(LOCAL_TXNS_KEY);
+    const localTxns = localRaw ? JSON.parse(localRaw) : [];
+    const metaRaw = localStorage.getItem(SYNC_META_KEY);
+    const meta = metaRaw ? JSON.parse(metaRaw) : null;
+
+    const url = getGoogleSheetUrl();
+    if (!url || !meta) {
+        const fullRes = await fetchTransactionsFromGoogleSheet();
+        return { changed: true, transactions: fullRes.transactions };
+    }
+
+    try {
+        const checkUrl = url + (url.includes('?') ? '&' : '?') + 'mode=check&_t=' + Date.now();
+        const res = await fetch(checkUrl, { method: 'GET', mode: 'cors' });
+        if (res.ok) {
+            const data = await res.json();
+            if (data && data.status === 'success') {
+                const sheetCount = parseInt(data.count) || 0;
+                const sheetLastId = String(data.lastTransactionId || '').trim();
+
+                // If count and last ID match local metadata, no new transactions exist
+                if (sheetCount === meta.count && sheetLastId === meta.lastTransactionId) {
+                    return { changed: false, transactions: localTxns };
+                }
+            }
+        }
+        // If changed or check failed, perform full refresh
+        const fullRes = await fetchTransactionsFromGoogleSheet();
+        return { changed: true, transactions: fullRes.transactions };
+    } catch (e) {
+        return { changed: false, transactions: localTxns };
+    }
+}
+
+/**
+ * Update an existing transaction in Google Sheet by transactionId only
+ * Prohibits row creation if ID is missing or amount is invalid
  * @param {Object} txn 
  * @returns {Promise<{success: boolean, message: string}>}
  */
 async function updateTransactionInGoogleSheet(txn) {
-    const targetId = txn.transactionId || txn.id;
+    const targetId = String(txn.transactionId || txn.id || '').trim();
+    const amt = parseFloat(txn.amount);
+
     if (!targetId) {
-        return { success: false, message: "Transaction ID is missing." };
+        return { success: false, message: "Update Error: Missing Transaction ID." };
+    }
+    if (isNaN(amt) || amt <= 0) {
+        return { success: false, message: "Update Error: Transaction amount must be greater than 0." };
     }
 
     const url = getGoogleSheetUrl();
@@ -209,9 +275,9 @@ async function updateTransactionInGoogleSheet(txn) {
             action: "update",
             transactionId: targetId,
             date: normalizeDateFormat(txn.date),
-            type: txn.type,
-            category: txn.category,
-            amount: parseFloat(txn.amount) || 0,
+            type: txn.type || 'Expense',
+            category: txn.category || 'General',
+            amount: amt,
             description: txn.description || txn.note || '',
             accountType: txn.accountType || 'Cash Wallet'
         };
@@ -227,8 +293,14 @@ async function updateTransactionInGoogleSheet(txn) {
         const data = await response.json();
 
         if (data && data.status === 'success') {
-            // Re-fetch live dataset immediately
-            await fetchTransactionsFromGoogleSheet();
+            // Update local cache row in-place
+            const localRaw = localStorage.getItem(LOCAL_TXNS_KEY);
+            let localTxns = localRaw ? JSON.parse(localRaw) : [];
+            const idx = localTxns.findIndex(t => (t.transactionId === targetId || t.id === targetId));
+            if (idx !== -1) {
+                localTxns[idx] = { ...localTxns[idx], ...payload };
+                localStorage.setItem(LOCAL_TXNS_KEY, JSON.stringify(localTxns));
+            }
             return {
                 success: true,
                 message: "Entry updated successfully in Google Sheet"
@@ -249,13 +321,14 @@ async function updateTransactionInGoogleSheet(txn) {
 }
 
 /**
- * Delete a transaction from Google Sheet by transactionId
+ * Delete a transaction from Google Sheet by transactionId only
  * @param {string} transactionId 
  * @returns {Promise<{success: boolean, message: string}>}
  */
 async function deleteTransactionFromGoogleSheet(transactionId) {
-    if (!transactionId) {
-        return { success: false, message: "Transaction ID is missing." };
+    const targetId = String(transactionId || '').trim();
+    if (!targetId) {
+        return { success: false, message: "Delete Error: Missing Transaction ID." };
     }
 
     const url = getGoogleSheetUrl();
@@ -264,7 +337,7 @@ async function deleteTransactionFromGoogleSheet(transactionId) {
     }
 
     try {
-        const payload = { action: "delete", transactionId: String(transactionId).trim() };
+        const payload = { action: "delete", transactionId: targetId };
         const response = await fetch(url, {
             method: 'POST',
             mode: 'cors',
@@ -276,8 +349,12 @@ async function deleteTransactionFromGoogleSheet(transactionId) {
         const data = await response.json();
 
         if (data && data.status === 'success') {
-            // Re-fetch live dataset immediately
-            await fetchTransactionsFromGoogleSheet();
+            // Remove from local cache
+            const localRaw = localStorage.getItem(LOCAL_TXNS_KEY);
+            let localTxns = localRaw ? JSON.parse(localRaw) : [];
+            localTxns = localTxns.filter(t => (t.transactionId !== targetId && t.id !== targetId));
+            localStorage.setItem(LOCAL_TXNS_KEY, JSON.stringify(localTxns));
+
             return {
                 success: true,
                 message: data.message || "Entry deleted successfully from Google Sheet"
@@ -299,6 +376,7 @@ async function deleteTransactionFromGoogleSheet(transactionId) {
 
 /**
  * Test Google Sheets Web App Connection
+ * GET request only — NO WRITES!
  * @param {string} [customUrl] 
  * @returns {Promise<{success: boolean, message: string, sheetUrl?: string, transactionsCount?: number}>}
  */
@@ -312,7 +390,7 @@ async function testGoogleSheetConnection(customUrl) {
     }
 
     try {
-        const response = await fetch(url, { method: 'GET', mode: 'cors' });
+        const response = await fetch(url + (url.includes('?') ? '&' : '?') + '_t=' + Date.now(), { method: 'GET', mode: 'cors' });
         if (!response.ok) {
             throw new Error(`Endpoint returned HTTP ${response.status}`);
         }
@@ -323,11 +401,12 @@ async function testGoogleSheetConnection(customUrl) {
                 localStorage.setItem(SPREADSHEET_LINK_KEY, data.sheetUrl);
             }
             if (data.transactions && Array.isArray(data.transactions)) {
-                localStorage.setItem('KOSH_LOCAL_TRANSACTIONS', JSON.stringify(data.transactions));
+                const valid = data.transactions.filter(t => parseFloat(t.amount) > 0);
+                localStorage.setItem(LOCAL_TXNS_KEY, JSON.stringify(valid));
             }
             return {
                 success: true,
-                message: `Connection Successful! Verified read & write access to Google Sheet.`,
+                message: `Connection Successful! Verified read access to Google Sheet.`,
                 sheetUrl: data.sheetUrl || getConfirmedSheetUrl(),
                 transactionsCount: data.transactions ? data.transactions.length : 0
             };
