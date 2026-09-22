@@ -8,19 +8,23 @@
 <header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] pt-safe">
   <div class="h-16 px-margin flex items-center justify-between gap-space-sm">
     <div class="flex items-center gap-space-sm">
-      <button aria-label="Go back" class="min-h-[44px] min-w-[44px] flex items-center justify-center text-on-surface-variant hover:text-on-surface rounded-full hover:bg-surface-container-low transition-colors cursor-pointer" onclick="window.location.href='home_dashboard.html'" type="button">
-        <span class="material-symbols-outlined text-[24px]">arrow_back</span>
-      </button>
-      <img alt="Kosh Expense Tracker Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEDOHzQ1qBqlsy278Q3Mtw8_ieQi92Tg409O5AtX-whZGtJoTBta3dwgSoBOfRqoczx_eB3vQEe6HnYZO10_R9uAiCFSI0H4gixnHsco-Lag-gY0sqhmviZXrKKQ541i3ru4YM1NpUUFGPpDypn_X2Uq-hUWwLtIeID4PZT_rUmUzls_3OH1E-UZStsD6nyv8wycneNjt6Lbrsu6JNQAi79Q7jXt7yumVB9gTZ11XJsN4EzKB7BXNB"/>
+      <img alt="Expenses Dashboard Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEDOHzQ1qBqlsy278Q3Mtw8_ieQi92Tg409O5AtX-whZGtJoTBta3dwgSoBOfRqoczx_eB3vQEe6HnYZO10_R9uAiCFSI0H4gixnHsco-Lag-gY0sqhmviZXrKKQ541i3ru4YM1NpUUFGPpDypn_X2Uq-hUWwLtIeID4PZT_rUmUzls_3OH1E-UZStsD6nyv8wycneNjt6Lbrsu6JNQAi79Q7jXt7yumVB9gTZ11XJsN4EzKB7BXNB"/>
       <h1 class="font-title-md text-title-md font-bold tracking-tight text-on-surface">New Record</h1>
     </div>
     <div class="flex items-center gap-space-sm">
       <button aria-label="Configure Google Sheet" class="w-10 h-10 rounded-full bg-surface-container-high text-primary flex items-center justify-center cursor-pointer hover:bg-surface-container transition-all" onclick="openSheetUrlModal()" title="Google Sheet Database Settings" type="button">
         <span class="material-symbols-outlined text-[20px]">table_chart</span>
       </button>
-      <button aria-label="Profile" class="cursor-pointer focus:outline-none" onclick="window.location.href='app_settings.html'" type="button">
-        <img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwW5DVLjf71vNANoVtEUjViQaE5vuMoM0VLUtFWGKSJEr2fVdWkqnr_TW5E_fGih3UrIQHvc62RYo08tU2gWWD8YPUDVRG2BSGXBsqhvu15WmksXrll7Fr-HHVYjWhVgplpe302acHF2fsnVDFmnzFvKRq-JDnSgIM29O8u3ub60fTTHSu5nncMrElk78Zulklf623OcgTiEsisPI3Ng5BQAFIsTtnUuDWk6fx6i3MJCmYd5hrZYKu"/>
-      </button>
+      <div class="relative flex items-center justify-center">
+        <button aria-label="Open profile &amp; settings" class="min-h-[44px] min-w-[44px] flex items-center justify-center p-1 focus:outline-none cursor-pointer" onclick="window.location.href='app_settings.html'" type="button">
+          <div class="relative">
+            <div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-sm border border-surface">
+              <span class="material-symbols-outlined text-[20px]">account_circle</span>
+            </div>
+            <span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-secondary rounded-full ring-2 ring-surface"></span>
+          </div>
+        </button>
+      </div>
     </div>
   </div>
 </header>
