@@ -1048,21 +1048,9 @@ UNDO
     const netBadgeBg = isSurplus ? '#dcfce7' : '#fee2e2';
     const netBadgeColor = isSurplus ? '#15803d' : '#b91c1c';
 
-    // Render container — positioned BELOW the visible viewport so html2canvas can capture it
+    // PDF container — style is set below, just before appending to DOM
     const pdfContainer = document.createElement('div');
     pdfContainer.id = 'pdf-statement-template';
-    pdfContainer.style.cssText = [
-      'position: absolute',
-      'left: 0',
-      'top: ' + (window.scrollY + window.innerHeight + 20) + 'px',
-      'width: 780px',
-      'background-color: #ffffff',
-      'color: #131b2e',
-      "font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
-      'padding: 28px 32px',
-      'box-sizing: border-box',
-      'z-index: -1'
-    ].join('; ');
 
     pdfContainer.innerHTML = `
       <!-- Header Banner -->
@@ -1166,10 +1154,41 @@ UNDO
       </div>
     `;
 
+    // ── Loading overlay (hides the PDF container from user while html2canvas captures it) ──
+    const genLoader = document.createElement('div');
+    genLoader.id = 'pdf-gen-loader';
+    genLoader.style.cssText = 'position:fixed;inset:0;z-index:10001;background:rgba(53,37,205,0.96);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;font-family:sans-serif;';
+    genLoader.innerHTML = `
+      <div style="width:44px;height:44px;border:4px solid rgba(255,255,255,0.25);border-top:4px solid #fff;border-radius:50%;animation:pdfSpin 0.7s linear infinite;"></div>
+      <p style="margin:0;color:#fff;font-size:15px;font-weight:700;letter-spacing:-0.01em;">Generating PDF Statement...</p>
+      <p style="margin:0;color:rgba(255,255,255,0.65);font-size:12px;font-weight:500;">Reading from Google Sheets data</p>
+      <style>@keyframes pdfSpin{to{transform:rotate(360deg)}}</style>
+    `;
+    document.body.appendChild(genLoader);
+
+    // ── Place PDF container at real document position 0,0 so html2canvas can capture it ──
+    // Loader overlay hides it from the user (z-index 10001 > container z-index 1)
+    pdfContainer.style.cssText = [
+      'position: absolute',
+      'top: 0',
+      'left: 0',
+      'width: 780px',
+      'background-color: #ffffff',
+      'color: #131b2e',
+      "font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif",
+      'padding: 28px 32px',
+      'box-sizing: border-box',
+      'z-index: 1'
+    ].join(';');
+
     document.body.appendChild(pdfContainer);
 
-    // Scroll to element so html2canvas can capture it
-    pdfContainer.scrollIntoView();
+    // Scroll to top so container is inside the viewport
+    window.scrollTo(0, 0);
+
+    // Wait two animation frames + an extra 400ms for full browser layout & font render
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await new Promise(r => setTimeout(r, 400));
 
     const filename = `Statement_${monthName}_${selectedYear}.pdf`;
     const opt = {
@@ -1179,9 +1198,12 @@ UNDO
       html2canvas: {
         scale: 2,
         useCORS: true,
-        logging: false,
         allowTaint: true,
-        windowWidth: 836
+        logging: false,
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: 836,
+        windowHeight: window.innerHeight
       },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
@@ -1189,10 +1211,7 @@ UNDO
     try {
       await html2pdf().set(opt).from(pdfContainer).save();
 
-      // Scroll back to top of page
-      window.scrollTo({ top: 0, behavior: 'instant' });
-
-      // Show toast
+      // Show success toast
       const toast = document.getElementById('exportToast');
       const toastSub = document.getElementById('exportToastSub');
       if (toastSub) toastSub.textContent = `${filename} downloaded successfully.`;
@@ -1206,12 +1225,12 @@ UNDO
       }
     } catch (err) {
       console.error('PDF generation error:', err);
-      window.scrollTo({ top: 0, behavior: 'instant' });
       alert('An error occurred while generating the PDF statement. Please try again.');
     } finally {
-      if (pdfContainer.parentNode) {
-        pdfContainer.parentNode.removeChild(pdfContainer);
-      }
+      // Remove loader and PDF container
+      if (genLoader.parentNode) genLoader.parentNode.removeChild(genLoader);
+      if (pdfContainer.parentNode) pdfContainer.parentNode.removeChild(pdfContainer);
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
   }
 </script>
