@@ -19,6 +19,8 @@
 tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-tint": "#4d44e3", "secondary-fixed": "#6ffbbe", "surface-container": "#eaedff", "tertiary-fixed-dim": "#ffb2b7", "on-secondary-container": "#00714d", "on-primary-fixed": "#0f0069", "secondary-container": "#6cf8bb", "surface-container-low": "#f2f3ff", "surface-dim": "#d2d9f4", "outline-variant": "#c7c4d8", "surface-variant": "#dae2fd", "on-background": "#131b2e", "on-secondary-fixed-variant": "#005236", "error-container": "#ffdad6", "on-primary-fixed-variant": "#3323cc", "on-tertiary": "#ffffff", "inverse-surface": "#283044", "surface-container-high": "#e2e7ff", "primary-fixed": "#e2dfff", "on-primary-container": "#dad7ff", "on-error": "#ffffff", "tertiary": "#95002b", "primary": "#3525cd", "surface": "#faf8ff", "on-surface-variant": "#464555", "primary-container": "#4f46e5", "tertiary-fixed": "#ffdadb", "tertiary-container": "#bf0f3c", "inverse-on-surface": "#eef0ff", "surface-container-lowest": "#ffffff", "outline": "#777587", "surface-bright": "#faf8ff", "on-secondary-fixed": "#002113", "on-tertiary-fixed-variant": "#92002a", "background": "#faf8ff", "primary-fixed-dim": "#c3c0ff", "secondary-fixed-dim": "#4edea3", "on-secondary": "#ffffff", "secondary": "#006c49", "inverse-primary": "#c3c0ff", "on-tertiary-container": "#ffd0d2", "on-error-container": "#93000a", "surface-container-highest": "#dae2fd", "on-primary": "#ffffff", "on-tertiary-fixed": "#40000d", "on-surface": "#131b2e", "error": "#ba1a1a" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1rem", "space-md": "1rem", "space-xs": "0.25rem", "space-xl": "2rem", "margin": "1.25rem", "space-sm": "0.5rem", "space-lg": "1.5rem" }, "fontFamily": { "title-md": ["Plus Jakarta Sans"], "stat-numeric-lg": ["Plus Jakarta Sans"], "display-hero": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "stat-numeric-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"] }, "fontSize": { "title-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "stat-numeric-lg": ["36px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "display-hero": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "800" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "stat-numeric-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }] } } } }
 </script>
 <script src="js/sheets_api.js"></script>
+<script src="js/html2pdf.bundle.min.js"></script>
+<script>if (typeof html2pdf === 'undefined') { document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"><\/script>'); }</script>
 </head>
 
 <body class="bg-background font-body-md text-on-surface flex flex-col min-h-screen">
@@ -75,11 +77,34 @@ tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-t
 <h1 class="font-headline-md text-headline-md font-bold text-on-surface tracking-tight">Transaction History</h1>
 <p class="font-body-sm text-body-sm text-on-surface-variant">Expense Tracker Database • LKR Account</p>
 </div>
-<div class="flex items-center gap-1.5">
-<button aria-label="Export Financial Statement" class="min-h-[44px] px-3.5 py-2 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-primary font-label-md text-label-md flex items-center gap-1.5 transition-transform active:scale-95 shadow-sm cursor-pointer" id="exportStatementBtn" onclick="exportStatementCSV()" type="button">
-<span class="material-symbols-outlined text-[18px]">file_download</span>
-<span id="export-statement-btn-text">Statement_(September_2026)</span>
-</button>
+<div class="flex items-center gap-1.5 relative">
+  <button aria-label="Export Financial Statement" class="min-h-[44px] px-3.5 py-2 rounded-full bg-surface-container-high hover:bg-surface-container-highest text-primary font-label-md text-label-md flex items-center gap-1.5 transition-transform active:scale-95 shadow-sm cursor-pointer" id="exportStatementBtn" onclick="toggleExportDropdown(event)" type="button">
+    <span class="material-symbols-outlined text-[18px]">file_download</span>
+    <span id="export-statement-btn-text">Nadun's_Statement_(September_2026)</span>
+    <span class="material-symbols-outlined text-[16px] transition-transform duration-200" id="export-dropdown-chevron">keyboard_arrow_down</span>
+  </button>
+
+  <!-- Statement Download Dropdown Menu -->
+  <div id="exportDropdownMenu" class="hidden absolute right-0 top-12 w-60 rounded-2xl bg-surface-container-lowest shadow-2xl border border-surface-container-high p-1.5 z-50 flex flex-col gap-1">
+    <button type="button" onclick="exportStatementPDF()" class="w-full px-3 py-2.5 rounded-xl hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-2.5 transition-colors text-left cursor-pointer">
+      <div class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+      </div>
+      <div class="flex flex-col">
+        <span class="font-bold text-on-surface text-[13px]">Download PDF</span>
+        <span class="text-[11px] text-on-surface-variant">Styled report with radial breakdown</span>
+      </div>
+    </button>
+    <button type="button" onclick="exportStatementCSV()" class="w-full px-3 py-2.5 rounded-xl hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-2.5 transition-colors text-left cursor-pointer">
+      <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-[20px]">table_view</span>
+      </div>
+      <div class="flex flex-col">
+        <span class="font-bold text-on-surface text-[13px]">Download CSV</span>
+        <span class="text-[11px] text-on-surface-variant">Raw spreadsheet data</span>
+      </div>
+    </button>
+  </div>
 </div>
 </div>
 
@@ -556,7 +581,7 @@ UNDO
     if (selectorText) selectorText.textContent = `${MONTH_NAMES[selectedMonth]} ${selectedYear}`;
 
     const exportBtnText = document.getElementById('export-statement-btn-text');
-    if (exportBtnText) exportBtnText.textContent = `Statement_(${MONTH_NAMES[selectedMonth]}_${selectedYear})`;
+    if (exportBtnText) exportBtnText.textContent = `Nadun's_Statement_(${MONTH_NAMES[selectedMonth]}_${selectedYear})`;
 
     // Update Summary Stat Ribbon
     let totalIncome = 0;
@@ -805,8 +830,44 @@ UNDO
     }
   }
 
-  // Statement CSV Download Exporter
+  // Export Dropdown Controls
+  function toggleExportDropdown(e) {
+    if (e) e.stopPropagation();
+    const menu = document.getElementById('exportDropdownMenu');
+    const chevron = document.getElementById('export-dropdown-chevron');
+    if (!menu) return;
+    const isHidden = menu.classList.contains('hidden');
+    if (isHidden) {
+      menu.classList.remove('hidden');
+      if (chevron) chevron.classList.add('rotate-180');
+    } else {
+      menu.classList.add('hidden');
+      if (chevron) chevron.classList.remove('rotate-180');
+    }
+  }
+
+  function closeExportDropdown() {
+    const menu = document.getElementById('exportDropdownMenu');
+    const chevron = document.getElementById('export-dropdown-chevron');
+    if (menu && !menu.classList.contains('hidden')) {
+      menu.classList.add('hidden');
+      if (chevron) chevron.classList.remove('rotate-180');
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    const dropdown = document.getElementById('exportDropdownMenu');
+    const btn = document.getElementById('exportStatementBtn');
+    if (dropdown && !dropdown.classList.contains('hidden')) {
+      if (!dropdown.contains(e.target) && !btn.contains(e.target)) {
+        closeExportDropdown();
+      }
+    }
+  });
+
+  // Statement CSV Download Exporter (Preserved as-is with updated filename and feedback)
   function exportStatementCSV() {
+    closeExportDropdown();
     const filtered = getFilteredTransactions();
     if (filtered.length === 0) {
       alert("No transactions available to export for the selected filter.");
@@ -829,7 +890,7 @@ UNDO
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `Statement_(${MONTH_NAMES[selectedMonth]}_${selectedYear}).csv`);
+    link.setAttribute("download", `Nadun's_Statement_(${MONTH_NAMES[selectedMonth]}_${selectedYear}).csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -837,7 +898,7 @@ UNDO
     // Show export toast feedback
     const toast = document.getElementById('exportToast');
     const toastSub = document.getElementById('exportToastSub');
-    if (toastSub) toastSub.textContent = `Kosh_Statement_${MONTH_NAMES[selectedMonth]}_${selectedYear}.csv downloaded.`;
+    if (toastSub) toastSub.textContent = `Nadun's_Statement_(${MONTH_NAMES[selectedMonth]}_${selectedYear}).csv downloaded.`;
     if (toast) {
       toast.classList.remove('hidden');
       toast.classList.add('flex');
@@ -845,6 +906,315 @@ UNDO
         toast.classList.add('hidden');
         toast.classList.remove('flex');
       }, 3500);
+    }
+  }
+
+  // Professional PDF Statement Exporter with Radial Breakdown
+  async function exportStatementPDF() {
+    closeExportDropdown();
+
+    if (typeof html2pdf === 'undefined') {
+      alert("PDF generator library is still loading. Please check your internet connection or try again in a moment.");
+      return;
+    }
+
+    // Target selected month & year (Read-only data from Google Sheets)
+    const targetPeriod = `${selectedYear}-${String(selectedMonth + 1).padStart(2, '0')}`;
+    let txns = allTransactions.filter(t => getTxnYearMonth(t.date) === targetPeriod);
+    if (txns.length === 0) {
+      txns = getFilteredTransactions();
+    }
+    if (txns.length === 0) {
+      alert(`No transactions found for ${MONTH_NAMES[selectedMonth]} ${selectedYear} to generate statement.`);
+      return;
+    }
+
+    // Sort transactions latest first
+    txns.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+    // Calculate executive figures
+    let totalIncome = 0;
+    let totalExpenses = 0;
+    const categoryTotals = {};
+
+    txns.forEach(t => {
+      const amt = parseFloat(t.amount) || 0;
+      const isInc = String(t.type).toLowerCase() === 'income';
+      if (isInc) {
+        totalIncome += amt;
+      } else {
+        totalExpenses += amt;
+        const cat = t.category || 'Other';
+        categoryTotals[cat] = (categoryTotals[cat] || 0) + amt;
+      }
+    });
+
+    const netBalance = totalIncome - totalExpenses;
+    const monthName = MONTH_NAMES[selectedMonth];
+    const generatedDateStr = new Date().toLocaleDateString('en-US', {
+      year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+
+    // Radial Donut Chart Slices (Clean SVG)
+    const circumference = 2 * Math.PI * 38; // ~238.76
+    let accumulatedOffset = 0;
+    const sortedCats = Object.keys(categoryTotals).sort((a, b) => categoryTotals[b] - categoryTotals[a]);
+    let donutSlicesHtml = '';
+    if (totalExpenses > 0) {
+      sortedCats.forEach(cat => {
+        const amt = categoryTotals[cat];
+        const fraction = amt / totalExpenses;
+        const strokeLength = fraction * circumference;
+        const config = CATEGORY_CONFIG[cat] || CATEGORY_CONFIG['Other'] || { color: '#64748b' };
+        donutSlicesHtml += `
+          <circle cx="50" cy="50" r="38" fill="none" stroke="${config.color}" stroke-width="10"
+            stroke-dasharray="${strokeLength.toFixed(2)} ${circumference.toFixed(2)}"
+            stroke-dashoffset="-${accumulatedOffset.toFixed(2)}"
+            transform="rotate(-90 50 50)" stroke-linecap="round" />
+        `;
+        accumulatedOffset += strokeLength;
+      });
+    }
+
+    // Category progress bars & percentages
+    let categoryRowsHtml = '';
+    if (sortedCats.length > 0 && totalExpenses > 0) {
+      sortedCats.forEach(cat => {
+        const amt = categoryTotals[cat];
+        const pct = ((amt / totalExpenses) * 100).toFixed(1);
+        const config = CATEGORY_CONFIG[cat] || CATEGORY_CONFIG['Other'] || { icon: '📦', color: '#64748b' };
+        categoryRowsHtml += `
+          <div style="display:flex; flex-direction:column; gap:3px; margin-bottom:8px; page-break-inside:avoid;">
+            <div style="display:flex; align-items:center; justify-content:space-between; font-size:11px;">
+              <span style="font-weight:600; color:#131b2e; display:flex; align-items:center; gap:5px;">
+                <span>${config.icon || '🏷️'}</span>
+                <span>${cat}</span>
+              </span>
+              <span style="font-weight:700; color:#131b2e;">
+                LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                <span style="font-size:10px; font-weight:500; color:#64748b; margin-left:4px;">(${pct}%)</span>
+              </span>
+            </div>
+            <div style="width:100%; height:6px; background-color:#eaedff; border-radius:3px; overflow:hidden;">
+              <div style="width:${pct}%; height:100%; background-color:${config.color}; border-radius:3px;"></div>
+            </div>
+          </div>
+        `;
+      });
+    } else {
+      categoryRowsHtml = `<div style="font-size:12px; color:#64748b; padding:12px 0;">No expense categories recorded for this month.</div>`;
+    }
+
+    // Transaction rows
+    let txnRowsHtml = '';
+    txns.forEach((t, idx) => {
+      const amt = parseFloat(t.amount) || 0;
+      const isInc = String(t.type).toLowerCase() === 'income';
+      const config = CATEGORY_CONFIG[t.category] || CATEGORY_CONFIG['Other'] || { color: '#64748b', icon: '📦' };
+      const rowBg = idx % 2 === 0 ? '#ffffff' : '#f8faff';
+      const typeBadge = isInc 
+        ? `<span style="display:inline-block; padding:2px 8px; border-radius:12px; background-color:#dcfce7; color:#15803d; font-size:9px; font-weight:700; letter-spacing:0.02em;">INCOME</span>`
+        : `<span style="display:inline-block; padding:2px 8px; border-radius:12px; background-color:#fee2e2; color:#b91c1c; font-size:9px; font-weight:700; letter-spacing:0.02em;">EXPENSE</span>`;
+      const amtDisplay = isInc
+        ? `<span style="color:#006c49; font-weight:700;">+ LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`
+        : `<span style="color:#131b2e; font-weight:700;">- LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>`;
+
+      txnRowsHtml += `
+        <tr style="background-color:${rowBg}; border-bottom:1px solid #eef2ff; page-break-inside:avoid;">
+          <td style="padding:7px 10px; font-size:11px; color:#464555; white-space:nowrap;">${t.date || ''}</td>
+          <td style="padding:7px 10px; font-size:12px; font-weight:600; color:#131b2e;">
+            ${t.description || t.category || 'Transaction'}
+            ${t.transactionId ? `<div style="font-size:9px; color:#94a3b8; font-family:monospace;">ID: ${t.transactionId}</div>` : ''}
+          </td>
+          <td style="padding:7px 10px; font-size:11px; color:#131b2e;">
+            <span style="display:inline-flex; align-items:center; gap:4px;">
+              <span>${config.icon || ''}</span>
+              <span>${t.category || 'Other'}</span>
+            </span>
+          </td>
+          <td style="padding:7px 10px; font-size:11px; color:#64748b;">${t.accountType || 'Cash Wallet'}</td>
+          <td style="padding:7px 10px; text-align:center;">${typeBadge}</td>
+          <td style="padding:7px 10px; font-size:12px; text-align:right; white-space:nowrap;">${amtDisplay}</td>
+        </tr>
+      `;
+    });
+
+    const isSurplus = netBalance >= 0;
+    const netSign = isSurplus ? '+' : '';
+    const netColor = isSurplus ? '#3525cd' : '#95002b';
+    const netBg = isSurplus ? '#f5f3ff' : '#fff1f2';
+    const netBorder = isSurplus ? '#c7d2fe' : '#fecdd3';
+    const netBadge = isSurplus ? 'SURPLUS' : 'DEFICIT';
+    const netBadgeBg = isSurplus ? '#dcfce7' : '#fee2e2';
+    const netBadgeColor = isSurplus ? '#15803d' : '#b91c1c';
+
+    // Offscreen render container matching theme
+    const pdfContainer = document.createElement('div');
+    pdfContainer.id = 'pdf-statement-template';
+    pdfContainer.style.position = 'fixed';
+    pdfContainer.style.left = '-9999px';
+    pdfContainer.style.top = '0';
+    pdfContainer.style.width = '780px';
+    pdfContainer.style.backgroundColor = '#ffffff';
+    pdfContainer.style.color = '#131b2e';
+    pdfContainer.style.fontFamily = "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif";
+    pdfContainer.style.padding = '24px 28px';
+    pdfContainer.style.boxSizing = 'border-box';
+
+    pdfContainer.innerHTML = `
+      <!-- Header Banner -->
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #eef2ff; padding-bottom:18px; margin-bottom:18px; page-break-inside:avoid;">
+        <div style="display:flex; flex-direction:column;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+            <div style="width:30px; height:30px; border-radius:8px; background:linear-gradient(135deg, #3525cd, #4f46e5); display:flex; align-items:center; justify-content:center; color:#ffffff; font-weight:800; font-size:15px; box-shadow:0 2px 6px rgba(79,70,229,0.25);">N</div>
+            <h1 style="margin:0; font-size:20px; font-weight:800; color:#131b2e; letter-spacing:-0.02em;">NADUN'S FINANCIAL STATEMENT</h1>
+          </div>
+          <span style="font-size:12px; color:#464555; font-weight:500;">Personal Finance Ledger • LKR Account</span>
+          <span style="font-size:11px; color:#006c49; font-weight:600; margin-top:2px;">• Google Sheets Live Synchronized</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:flex-end;">
+          <div style="background:linear-gradient(135deg, #3525cd, #4f46e5); color:#ffffff; padding:5px 14px; border-radius:20px; font-size:12px; font-weight:700; letter-spacing:0.02em; box-shadow:0 2px 6px rgba(79,70,229,0.2);">
+            ${monthName.toUpperCase()} ${selectedYear}
+          </div>
+          <span style="font-size:10px; color:#64748b; margin-top:5px;">Generated on: ${generatedDateStr}</span>
+          <span style="font-size:10px; color:#94a3b8; font-family:monospace;">REF: STMT-${selectedYear}${String(selectedMonth+1).padStart(2,'0')}</span>
+        </div>
+      </div>
+
+      <!-- Top Summary Metrics (3 Cards) -->
+      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:20px; page-break-inside:avoid;">
+        <!-- Net Balance Card -->
+        <div style="background-color:${netBg}; border:1px solid ${netBorder}; border-radius:14px; padding:12px 14px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:10px; font-weight:700; color:#464555; letter-spacing:0.04em; text-transform:uppercase;">Net Monthly Balance</span>
+            <span style="background-color:${netBadgeBg}; color:${netBadgeColor}; font-size:9px; font-weight:800; padding:2px 7px; border-radius:8px;">${netBadge}</span>
+          </div>
+          <div style="font-size:17px; font-weight:800; color:${netColor}; margin-top:6px;">
+            ${netSign}LKR ${netBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </div>
+          <span style="font-size:10px; color:#64748b; margin-top:4px;">Period flow of ${txns.length} records</span>
+        </div>
+
+        <!-- Total Income Card -->
+        <div style="background-color:#f0fdf4; border:1px solid #bbf7d0; border-radius:14px; padding:12px 14px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:10px; font-weight:700; color:#15803d; letter-spacing:0.04em; text-transform:uppercase;">Total Inflow</span>
+            <span style="background-color:#dcfce7; color:#15803d; font-size:9px; font-weight:800; padding:2px 7px; border-radius:8px;">INCOME</span>
+          </div>
+          <div style="font-size:17px; font-weight:800; color:#15803d; margin-top:6px;">
+            + LKR ${totalIncome.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </div>
+          <span style="font-size:10px; color:#16a34a; margin-top:4px;">${monthName.substring(0,3)} Inflow</span>
+        </div>
+
+        <!-- Total Expenses Card -->
+        <div style="background-color:#fef2f2; border:1px solid #fecaca; border-radius:14px; padding:12px 14px; display:flex; flex-direction:column; justify-content:space-between;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:10px; font-weight:700; color:#b91c1c; letter-spacing:0.04em; text-transform:uppercase;">Total Outflow</span>
+            <span style="background-color:#fee2e2; color:#b91c1c; font-size:9px; font-weight:800; padding:2px 7px; border-radius:8px;">EXPENSES</span>
+          </div>
+          <div style="font-size:17px; font-weight:800; color:#b91c1c; margin-top:6px;">
+            - LKR ${totalExpenses.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </div>
+          <span style="font-size:10px; color:#dc2626; margin-top:4px;">${sortedCats.length} Category allocations</span>
+        </div>
+      </div>
+
+      <!-- Expense Breakdown & Radial Style Section -->
+      <div style="background-color:#faf8ff; border:1px solid #eaedff; border-radius:16px; padding:16px; margin-bottom:20px; page-break-inside:avoid;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h2 style="margin:0; font-size:13px; font-weight:700; color:#131b2e; letter-spacing:-0.01em;">
+            EXPENSE BREAKDOWN &amp; CATEGORY ALLOCATION
+          </h2>
+          <span style="font-size:10px; color:#4f46e5; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">Radial Analytics</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:24px;">
+          <!-- SVG Radial Donut Chart -->
+          <div style="width:160px; height:160px; flex-shrink:0; display:flex; align-items:center; justify-content:center; position:relative;">
+            <svg width="160" height="160" viewBox="0 0 100 100" style="overflow:visible;">
+              <circle cx="50" cy="50" r="38" fill="none" stroke="#eaedff" stroke-width="10"></circle>
+              ${donutSlicesHtml}
+              <!-- Donut Center Insight -->
+              <text x="50" y="44" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="6.5" font-weight="600" fill="#64748b">TOTAL SPENT</text>
+              <text x="50" y="54" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="8" font-weight="800" fill="#131b2e">LKR ${Math.round(totalExpenses).toLocaleString('en-US')}</text>
+              <text x="50" y="62" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="5.5" font-weight="600" fill="#4f46e5">${sortedCats.length} Categories</text>
+            </svg>
+          </div>
+
+          <!-- Category Progress Legend List -->
+          <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+            ${categoryRowsHtml}
+          </div>
+        </div>
+      </div>
+
+      <!-- Transaction Ledger Table -->
+      <div style="margin-bottom:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; page-break-inside:avoid;">
+          <h2 style="margin:0; font-size:13px; font-weight:700; color:#131b2e; letter-spacing:-0.01em;">
+            TRANSACTION LEDGER
+          </h2>
+          <span style="font-size:11px; color:#64748b;">${txns.length} records in period</span>
+        </div>
+
+        <table style="width:100%; border-collapse:collapse; text-align:left; border:1px solid #eef2ff; border-radius:12px; overflow:hidden;">
+          <thead>
+            <tr style="background-color:#f1f4ff; border-bottom:2px solid #e2e7ff; page-break-inside:avoid;">
+              <th style="padding:8px 10px; font-size:10px; font-weight:700; color:#464555; text-transform:uppercase; letter-spacing:0.04em;">Date</th>
+              <th style="padding:8px 10px; font-size:10px; font-weight:700; color:#464555; text-transform:uppercase; letter-spacing:0.04em;">Description / Vendor</th>
+              <th style="padding:8px 10px; font-size:10px; font-weight:700; color:#464555; text-transform:uppercase; letter-spacing:0.04em;">Category</th>
+              <th style="padding:8px 10px; font-size:10px; font-weight:700; color:#464555; text-transform:uppercase; letter-spacing:0.04em;">Account</th>
+              <th style="padding:8px 10px; font-size:10px; font-weight:700; color:#464555; text-transform:uppercase; letter-spacing:0.04em; text-align:center;">Type</th>
+              <th style="padding:8px 10px; font-size:10px; font-weight:700; color:#464555; text-transform:uppercase; letter-spacing:0.04em; text-align:right;">Amount (LKR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${txnRowsHtml}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Statement Footer -->
+      <div style="border-top:1px solid #eef2ff; padding-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:10px; color:#94a3b8; page-break-inside:avoid;">
+        <span>CONFIDENTIAL • Official Monthly Financial Statement for Nadun Chanaka</span>
+        <span>Expense Tracker V1.0 • Google Sheets Live Ledger</span>
+      </div>
+    `;
+
+    document.body.appendChild(pdfContainer);
+
+    const filename = `Nadun's_Statement_(${monthName}_${selectedYear}).pdf`;
+    const opt = {
+      margin: [8, 8, 8, 8],
+      filename: filename,
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, logging: false },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    try {
+      await html2pdf().set(opt).from(pdfContainer).save();
+
+      // Show export toast feedback
+      const toast = document.getElementById('exportToast');
+      const toastSub = document.getElementById('exportToastSub');
+      if (toastSub) toastSub.textContent = `${filename} downloaded successfully.`;
+      if (toast) {
+        toast.classList.remove('hidden');
+        toast.classList.add('flex');
+        setTimeout(() => {
+          toast.classList.add('hidden');
+          toast.classList.remove('flex');
+        }, 3500);
+      }
+    } catch (err) {
+      console.error("PDF generation error:", err);
+      alert("An error occurred while generating the PDF statement.");
+    } finally {
+      if (pdfContainer.parentNode) {
+        pdfContainer.parentNode.removeChild(pdfContainer);
+      }
     }
   }
 </script>
