@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<meta content="mobile_tab" name="shell-type"/>
+<title>Expenses Dashboard</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+.donut-segment{transition:all 0.4s cubic-bezier(0.4, 0, 0.2, 1);}
+.donut-segment:hover, .donut-segment.active{stroke-width:11px;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.15));cursor:pointer;}
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">
+tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-tint": "#4d44e3", "secondary-fixed": "#6ffbbe", "surface-container": "#eaedff", "tertiary-fixed-dim": "#ffb2b7", "on-secondary-container": "#00714d", "on-primary-fixed": "#0f0069", "secondary-container": "#6cf8bb", "surface-container-low": "#f2f3ff", "surface-dim": "#d2d9f4", "outline-variant": "#c7c4d8", "surface-variant": "#dae2fd", "on-background": "#131b2e", "on-secondary-fixed-variant": "#005236", "error-container": "#ffdad6", "on-primary-fixed-variant": "#3323cc", "on-tertiary": "#ffffff", "inverse-surface": "#283044", "surface-container-high": "#e2e7ff", "primary-fixed": "#e2dfff", "on-primary-container": "#dad7ff", "on-error": "#ffffff", "tertiary": "#95002b", "primary": "#3525cd", "surface": "#faf8ff", "on-surface-variant": "#464555", "primary-container": "#4f46e5", "tertiary-fixed": "#ffdadb", "tertiary-container": "#bf0f3c", "inverse-on-surface": "#eef0ff", "surface-container-lowest": "#ffffff", "outline": "#777587", "surface-bright": "#faf8ff", "on-secondary-fixed": "#002113", "on-tertiary-fixed-variant": "#92002a", "background": "#faf8ff", "primary-fixed-dim": "#c3c0ff", "secondary-fixed-dim": "#4edea3", "on-secondary": "#ffffff", "secondary": "#006c49", "inverse-primary": "#c3c0ff", "on-tertiary-container": "#ffd0d2", "on-error-container": "#93000a", "surface-container-highest": "#dae2fd", "on-primary": "#ffffff", "on-tertiary-fixed": "#40000d", "on-surface": "#131b2e", "error": "#ba1a1a" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter": "1rem", "space-md": "1rem", "space-xs": "0.25rem", "space-xl": "2rem", "margin": "1.25rem", "space-sm": "0.5rem", "space-lg": "1.5rem" }, "fontFamily": { "title-md": ["Plus Jakarta Sans"], "stat-numeric-lg": ["Plus Jakarta Sans"], "display-hero": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "stat-numeric-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"] }, "fontSize": { "title-md": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "stat-numeric-lg": ["36px", { "lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "display-hero": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "800" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "700" }], "label-md": ["13px", { "lineHeight": "18px", "letterSpacing": "0.02em", "fontWeight": "600" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "400" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "600" }], "stat-numeric-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }] } } } }
+</script>
+<script src="js/sheets_api.js"></script>
+</head>
+
+<body class="bg-background font-body-md text-on-surface flex flex-col min-h-screen">
+<header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.03)] pt-safe">
+<div class="h-16 px-margin flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<img alt="Expenses Dashboard Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEDOHzQ1qBqlsy278Q3Mtw8_ieQi92Tg409O5AtX-whZGtJoTBta3dwgSoBOfRqoczx_eB3vQEe6HnYZO10_R9uAiCFSI0H4gixnHsco-Lag-gY0sqhmviZXrKKQ541i3ru4YM1NpUUFGPpDypn_X2Uq-hUWwLtIeID4PZT_rUmUzls_3OH1E-UZStsD6nyv8wycneNjt6Lbrsu6JNQAi79Q7jXt7yumVB9gTZ11XJsN4EzKB7BXNB"/>
+<span class="font-title-md text-title-md font-extrabold tracking-tight text-on-surface leading-none">Expenses Dashboard</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<!-- Month & Year Selector Button -->
+<button id="btn-month-selector" aria-label="Change month filter" class="min-h-[44px] px-3 py-1.5 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center gap-1.5 transition-colors cursor-pointer" onclick="toggleMonthPicker()" type="button">
+<span id="month-selector-text" class="font-label-md text-label-md font-semibold text-on-surface">September 2026</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">keyboard_arrow_down</span>
+</button>
+<div class="relative flex items-center justify-center">
+<!-- Clean Male Profile Icon Avatar -->
+<button aria-label="Open profile &amp; settings" class="min-h-[44px] min-w-[44px] flex items-center justify-center p-1 focus:outline-none cursor-pointer" onclick="window.location.href='app_settings.html'" type="button">
+<div class="relative">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-sm border border-surface">
+<span class="material-symbols-outlined text-[20px]">account_circle</span>
+</div>
+<span class="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-secondary rounded-full ring-2 ring-surface"></span>
+</div>
+</button>
+</div>
+</div>
+</div>
+</header>
+
+<!-- Month Selector Modal -->
+<div id="month-picker-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/40 backdrop-blur-sm p-4">
+<div class="w-full max-w-xs rounded-3xl bg-surface-container-lowest p-5 shadow-2xl flex flex-col gap-3">
+<div class="flex items-center justify-between border-b border-surface-container-low pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">calendar_month</span>
+<h3 class="font-title-md text-title-md font-bold text-on-surface">Select Period</h3>
+</div>
+<button type="button" onclick="toggleMonthPicker()" class="w-8 h-8 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div id="month-picker-options" class="flex flex-col gap-1 max-h-64 overflow-y-auto">
+<!-- Options generated dynamically -->
+</div>
+</div>
+</div>
+
+<main class="flex flex-col relative w-full pt-16 pb-28 bg-surface">
+<div class="flex flex-col w-full px-margin gap-space-lg">
+
+<!-- Top Dynamic Greeting Tile -->
+<section class="flex items-center justify-between pt-space-sm">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span id="greeting-ayubowan" class="font-body-sm text-body-sm text-on-surface-variant">Ayubowan, Nadun</span>
+<span class="inline-block w-2 h-2 rounded-full bg-secondary"></span>
+</div>
+<h1 id="user-greeting-heading" class="font-headline-md text-headline-md text-on-surface font-bold">Good morning, Nadun ✨</h1>
+</div>
+<div class="flex items-center gap-space-xs">
+<button aria-label="Quick search" class="min-w-[44px] min-h-[44px] rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant active:scale-95 transition-transform cursor-pointer" onclick="window.location.href='transaction_history.html'" type="button">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</button>
+<button aria-label="Notifications" class="min-w-[44px] min-h-[44px] rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant relative active:scale-95 transition-transform cursor-pointer" onclick="window.location.href='app_settings.html'" type="button">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+</div>
+</section>
+
+<!-- Net Balance Hero Card -->
+<section class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary-container to-surface-tint p-space-lg text-on-primary shadow-xl">
+<div class="absolute -right-8 -top-8 w-44 h-44 rounded-full bg-on-primary/10 blur-2xl pointer-events-none"></div>
+<div class="absolute right-12 bottom-2 w-32 h-32 rounded-full bg-secondary-fixed/15 blur-xl pointer-events-none"></div>
+<div class="relative flex flex-col gap-space-md z-10">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-on-primary-container">account_balance_wallet</span>
+<span class="font-label-md text-label-md text-on-primary-container uppercase tracking-wider font-semibold">Net Balance</span>
+</div>
+<div id="hero-trend-badge" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-lowest/15 backdrop-blur-md text-secondary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]" id="hero-trend-icon">trending_up</span>
+<span id="hero-net-trend-text">+100% Net</span>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-primary-container">Sri Lankan Rupee (LKR)</span>
+<div class="flex items-baseline gap-space-xs">
+<span id="hero-net-balance" class="font-stat-numeric-lg text-stat-numeric-lg tracking-tight font-extrabold">LKR 0.00</span>
+</div>
+</div>
+<!-- Sub-Pill Flow Breakdown -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-xs">
+<!-- Income Pill -->
+<div class="flex flex-col p-3 rounded-2xl bg-surface-container-lowest/10 backdrop-blur-md">
+<div class="flex items-center gap-1.5 text-secondary-fixed mb-1">
+<span class="material-symbols-outlined text-[16px]">arrow_outward</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wide">Income</span>
+</div>
+<span id="hero-income-amount" class="font-stat-numeric-md text-stat-numeric-md font-bold text-on-primary truncate">LKR 0</span>
+<span id="hero-income-sub" class="font-body-sm text-body-sm text-secondary-fixed-dim text-[11px] mt-0.5">Month inflow</span>
+</div>
+<!-- Expense Pill -->
+<div class="flex flex-col p-3 rounded-2xl bg-surface-container-lowest/10 backdrop-blur-md">
+<div class="flex items-center gap-1.5 text-tertiary-fixed mb-1">
+<span class="material-symbols-outlined text-[16px]">call_received</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wide">Expenses</span>
+</div>
+<span id="hero-expense-amount" class="font-stat-numeric-md text-stat-numeric-md font-bold text-on-primary truncate">LKR 0</span>
+<span id="hero-expense-sub" class="font-body-sm text-body-sm text-tertiary-fixed-dim text-[11px] mt-0.5">0% of inflow</span>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Quick Action Shortcuts -->
+<section class="flex items-center justify-between gap-space-xs overflow-x-auto py-1">
+<button aria-label="Add Expense Shortcut" class="flex flex-col items-center gap-1 min-w-[72px] group cursor-pointer" onclick="window.location.href='add_transaction.html'" type="button">
+<div class="w-13 h-13 p-3.5 rounded-2xl bg-primary text-on-primary shadow-md flex items-center justify-center group-active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[24px]">add_circle</span>
+</div>
+<span class="font-label-sm text-label-sm font-semibold text-on-surface text-center mt-1">+ Record</span>
+</button>
+<button aria-label="Scan Receipt" class="flex flex-col items-center gap-1 min-w-[72px] group cursor-pointer" onclick="window.location.href='add_transaction.html'" type="button">
+<div class="w-13 h-13 p-3.5 rounded-2xl bg-surface-container text-primary flex items-center justify-center group-active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[24px]">document_scanner</span>
+</div>
+<span class="font-label-sm text-label-sm font-semibold text-on-surface text-center mt-1">Scan</span>
+</button>
+<button aria-label="Monthly Report" class="flex flex-col items-center gap-1 min-w-[72px] group cursor-pointer" onclick="window.location.href='transaction_history.html'" type="button">
+<div class="w-13 h-13 p-3.5 rounded-2xl bg-surface-container text-on-surface flex items-center justify-center group-active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[24px]">donut_small</span>
+</div>
+<span class="font-label-sm text-label-sm font-semibold text-on-surface text-center mt-1">Report</span>
+</button>
+<button aria-label="Export CSV Spreadsheet" class="flex flex-col items-center gap-1 min-w-[72px] group cursor-pointer" onclick="window.location.href='transaction_history.html'" type="button">
+<div class="w-13 h-13 p-3.5 rounded-2xl bg-surface-container text-on-surface flex items-center justify-center group-active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[24px]">ios_share</span>
+</div>
+<span class="font-label-sm text-label-sm font-semibold text-on-surface text-center mt-1">Export</span>
+</button>
+</section>
+
+<!-- Dynamic SVG Donut Chart & Category Breakdown Section -->
+<section class="flex flex-col rounded-3xl bg-surface-container-lowest p-space-lg shadow-sm">
+<div class="flex items-center justify-between mb-space-md">
+<div>
+<h2 class="font-title-md text-title-md font-bold text-on-surface">Expense Breakdown</h2>
+<p id="breakdown-date-range" class="font-body-sm text-body-sm text-on-surface-variant">September 2026</p>
+</div>
+<button class="px-3 py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold cursor-pointer" onclick="resetDonutChartSelection()" type="button">
+<span id="btn-chart-reset-text">Categories</span>
+</button>
+</div>
+
+<!-- Dynamic SVG Donut Visualization -->
+<div class="flex flex-col items-center justify-center my-space-xs relative">
+<div class="relative w-48 h-48 flex items-center justify-center">
+<svg id="donut-svg" aria-hidden="true" class="w-full h-full -rotate-90 overflow-visible" viewbox="0 0 100 100">
+<!-- Background circle track -->
+<circle cx="50" cy="50" fill="transparent" r="38" stroke="#eaedff" stroke-width="9"></circle>
+<!-- Dynamic SVG Donut stroke segments injected by JS -->
+</svg>
+<!-- Donut Center Insight Pill -->
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center px-4 pointer-events-none">
+<span id="donut-insight-label" class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Total Spent</span>
+<span id="donut-total-spent" class="font-title-md text-title-md font-extrabold text-on-surface leading-tight mt-0.5">LKR 0.00</span>
+<span id="donut-status-text" class="font-label-sm text-label-sm text-secondary font-semibold mt-0.5">Real-time sync</span>
+</div>
+</div>
+</div>
+
+<!-- Category Progress Legend List (Exact LKR Amounts, Icons, Progress Bars, and Percentage Breakdown) -->
+<div id="category-legend-list" class="flex flex-col gap-space-sm mt-space-md">
+<!-- Dynamic Category Items -->
+</div>
+</section>
+
+<!-- Recent Transactions Section -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">Recent Transactions</h2>
+<span id="recent-count-badge" class="px-2 py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm font-semibold text-primary">0 Records</span>
+</div>
+<a class="font-label-md text-label-md font-bold text-primary hover:underline flex items-center" href="transaction_history.html">
+View All
+<span class="material-symbols-outlined text-[16px] ml-0.5">chevron_right</span>
+</a>
+</div>
+<!-- Transactions List Container -->
+<div id="recent-transactions-list" class="flex flex-col rounded-3xl bg-surface-container-lowest p-space-sm shadow-sm divide-y divide-surface-container-low">
+<!-- Dynamic Items -->
+</div>
+</section>
+
+<!-- Sri Lankan Local Advice Card -->
+<section class="rounded-3xl bg-surface-container-high p-space-md flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-2xl bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">savings</span>
+</div>
+<div class="flex flex-col min-w-0">
+<h3 class="font-label-md text-label-md font-bold text-on-surface">Google Sheet Database 📊</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Connected live to Expense Tracker Database. No demo numbers used.</p>
+</div>
+</section>
+
+</div>
+</main>
+
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-2xl shadow-[0_-4px_24px_rgba(0,0,0,0.04)]" data-active-classes="text-primary font-bold">
+<div class="h-16 px-gutter flex items-center justify-around">
+<a aria-current="page" aria-label="Home Dashboard" class="min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 transition-colors text-primary font-bold" data-path="dashboard" href="home_dashboard.html">
+<span class="material-symbols-outlined text-[24px]">home</span>
+<span class="font-label-sm text-label-sm tracking-tight">Home</span>
+</a>
+<a aria-label="Add Expense" class="-translate-y-3 min-w-[52px] min-h-[52px] w-13 h-13 rounded-full bg-primary-container text-on-primary flex items-center justify-center shadow-[0_6px_20px_rgba(79,70,229,0.35)] active:scale-95 transition-all hover:bg-primary" data-path="quick-add" href="add_transaction.html">
+<span class="material-symbols-outlined text-[28px]">add</span>
+</a>
+<a aria-label="Transaction History" class="min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface transition-colors" data-path="transaction-history" href="transaction_history.html">
+<span class="material-symbols-outlined text-[24px]">receipt_long</span>
+<span class="font-label-sm text-label-sm tracking-tight">History</span>
+</a>
+<a aria-label="Preferences and Settings" class="min-w-[44px] min-h-[44px] flex flex-col items-center justify-center gap-0.5 text-on-surface-variant hover:text-on-surface transition-colors" data-path="app-settings" href="app_settings.html">
+<span class="material-symbols-outlined text-[24px]">tune</span>
+<span class="font-label-sm text-label-sm tracking-tight">Settings</span>
+</a>
+</div>
+</nav>
+
+<script>
+  const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  
+  const CATEGORY_CONFIG = {
+    'Grocery': { icon: '🛒', symbol: 'shopping_cart', color: '#006c49', badgeBg: 'bg-secondary-container/40', textCls: 'text-on-secondary-container' },
+    'Traveling': { icon: '🚗', symbol: 'directions_car', color: '#3525cd', badgeBg: 'bg-surface-container', textCls: 'text-primary' },
+    'Bakery': { icon: '🥐', symbol: 'bakery_dining', color: '#d97706', badgeBg: 'bg-amber-100', textCls: 'text-amber-700' },
+    'Vehicle': { icon: '⛽', symbol: 'local_gas_station', color: '#805ad5', badgeBg: 'bg-purple-100', textCls: 'text-purple-700' },
+    'Cosmetics': { icon: '💄', symbol: 'face_3', color: '#ec4899', badgeBg: 'bg-pink-100', textCls: 'text-pink-700' },
+    'Dresses': { icon: '👗', symbol: 'styler', color: '#bf0f3c', badgeBg: 'bg-red-100', textCls: 'text-red-700' },
+    'Gifts': { icon: '🎁', symbol: 'card_giftcard', color: '#0284c7', badgeBg: 'bg-sky-100', textCls: 'text-sky-700' },
+    'Utilities': { icon: '💡', symbol: 'lightbulb', color: '#059669', badgeBg: 'bg-emerald-100', textCls: 'text-emerald-700' },
+    'Salary': { icon: '💼', symbol: 'work', color: '#059669', badgeBg: 'bg-secondary-fixed/50', textCls: 'text-secondary' },
+    'Other Income': { icon: '💰', symbol: 'payments', color: '#10b981', badgeBg: 'bg-secondary-container', textCls: 'text-on-secondary-container' },
+    'Other': { icon: '📦', symbol: 'sell', color: '#64748b', badgeBg: 'bg-surface-container', textCls: 'text-on-surface-variant' }
+  };
+
+  let allTransactions = [];
+  let selectedYear = new Date().getFullYear();
+  let selectedMonth = new Date().getMonth(); // 0-11
+  let activeSelectedCategory = null;
+  let currentCategoryTotals = {};
+  let currentTotalExpenses = 0;
+
+  document.addEventListener('DOMContentLoaded', () => {
+    updateGreeting();
+    loadDashboardData();
+  });
+
+  window.addEventListener('pageshow', () => {
+    loadDashboardData();
+  });
+
+  window.addEventListener('focus', () => {
+    loadDashboardData();
+  });
+
+  // Dynamic Greeting for Morning, Afternoon, Evening, and Night for Nadun
+  function updateGreeting() {
+    const hour = new Date().getHours();
+    let timeGreeting = "morning";
+    let emoji = "✨";
+    
+    if (hour >= 5 && hour < 12) {
+      timeGreeting = "morning";
+      emoji = "✨";
+    } else if (hour >= 12 && hour < 17) {
+      timeGreeting = "afternoon";
+      emoji = "☀️";
+    } else if (hour >= 17 && hour < 21) {
+      timeGreeting = "evening";
+      emoji = "🌆";
+    } else {
+      timeGreeting = "night";
+      emoji = "🌙";
+    }
+    
+    const userGreetingElem = document.getElementById('user-greeting-heading');
+    const ayubowanElem = document.getElementById('greeting-ayubowan');
+    if (userGreetingElem) userGreetingElem.textContent = `Good ${timeGreeting}, Nadun ${emoji}`;
+    if (ayubowanElem) ayubowanElem.textContent = `Ayubowan, Nadun`;
+  }
+
+  function getTxnYearMonth(dateStr) {
+    if (!dateStr) return '';
+    const str = String(dateStr).trim();
+    if (str.includes('-')) {
+      const parts = str.split('-');
+      if (parts.length >= 2) {
+        const y = parts[0];
+        const m = parts[1].padStart(2, '0');
+        return `${y}-${m}`;
+      }
+    }
+    return '';
+  }
+
+  async function loadDashboardData() {
+    // 1. Display cached transactions immediately if present
+    const localRaw = localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
+    let hasCache = false;
+    if (localRaw) {
+      try {
+        const cached = JSON.parse(localRaw);
+        if (Array.isArray(cached) && cached.length > 0) {
+          allTransactions = cached;
+          hasCache = true;
+          populateMonthPickerOptions();
+          renderDashboard();
+        }
+      } catch (e) {}
+    }
+
+    // 2. Perform lightweight change detection (or initial fetch if no cache)
+    try {
+      if (!hasCache) {
+        const res = await fetchTransactionsFromGoogleSheet();
+        if (res && res.success && Array.isArray(res.transactions)) {
+          allTransactions = res.transactions;
+          if (allTransactions.length > 0 && !window.userHasPickedMonth) {
+            const latestDateStr = allTransactions[allTransactions.length - 1].date;
+            if (latestDateStr && latestDateStr.includes('-')) {
+              const parts = latestDateStr.split('-');
+              if (parts.length >= 2) {
+                selectedYear = parseInt(parts[0]);
+                selectedMonth = parseInt(parts[1]) - 1;
+              }
+            }
+          }
+          populateMonthPickerOptions();
+          renderDashboard();
+        }
+      } else {
+        const checkRes = await checkForSheetUpdates();
+        if (checkRes.changed && Array.isArray(checkRes.transactions)) {
+          allTransactions = checkRes.transactions;
+          populateMonthPickerOptions();
+          renderDashboard();
+        }
+      }
+    } catch (e) {
+      console.warn("Sync check error:", e);
+    }
+  }
+
+  function toggleMonthPicker() {
+    const modal = document.getElementById('month-picker-modal');
+    if (modal) modal.classList.toggle('hidden');
+  }
+
+  function populateMonthPickerOptions() {
+    const container = document.getElementById('month-picker-options');
+    if (!container) return;
+
+    const periodsSet = new Set();
+    const now = new Date();
+    periodsSet.add(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`);
+    
+    allTransactions.forEach(t => {
+      const ym = getTxnYearMonth(t.date);
+      if (ym) periodsSet.add(ym);
+    });
+
+    const periods = Array.from(periodsSet).sort().reverse();
+    container.innerHTML = '';
+
+    periods.forEach(pKey => {
+      const [yrStr, moStr] = pKey.split('-');
+      const yr = parseInt(yrStr);
+      const mo = parseInt(moStr) - 1;
+      const isSelected = (yr === selectedYear && mo === selectedMonth);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = isSelected 
+        ? "w-full py-2.5 px-3 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold flex items-center justify-between cursor-pointer"
+        : "w-full py-2.5 px-3 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center justify-between cursor-pointer";
+      btn.innerHTML = `<span>${MONTH_NAMES[mo]} ${yr}</span>${isSelected ? '<span class="material-symbols-outlined text-[18px]">check</span>' : ''}`;
+      btn.onclick = () => {
+        selectedYear = yr;
+        selectedMonth = mo;
+        window.userHasPickedMonth = true;
+        toggleMonthPicker();
+        renderDashboard();
+      };
+      container.appendChild(btn);
+    });
+  }
+
+  function renderDashboard() {
+    activeSelectedCategory = null;
+    const monthStr = String(selectedMonth + 1).padStart(2, '0');
+    const targetPeriod = `${selectedYear}-${monthStr}`;
+
+    const selectorText = document.getElementById('month-selector-text');
+    if (selectorText) selectorText.textContent = `${MONTH_NAMES[selectedMonth]} ${selectedYear}`;
+
+    const dateRangeSub = document.getElementById('breakdown-date-range');
+    if (dateRangeSub) dateRangeSub.textContent = `${MONTH_NAMES[selectedMonth]} ${selectedYear}`;
+
+    // Filter transactions for selected period using normalized year-month comparison
+    const filtered = allTransactions.filter(t => getTxnYearMonth(t.date) === targetPeriod);
+
+    let totalIncome = 0;
+    let totalExpenses = 0;
+    const categoryTotals = {};
+
+    filtered.forEach(t => {
+      const amt = parseFloat(t.amount) || 0;
+      const isIncome = String(t.type).toLowerCase() === 'income';
+      if (isIncome) {
+        totalIncome += amt;
+      } else {
+        totalExpenses += amt;
+        const cat = t.category || 'Other';
+        categoryTotals[cat] = (categoryTotals[cat] || 0) + amt;
+      }
+    });
+
+    currentCategoryTotals = categoryTotals;
+    currentTotalExpenses = totalExpenses;
+
+    const netBalance = totalIncome - totalExpenses;
+
+    // Render Hero Card
+    const heroNetBalance = document.getElementById('hero-net-balance');
+    const heroIncomeAmount = document.getElementById('hero-income-amount');
+    const heroIncomeSub = document.getElementById('hero-income-sub');
+    const heroExpenseAmount = document.getElementById('hero-expense-amount');
+    const heroExpenseSub = document.getElementById('hero-expense-sub');
+    const heroNetTrendText = document.getElementById('hero-net-trend-text');
+    const heroTrendIcon = document.getElementById('hero-trend-icon');
+
+    if (heroNetBalance) heroNetBalance.textContent = `LKR ${netBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    if (heroIncomeAmount) heroIncomeAmount.textContent = `LKR ${totalIncome.toLocaleString('en-US')}`;
+    if (heroExpenseAmount) heroExpenseAmount.textContent = `LKR ${totalExpenses.toLocaleString('en-US')}`;
+
+    if (totalIncome > 0) {
+      const expPct = ((totalExpenses / totalIncome) * 100).toFixed(1);
+      if (heroExpenseSub) heroExpenseSub.textContent = `${expPct}% of inflow`;
+      if (heroIncomeSub) heroIncomeSub.textContent = `${MONTH_NAMES[selectedMonth].substring(0,3)} inflow`;
+    } else {
+      if (heroExpenseSub) heroExpenseSub.textContent = `0% of inflow`;
+      if (heroIncomeSub) heroIncomeSub.textContent = `No income recorded`;
+    }
+
+    if (heroNetTrendText) {
+      if (netBalance >= 0) {
+        heroNetTrendText.textContent = `+Surplus`;
+        if (heroTrendIcon) heroTrendIcon.textContent = 'trending_up';
+      } else {
+        heroNetTrendText.textContent = `-Deficit`;
+        if (heroTrendIcon) heroTrendIcon.textContent = 'trending_down';
+      }
+    }
+
+    // Reset Donut Center Insight
+    resetDonutChartSelection();
+
+    // Render Dynamic SVG Donut Chart (Calculates stroke segments from real category totals)
+    renderDonutChart(categoryTotals, totalExpenses);
+
+    // Render Category Progress Legend List (Exact LKR amounts, icons, progress bars, and percentage breakdown)
+    renderCategoryLegend(categoryTotals, totalExpenses);
+
+    // Render Recent Transactions
+    renderRecentTransactions(filtered);
+  }
+
+  // Dynamic SVG Donut Chart Renderer (Stroke Segment Calculation)
+  function renderDonutChart(categoryTotals, totalExpenses) {
+    const svg = document.getElementById('donut-svg');
+    if (!svg) return;
+
+    // Remove previous dynamic segments (keep background track circle at index 0)
+    while (svg.children.length > 1) {
+      svg.removeChild(svg.lastChild);
+    }
+
+    if (totalExpenses === 0) return;
+
+    const circumference = 2 * Math.PI * 38; // ~238.76
+    let accumulatedOffset = 0;
+
+    const categories = Object.keys(categoryTotals).sort((a, b) => categoryTotals[b] - categoryTotals[a]);
+
+    categories.forEach(cat => {
+      const amount = categoryTotals[cat];
+      const fraction = amount / totalExpenses;
+      const strokeLength = fraction * circumference;
+      const config = CATEGORY_CONFIG[cat] || CATEGORY_CONFIG['Other'];
+
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', '50');
+      circle.setAttribute('cy', '50');
+      circle.setAttribute('r', '38');
+      circle.setAttribute('fill', 'transparent');
+      circle.setAttribute('stroke', config.color);
+      circle.setAttribute('stroke-width', '9');
+      circle.setAttribute('stroke-dasharray', `${strokeLength.toFixed(2)} ${circumference.toFixed(2)}`);
+      circle.setAttribute('stroke-dashoffset', `-${accumulatedOffset.toFixed(2)}`);
+      circle.setAttribute('stroke-linecap', 'round');
+      circle.setAttribute('id', `donut-segment-${cat.replace(/\s+/g, '-')}`);
+      circle.setAttribute('class', 'donut-segment cursor-pointer');
+
+      circle.onclick = (e) => {
+        e.stopPropagation();
+        selectCategorySegment(cat);
+      };
+
+      svg.appendChild(circle);
+      accumulatedOffset += strokeLength;
+    });
+  }
+
+  function selectCategorySegment(cat) {
+    activeSelectedCategory = cat;
+    const amount = currentCategoryTotals[cat] || 0;
+    const pct = currentTotalExpenses > 0 ? ((amount / currentTotalExpenses) * 100).toFixed(1) : '0';
+    const config = CATEGORY_CONFIG[cat] || CATEGORY_CONFIG['Other'];
+
+    // Update Donut Center Insight Pill
+    const labelElem = document.getElementById('donut-insight-label');
+    const amountElem = document.getElementById('donut-total-spent');
+    const statusElem = document.getElementById('donut-status-text');
+    const resetBtnText = document.getElementById('btn-chart-reset-text');
+
+    if (labelElem) labelElem.textContent = `${cat} ${config.icon}`;
+    if (amountElem) amountElem.textContent = `LKR ${amount.toLocaleString('en-US')}`;
+    if (statusElem) statusElem.textContent = `${pct}% of expenses`;
+    if (resetBtnText) resetBtnText.textContent = 'Reset View';
+
+    // Highlight Legend Items
+    document.querySelectorAll('.cat-legend-item').forEach(el => {
+      if (el.getAttribute('data-cat') === cat) {
+        el.classList.add('ring-2', 'ring-primary', 'bg-surface-container-high');
+      } else {
+        el.classList.remove('ring-2', 'ring-primary', 'bg-surface-container-high');
+      }
+    });
+
+    // Highlight Donut SVG Stroke Segment
+    document.querySelectorAll('.donut-segment').forEach(seg => {
+      if (seg.id === `donut-segment-${cat.replace(/\s+/g, '-')}`) {
+        seg.classList.add('active');
+        seg.setAttribute('stroke-width', '11');
+      } else {
+        seg.classList.remove('active');
+        seg.setAttribute('stroke-width', '9');
+      }
+    });
+  }
+
+  function resetDonutChartSelection() {
+    activeSelectedCategory = null;
+    const labelElem = document.getElementById('donut-insight-label');
+    const amountElem = document.getElementById('donut-total-spent');
+    const statusElem = document.getElementById('donut-status-text');
+    const resetBtnText = document.getElementById('btn-chart-reset-text');
+
+    if (labelElem) labelElem.textContent = 'Total Spent';
+    if (amountElem) amountElem.textContent = `LKR ${(currentTotalExpenses / 1000).toFixed(1)}k`;
+    if (statusElem) statusElem.textContent = 'Real-time sync';
+    if (resetBtnText) resetBtnText.textContent = 'Categories';
+
+    document.querySelectorAll('.cat-legend-item').forEach(el => {
+      el.classList.remove('ring-2', 'ring-primary', 'bg-surface-container-high');
+    });
+
+    document.querySelectorAll('.donut-segment').forEach(seg => {
+      seg.classList.remove('active');
+      seg.setAttribute('stroke-width', '9');
+    });
+  }
+
+  // Category Progress Legend List (Exact LKR Amounts, Category Icons, Progress Bars, and Percentage Breakdown)
+  function renderCategoryLegend(categoryTotals, totalExpenses) {
+    const container = document.getElementById('category-legend-list');
+    if (!container) return;
+
+    container.innerHTML = '';
+    const categories = Object.keys(categoryTotals).sort((a, b) => categoryTotals[b] - categoryTotals[a]);
+
+    if (categories.length === 0) {
+      container.innerHTML = `
+        <div class="p-4 rounded-2xl bg-surface-container-low text-center text-on-surface-variant font-body-sm text-body-sm">
+          No expenses logged for this month.
+        </div>
+      `;
+      return;
+    }
+
+    categories.forEach(cat => {
+      const amt = categoryTotals[cat];
+      const pct = totalExpenses > 0 ? ((amt / totalExpenses) * 100).toFixed(1) : '0';
+      const config = CATEGORY_CONFIG[cat] || CATEGORY_CONFIG['Other'];
+
+      const item = document.createElement('div');
+      item.setAttribute('data-cat', cat);
+      item.className = "cat-legend-item flex flex-col gap-1.5 p-2.5 rounded-2xl bg-surface-container-low/60 hover:bg-surface-container-low transition-all cursor-pointer";
+      item.onclick = () => selectCategorySegment(cat);
+
+      item.innerHTML = `
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full" style="background-color: ${config.color}"></span>
+            <span class="font-label-md text-label-md font-semibold text-on-surface">${cat} ${config.icon}</span>
+            <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">${pct}%</span>
+          </div>
+          <span class="font-stat-numeric-md text-body-md font-bold text-on-surface">LKR ${amt.toLocaleString('en-US')}</span>
+        </div>
+        <div class="w-full h-1.5 rounded-full bg-surface-container overflow-hidden">
+          <div class="h-full rounded-full transition-all duration-500" style="width: ${pct}%; background-color: ${config.color}"></div>
+        </div>
+      `;
+      container.appendChild(item);
+    });
+  }
+
+  function renderRecentTransactions(transactions) {
+    const container = document.getElementById('recent-transactions-list');
+    const badge = document.getElementById('recent-count-badge');
+    if (!container) return;
+
+    if (badge) badge.textContent = `${transactions.length} Records`;
+
+    container.innerHTML = '';
+
+    if (transactions.length === 0) {
+      container.innerHTML = `
+        <div class="p-5 text-center text-on-surface-variant flex flex-col items-center gap-2">
+          <span class="material-symbols-outlined text-[32px] text-outline">receipt_long</span>
+          <span class="font-body-md text-body-md font-semibold">No transactions for ${MONTH_NAMES[selectedMonth]} ${selectedYear}</span>
+          <span class="font-body-sm text-body-sm text-outline">Tap + Record to add your first expense or income</span>
+        </div>
+      `;
+      return;
+    }
+
+    const sorted = [...transactions].reverse().slice(0, 5);
+
+    sorted.forEach(t => {
+      const isIncome = String(t.type).toLowerCase() === 'income';
+      const config = CATEGORY_CONFIG[t.category] || (isIncome ? CATEGORY_CONFIG['Salary'] : CATEGORY_CONFIG['Other']);
+      const amt = parseFloat(t.amount) || 0;
+      const amtDisplay = isIncome ? `+ LKR ${amt.toLocaleString('en-US')}` : `- LKR ${amt.toLocaleString('en-US')}`;
+      const amtColor = isIncome ? 'text-secondary font-extrabold' : 'text-tertiary-container font-extrabold';
+
+      const item = document.createElement('div');
+      item.className = "flex items-center justify-between p-space-sm hover:bg-surface-container-low/40 rounded-2xl transition-colors cursor-pointer";
+      item.onclick = () => window.location.href = 'transaction_history.html';
+
+      item.innerHTML = `
+        <div class="flex items-center gap-space-sm min-w-0">
+          <div class="w-12 h-12 rounded-2xl ${config.badgeBg} flex items-center justify-center ${config.textCls} shrink-0">
+            <span class="material-symbols-outlined text-[24px]">${config.symbol || 'receipt'}</span>
+          </div>
+          <div class="flex flex-col min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="font-title-md text-body-lg font-bold text-on-surface truncate">${t.description || t.category}</span>
+              <span class="px-2 py-0.5 rounded-md bg-surface-container text-on-surface-variant font-label-sm text-label-sm">${t.category}</span>
+            </div>
+            <span class="font-body-sm text-body-sm text-on-surface-variant truncate">${t.date || 'Today'} • ${t.accountType || 'Cash Wallet'}</span>
+          </div>
+        </div>
+        <div class="flex flex-col items-end shrink-0 pl-2">
+          <span class="font-stat-numeric-md text-title-md ${amtColor}">${amtDisplay}</span>
+          <span class="font-label-sm text-label-sm text-on-surface-variant font-medium">${t.type}</span>
+        </div>
+      `;
+      container.appendChild(item);
+    });
+  }
+</script>
+</body>
+</html>
