@@ -13,7 +13,8 @@ export default function Settings() {
     categories,
     updateCategories,
     testGoogleSheetConnection,
-    showToast
+    showToast,
+    logout
   } = useApp();
 
   const [inputUrl, setInputUrl] = useState(sheetUrl);
@@ -142,6 +143,34 @@ export default function Settings() {
                   Google Sheets Live Sync • Active Ledger
                 </span>
               </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', zIndex: 1, flexShrink: 0 }}>
+              <button
+                id="btn-logout"
+                type="button"
+                onClick={() => {
+                  logout();
+                  showToast('Logged out successfully');
+                }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '8px 14px',
+                  borderRadius: '14px',
+                  backgroundColor: 'var(--color-error-container)',
+                  color: 'var(--color-on-error-container)',
+                  border: 'none',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+                title="Log Out"
+              >
+                <Icon name="logout" size={16} color="var(--color-on-error-container)" />
+                <span>Log Out</span>
+              </button>
             </div>
           </section>
 

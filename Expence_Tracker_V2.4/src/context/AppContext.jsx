@@ -14,6 +14,7 @@ import {
 } from '../services/googleSheetsApi';
 import {
   STORAGE_KEYS,
+  AUTH_CREDENTIALS,
   DEFAULT_EXPENSE_CATEGORIES,
   DEFAULT_INCOME_CATEGORIES
 } from '../utils/constants';
@@ -21,6 +22,38 @@ import {
 const AppContext = createContext(null);
 
 export function AppProvider({ children }) {
+  // Authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem(STORAGE_KEYS.AUTH_SESSION) === 'true';
+  });
+
+  const [currentUser, setCurrentUser] = useState(() => {
+    return localStorage.getItem(STORAGE_KEYS.AUTH_USER) || 'nadunchanaka';
+  });
+
+  const login = useCallback((username, password) => {
+    const validUser = AUTH_CREDENTIALS.username.toLowerCase();
+    const validPass = AUTH_CREDENTIALS.password;
+
+    if (
+      String(username || '').trim().toLowerCase() === validUser &&
+      String(password || '') === validPass
+    ) {
+      setIsAuthenticated(true);
+      setCurrentUser(username.trim());
+      localStorage.setItem(STORAGE_KEYS.AUTH_SESSION, 'true');
+      localStorage.setItem(STORAGE_KEYS.AUTH_USER, username.trim());
+      return { success: true };
+    }
+    return { success: false, message: 'Invalid username or password' };
+  }, []);
+
+  const logout = useCallback(() => {
+    setIsAuthenticated(false);
+    localStorage.removeItem(STORAGE_KEYS.AUTH_SESSION);
+    localStorage.removeItem(STORAGE_KEYS.AUTH_USER);
+  }, []);
+
   // Period filter state
   const [selectedYear, setSelectedYear] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.ACTIVE_YEAR) || localStorage.getItem('KOSH_ACTIVE_YEAR');
@@ -110,8 +143,10 @@ export function AppProvider({ children }) {
   }, [transactions.length]);
 
   useEffect(() => {
-    refreshTransactions(false);
-  }, []);
+    if (isAuthenticated) {
+      refreshTransactions(false);
+    }
+  }, [isAuthenticated, refreshTransactions]);
 
   // Add transactions batch
   const addTransactions = useCallback(async (records) => {
@@ -171,6 +206,10 @@ export function AppProvider({ children }) {
   return (
     <AppContext.Provider
       value={{
+        isAuthenticated,
+        currentUser,
+        login,
+        logout,
         transactions,
         selectedYear,
         selectedMonth,
