@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import { MONTH_NAMES } from '../utils/constants';
 import Icon from './Icon';
 
-export default function Header({ title = 'Expenses Dashboard', showSheetConfig = false, onOpenSheetModal }) {
+export default function Header({ title = 'Expense Tracker', showSheetConfig = false, onOpenSheetModal }) {
   const { selectedMonth, selectedYear, setIsMonthPickerOpen } = useApp();
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,7 +19,7 @@ export default function Header({ title = 'Expenses Dashboard', showSheetConfig =
           aria-label="Home Dashboard"
         >
           <img
-            alt="Expenses Dashboard Logo"
+            alt="Expense Tracker Logo"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEDOHzQ1qBqlsy278Q3Mtw8_ieQi92Tg409O5AtX-whZGtJoTBta3dwgSoBOfRqoczx_eB3vQEe6HnYZO10_R9uAiCFSI0H4gixnHsco-Lag-gY0sqhmviZXrKKQ541i3ru4YM1NpUUFGPpDypn_X2Uq-hUWwLtIeID4PZT_rUmUzls_3OH1E-UZStsD6nyv8wycneNjt6Lbrsu6JNQAi79Q7jXt7yumVB9gTZ11XJsN4EzKB7BXNB"
           />
           <span className="header-brand-title truncate">

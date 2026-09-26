@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ACCOUNT_OPTIONS } from '../utils/constants';
+import { ACCOUNT_OPTIONS, ACCOUNT_CONFIG, normalizeAccountKey } from '../utils/constants';
 import Icon from './Icon';
 
 export default function QuickEditModal({ isOpen, transaction, onClose, onSave }) {
@@ -23,6 +23,9 @@ export default function QuickEditModal({ isOpen, transaction, onClose, onSave })
   }, [transaction]);
 
   if (!isOpen || !transaction) return null;
+
+  const currentAccKey = normalizeAccountKey(accountType);
+  const currentAccCfg = ACCOUNT_CONFIG[currentAccKey] || ACCOUNT_CONFIG['Cash Wallet'];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -135,8 +138,8 @@ export default function QuickEditModal({ isOpen, transaction, onClose, onSave })
               />
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-on-surface-variant)' }} htmlFor="modalAccountInput">
-                Account Type
+              <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-on-surface-variant)', display: 'flex', alignItems: 'center', gap: '4px' }} htmlFor="modalAccountInput">
+                <Icon name={currentAccCfg.icon} size={15} color={currentAccCfg.color} /> Account Type
               </label>
               <select
                 id="modalAccountInput"
@@ -144,9 +147,12 @@ export default function QuickEditModal({ isOpen, transaction, onClose, onSave })
                 value={accountType}
                 onChange={(e) => setAccountType(e.target.value)}
               >
-                {ACCOUNT_OPTIONS.map(opt => (
-                  <option key={opt} value={opt}>{opt}</option>
-                ))}
+                {ACCOUNT_OPTIONS.map(opt => {
+                  const cfg = ACCOUNT_CONFIG[opt];
+                  return (
+                    <option key={opt} value={opt}>{cfg ? cfg.name : opt}</option>
+                  );
+                })}
               </select>
             </div>
           </div>

@@ -23,13 +23,13 @@ const AppContext = createContext(null);
 export function AppProvider({ children }) {
   // Period filter state
   const [selectedYear, setSelectedYear] = useState(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.ACTIVE_YEAR);
+    const saved = localStorage.getItem(STORAGE_KEYS.ACTIVE_YEAR) || localStorage.getItem('KOSH_ACTIVE_YEAR');
     return saved ? parseInt(saved) : new Date().getFullYear();
   });
 
   const [selectedMonth, setSelectedMonth] = useState(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.ACTIVE_MONTH);
-    return saved !== null ? parseInt(saved) : new Date().getMonth();
+    const saved = localStorage.getItem(STORAGE_KEYS.ACTIVE_MONTH) ?? localStorage.getItem('KOSH_ACTIVE_MONTH');
+    return saved !== null && saved !== undefined ? parseInt(saved) : new Date().getMonth();
   });
 
   const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
@@ -37,7 +37,7 @@ export function AppProvider({ children }) {
   // Transactions state
   const [transactions, setTransactions] = useState(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEYS.LOCAL_TXNS);
+      const raw = localStorage.getItem(STORAGE_KEYS.LOCAL_TXNS) || localStorage.getItem('KOSH_LOCAL_TRANSACTIONS');
       return raw ? JSON.parse(raw) : [];
     } catch {
       return [];
@@ -56,7 +56,7 @@ export function AppProvider({ children }) {
 
   // Currency
   const [currency, setCurrency] = useState(() => {
-    return localStorage.getItem(STORAGE_KEYS.CURRENCY) || 'LKR';
+    return localStorage.getItem(STORAGE_KEYS.CURRENCY) || localStorage.getItem('KOSH_CURRENCY') || 'LKR';
   });
 
   // Network & Sync status

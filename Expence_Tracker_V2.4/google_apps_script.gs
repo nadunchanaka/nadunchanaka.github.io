@@ -1,5 +1,5 @@
 /**
- * Google Apps Script Backend for Kosh Expense Tracker
+ * Google Apps Script Backend for Expense Tracker
  * Database Name: "Expense Tracker Database"
  * Sheet Tab Name: "Transactions"
  *

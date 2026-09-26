@@ -118,7 +118,7 @@ export default function Settings() {
 
       <main className="page-container">
         <div className="content-wrap" style={{ gap: '20px' }}>
-          {/* Section 1: User Profile Card (Nadun Ratnayake) */}
+          {/* Section 1: User Profile Card (Nadun Rathnayake) */}
           <section className="card-surface" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', position: 'relative', overflow: 'hidden', marginTop: '8px' }}>
             <div style={{ position: 'absolute', right: '-24px', bottom: '-24px', width: '112px', height: '112px', backgroundColor: 'rgba(79, 70, 229, 0.05)', borderRadius: '50%', pointerEvents: 'none' }}></div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', minWidth: 0 }}>
@@ -132,7 +132,7 @@ export default function Settings() {
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                  <h2 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--color-on-surface)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Nadun Ratnayake</h2>
+                  <h2 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--color-on-surface)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Nadun Rathnayake</h2>
                   <span style={{ padding: '2px 8px', borderRadius: '9999px', backgroundColor: 'var(--color-primary-fixed)', color: 'var(--color-on-primary-fixed)', fontSize: '11px', fontWeight: 600 }}>
                     Personal Account
                   </span>

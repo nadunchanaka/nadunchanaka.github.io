@@ -148,6 +148,18 @@ const ICONS = {
   ),
   edit_note: (
     <path d="M3 10h11v2H3v-2zm0-4h11v2H3V6zm0 8h7v2H3v-2zm15.01-3.13l.71-.71c.39-.39 1.02-.39 1.41 0l.71.71c.39.39.39 1.02 0 1.41l-.71.71-2.12-2.12zm-.71.71l-5.3 5.3V19h2.12l5.3-5.3-2.12-2.12z" />
+  ),
+  account_balance: (
+    <path d="M4 10v7h3v-7H4zm6 0v7h3v-7h-3zM2 22h19v-3H2v3zm14-12v7h3v-7h-3zm-4.5-9L2 6v2h19V6l-9.5-5z" />
+  ),
+  credit_card: (
+    <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
+  ),
+  qr_code_2: (
+    <path d="M15 21h-2v-2h2v2zm4 0h-2v-2h2v2zM7 21H3v-4h4v4zm-2-2v-2H3v2h2zm4 2H7v-2h2v2zm2-4h-2v-2h2v2zm4 2h-2v-2h2v2zm2-2h-2v-2h2v2zm0-4h-2v-2h2v2zm2 2h-2v-2h2v2zm0-4h-2v-2h2v2zM7 7H3V3h4v4zm-2-2v-2H3v2h2zm16 2h-4V3h4v4zm-2-2v-2h-2v2h2zM7 15H3v-4h4v4zm-2-2v-2H3v2h2zm10-2h-2v-2h2v2zm2 2h-2v-2h2v2zm2-2h-2v-2h2v2zM9 9H7V7h2v2zm2 2H9V9h2v2zm2 2h-2v-2h2v2zm0-4h-2V7h2v2zm2 2h-2V9h2v2z" />
+  ),
+  wallet: (
+    <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" />
   )
 };
 

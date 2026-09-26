@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import Header from '../components/Header';
 import Icon from '../components/Icon';
-import { ACCOUNT_OPTIONS, STORAGE_KEYS } from '../utils/constants';
+import { ACCOUNT_OPTIONS, ACCOUNT_CONFIG, normalizeAccountKey, STORAGE_KEYS } from '../utils/constants';
 
 export default function AddTransaction() {
   const navigate = useNavigate();
@@ -37,6 +37,15 @@ export default function AddTransaction() {
   ]);
   const [activeCardId, setActiveCardId] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Internal Account Transfer state
+  const [transferData, setTransferData] = useState({
+    fromAccount: 'Commercial Bank',
+    toAccount: 'Cash Wallet',
+    amount: '',
+    description: '',
+    date: todayStr
+  });
 
   // Modals
   const [isSheetModalOpen, setIsSheetModalOpen] = useState(false);
@@ -100,9 +109,13 @@ export default function AddTransaction() {
     }
   }, [searchParams]);
 
-  // Handle switching type (Expense vs Income)
+  // Handle switching type (Expense vs Income vs Transfer)
   const handleSwitchType = (type) => {
     setCurrentType(type);
+    if (type === 'transfer') {
+      showToast('Switched to Internal Account Transfer');
+      return;
+    }
     const catList = type === 'expense' ? categories.expense : categories.income;
     const defaultCat = catList[0] || { name: 'Other', icon: '📦' };
 
@@ -263,6 +276,79 @@ export default function AddTransaction() {
     }
   };
 
+  // Submit Internal Account Transfer
+  const handleSubmitTransfer = async () => {
+    if (isSubmitting) return;
+
+    const amt = parseFloat(transferData.amount);
+    if (isNaN(amt) || amt <= 0) {
+      showToast('Please enter a valid transfer amount greater than 0', 'error');
+      return;
+    }
+
+    const fromAccKey = normalizeAccountKey(transferData.fromAccount);
+    const toAccKey = normalizeAccountKey(transferData.toAccount);
+
+    if (fromAccKey === toAccKey) {
+      showToast('Source and Destination accounts cannot be the same', 'error');
+      return;
+    }
+
+    if (!transferData.description || !transferData.description.trim()) {
+      showToast('Please enter a transfer purpose or memo', 'error');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const nowIso = new Date().toISOString();
+    const fromCfg = ACCOUNT_CONFIG[fromAccKey] || { name: transferData.fromAccount };
+    const toCfg = ACCOUNT_CONFIG[toAccKey] || { name: transferData.toAccount };
+    const memo = transferData.description.trim();
+
+    const transferRecords = [
+      {
+        transactionId: `TXN-${Date.now()}-1`,
+        date: transferData.date,
+        type: 'Transfer Out',
+        category: 'Transfer',
+        amount: amt,
+        description: `Transfer to ${toCfg.name} • ${memo}`,
+        accountType: transferData.fromAccount,
+        createdAt: nowIso
+      },
+      {
+        transactionId: `TXN-${Date.now()}-2`,
+        date: transferData.date,
+        type: 'Transfer In',
+        category: 'Transfer',
+        amount: amt,
+        description: `Transfer from ${fromCfg.name} • ${memo}`,
+        accountType: transferData.toAccount,
+        createdAt: nowIso
+      }
+    ];
+
+    const result = await addTransactions(transferRecords);
+    setIsSubmitting(false);
+
+    if (result.success) {
+      showToast(`Transferred LKR ${amt.toLocaleString('en-US')} from ${fromCfg.name} to ${toCfg.name}!`, 'verified');
+      setTransferData({
+        fromAccount: 'Commercial Bank',
+        toAccount: 'Cash Wallet',
+        amount: '',
+        description: '',
+        date: todayStr
+      });
+      setTimeout(() => {
+        navigate('/');
+      }, 1400);
+    } else {
+      setErrorModal({ isOpen: true, message: result.message });
+    }
+  };
+
   const activeCard = cards.find(c => c.id === activeCardId) || cards[0];
 
   return (
@@ -283,7 +369,7 @@ export default function AddTransaction() {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontSize: '20px', fontWeight: 700, color: 'var(--color-on-surface)' }}>
-                  {isEditMode ? 'Edit Record' : (currentType === 'expense' ? 'Log Expense' : 'Log Income')}
+                  {isEditMode ? 'Edit Record' : (currentType === 'expense' ? 'Log Expense' : (currentType === 'income' ? 'Log Income' : 'Account Transfer'))}
                 </span>
                 <span style={{ display: 'inline-flex', alignItems: 'center', padding: '2px 8px', borderRadius: '9999px', backgroundColor: 'rgba(79, 70, 229, 0.1)', color: 'var(--color-primary)', fontSize: '11px', fontWeight: 600 }}>
                   Google Sheet Database
@@ -294,12 +380,14 @@ export default function AddTransaction() {
                   ? `Updating transaction ${editingTransaction?.transactionId || ''}`
                   : (currentType === 'expense'
                       ? 'Record single or multiple expense entries directly to your sheet'
-                      : 'Record salary, freelance, or other income sources to your sheet')}
+                      : (currentType === 'income'
+                          ? 'Record salary, freelance, or other income sources to your sheet'
+                          : 'Transfer funds internally between your accounts and wallets'))}
               </p>
             </div>
           </div>
 
-          {/* Type Selector Segmented Pill (Expense vs Income) */}
+          {/* Type Selector Segmented Pill (Expense vs Income vs Transfer) */}
           <div style={{ padding: '0 16px', marginTop: '8px' }}>
             <div className="segmented-control">
               <button
@@ -318,51 +406,268 @@ export default function AddTransaction() {
                 <Icon name="south_west" size={18} color={currentType === 'income' ? 'var(--color-secondary)' : 'var(--color-on-surface-variant)'} />
                 <span>Income</span>
               </button>
+              {!isEditMode && (
+                <button
+                  className={`segmented-btn ${currentType === 'transfer' ? 'active-transfer' : ''}`}
+                  onClick={() => handleSwitchType('transfer')}
+                  type="button"
+                >
+                  <Icon name="swap_horiz" size={18} color={currentType === 'transfer' ? 'var(--color-primary)' : 'var(--color-on-surface-variant)'} />
+                  <span>Transfer</span>
+                </button>
+              )}
             </div>
           </div>
 
-          {/* Sticky Category Selection Bar */}
-          <div style={{ position: 'sticky', top: '64px', zIndex: 30, backgroundColor: 'rgba(250, 248, 255, 0.95)', backdropFilter: 'blur(12px)', paddingTop: '12px', paddingBottom: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.03)', borderBottom: '1px solid var(--color-surface-container-low)', marginTop: '12px' }}>
-            <div style={{ padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-on-surface-variant)', fontWeight: 700 }}>
-                Assign to Entry #{activeCardId}
-              </span>
-              <span style={{ fontSize: '12px', color: 'var(--color-primary)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Icon name="tips_and_updates" size={15} color="var(--color-primary)" /> Tap chip to assign
-              </span>
-            </div>
+          {/* Sticky Category Selection Bar (Only for Expense / Income) */}
+          {currentType !== 'transfer' && (
+            <div style={{ position: 'sticky', top: '64px', zIndex: 30, backgroundColor: 'rgba(250, 248, 255, 0.95)', backdropFilter: 'blur(12px)', paddingTop: '12px', paddingBottom: '12px', boxShadow: '0 4px 16px rgba(0,0,0,0.03)', borderBottom: '1px solid var(--color-surface-container-low)', marginTop: '12px' }}>
+              <div style={{ padding: '0 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-on-surface-variant)', fontWeight: 700 }}>
+                  Assign to Entry #{activeCardId}
+                </span>
+                <span style={{ fontSize: '12px', color: 'var(--color-primary)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <Icon name="tips_and_updates" size={15} color="var(--color-primary)" /> Tap chip to assign
+                </span>
+              </div>
 
-            {/* Chips Scroll Area */}
-            <div className="cat-chips-scroll no-scrollbar">
-              {activeCategoryList.map((cat) => {
-                const isActive = activeCard?.category === cat.name;
-                return (
-                  <button
-                    key={cat.name}
-                    type="button"
-                    className={`cat-chip ${isActive ? 'active' : ''}`}
-                    onClick={() => selectCategoryForActiveCard(cat.name, cat.icon)}
+              {/* Chips Scroll Area */}
+              <div className="cat-chips-scroll no-scrollbar">
+                {activeCategoryList.map((cat) => {
+                  const isActive = activeCard?.category === cat.name;
+                  return (
+                    <button
+                      key={cat.name}
+                      type="button"
+                      className={`cat-chip ${isActive ? 'active' : ''}`}
+                      onClick={() => selectCategoryForActiveCard(cat.name, cat.icon)}
+                    >
+                      <span style={{ fontSize: '17px' }}>{cat.icon}</span>
+                      <span>{cat.name}</span>
+                    </button>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  className="cat-chip"
+                  style={{ backgroundColor: 'var(--color-surface-container-high)', color: 'var(--color-primary)' }}
+                  onClick={() => navigate('/settings')}
+                >
+                  <Icon name="add_circle" size={18} color="var(--color-primary)" />
+                  <span style={{ whiteSpace: 'nowrap', fontWeight: 700 }}>+ Custom</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Transfer Form vs Multi-Entry Cards */}
+          {currentType === 'transfer' ? (
+            <div style={{ padding: '0 16px', marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="entry-card active-focus">
+                {/* Transfer Card Header */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '1px solid var(--color-surface-container-low)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: 'var(--color-primary)', color: '#ffffff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <Icon name="swap_horiz" size={20} color="#ffffff" />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '17px', fontWeight: 700, color: 'var(--color-on-surface)' }}>
+                        Internal Account Transfer
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)' }}>
+                        Transfer between accounts with dual-entry sync
+                      </div>
+                    </div>
+                  </div>
+                  <span
+                    style={{
+                      padding: '4px 10px',
+                      borderRadius: '9999px',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                      color: 'var(--color-primary)'
+                    }}
                   >
-                    <span style={{ fontSize: '17px' }}>{cat.icon}</span>
-                    <span>{cat.name}</span>
-                  </button>
-                );
-              })}
+                    Dual-Entry
+                  </span>
+                </div>
 
-              <button
-                type="button"
-                className="cat-chip"
-                style={{ backgroundColor: 'var(--color-surface-container-high)', color: 'var(--color-primary)' }}
-                onClick={() => navigate('/settings')}
-              >
-                <Icon name="add_circle" size={18} color="var(--color-primary)" />
-                <span style={{ whiteSpace: 'nowrap', fontWeight: 700 }}>+ Custom</span>
-              </button>
+                {/* Account Transfer Route (From -> To) */}
+                <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  {/* From Account Selector */}
+                  {(() => {
+                    const fromKey = normalizeAccountKey(transferData.fromAccount);
+                    const fromCfg = ACCOUNT_CONFIG[fromKey] || ACCOUNT_CONFIG['Commercial Bank'];
+                    return (
+                      <div style={{ backgroundColor: 'var(--color-surface-container-low)', padding: '14px', borderRadius: '18px', border: '1px solid var(--color-outline-variant)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                          <label style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-on-surface-variant)', fontWeight: 700 }}>
+                            From Account (Deducted)
+                          </label>
+                          <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-tertiary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Icon name="arrow_upward" size={14} color="var(--color-tertiary)" />
+                            Source
+                          </span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <div style={{ width: '38px', height: '38px', borderRadius: '12px', backgroundColor: 'var(--color-surface-container-lowest)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', flexShrink: 0 }}>
+                            <Icon name={fromCfg.icon} size={20} color={fromCfg.color} />
+                          </div>
+                          <select
+                            id="transfer-from-account"
+                            className="account-select"
+                            style={{ width: '100%', background: 'transparent', border: 'none', fontSize: '15px', fontWeight: 700, color: 'var(--color-on-surface)', outline: 'none', cursor: 'pointer' }}
+                            value={transferData.fromAccount}
+                            onChange={(e) => setTransferData(prev => ({ ...prev, fromAccount: e.target.value }))}
+                          >
+                            {ACCOUNT_OPTIONS.map(opt => {
+                              const cfg = ACCOUNT_CONFIG[opt];
+                              return (
+                                <option key={opt} value={opt}>
+                                  {cfg ? cfg.name : opt}
+                                </option>
+                              );
+                            })}
+                          </select>
+                        </div>
+                      </div>
+                    );
+                  })()}
+
+                  {/* Directional Divider Badge */}
+                  <div className="transfer-direction-divider">
+                    <div className="transfer-arrow-badge">
+                      <Icon name="arrow_downward" size={18} color="#ffffff" />
+                    </div>
+                  </div>
+
+                  {/* To Account Selector */}
+                  {(() => {
+                    const toKey = normalizeAccountKey(transferData.toAccount);
+                    const toCfg = ACCOUNT_CONFIG[toKey] || ACCOUNT_CONFIG['Cash Wallet'];
+                    const isSameAccount = normalizeAccountKey(transferData.fromAccount) === normalizeAccountKey(transferData.toAccount);
+
+                    return (
+                      <div style={{ backgroundColor: 'var(--color-surface-container-low)', padding: '14px', borderRadius: '18px', border: isSameAccount ? '1px solid var(--color-error)' : '1px solid var(--color-outline-variant)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                          <label style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-on-surface-variant)', fontWeight: 700 }}>
+                            To Account (Credited)
+                          </label>
+                          <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-secondary)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Icon name="arrow_downward" size={14} color="var(--color-secondary)" />
+                            Destination
+                          </span>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <div style={{ width: '38px', height: '38px', borderRadius: '12px', backgroundColor: 'var(--color-surface-container-lowest)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: 'var(--shadow-sm)', flexShrink: 0 }}>
+                            <Icon name={toCfg.icon} size={20} color={toCfg.color} />
+                          </div>
+                          <select
+                            id="transfer-to-account"
+                            className="account-select"
+                            style={{ width: '100%', background: 'transparent', border: 'none', fontSize: '15px', fontWeight: 700, color: 'var(--color-on-surface)', outline: 'none', cursor: 'pointer' }}
+                            value={transferData.toAccount}
+                            onChange={(e) => setTransferData(prev => ({ ...prev, toAccount: e.target.value }))}
+                          >
+                            {ACCOUNT_OPTIONS.map(opt => {
+                              const cfg = ACCOUNT_CONFIG[opt];
+                              return (
+                                <option key={opt} value={opt}>
+                                  {cfg ? cfg.name : opt}
+                                </option>
+                              );
+                            })}
+                          </select>
+                        </div>
+                        {isSameAccount && (
+                          <div style={{ marginTop: '8px', fontSize: '11px', color: 'var(--color-error)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <Icon name="error" size={14} color="var(--color-error)" />
+                            <span>Destination must be different from source account</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
+                </div>
+
+                {/* Amount Input */}
+                <div style={{ backgroundColor: 'var(--color-surface-container-low)', borderRadius: '18px', padding: '14px', marginTop: '12px', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <label style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--color-on-surface-variant)', fontWeight: 700 }}>
+                      Transfer Amount (LKR) *
+                    </label>
+                    <span style={{ fontSize: '11px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--color-primary)' }}>
+                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: 'var(--color-primary)' }} />
+                      <span>Transfer</span>
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', paddingTop: '4px' }}>
+                    <span style={{ fontSize: '24px', fontWeight: 800, color: 'var(--color-on-surface-variant)', letterSpacing: '-0.02em' }}>
+                      LKR
+                    </span>
+                    <input
+                      id="transfer-amount"
+                      className="amount-input"
+                      style={{ width: '100%', background: 'transparent', border: 'none', fontSize: '32px', fontWeight: 800, color: 'var(--color-on-surface)', letterSpacing: '-0.02em', outline: 'none' }}
+                      placeholder="0.00"
+                      step="0.01"
+                      type="number"
+                      value={transferData.amount}
+                      onChange={(e) => setTransferData(prev => ({ ...prev, amount: e.target.value }))}
+                    />
+                  </div>
+                </div>
+
+                {/* Description / Memo */}
+                <div style={{ marginTop: '12px' }}>
+                  <label style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', marginBottom: '4px', display: 'block', fontWeight: 600 }}>
+                    Transfer Description / Memo *
+                  </label>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', backgroundColor: 'var(--color-surface-container-low)', padding: '10px 14px', borderRadius: '16px' }}>
+                    <Icon name="swap_horiz" size={20} color="var(--color-on-surface-variant)" />
+                    <input
+                      id="transfer-description"
+                      className="desc-input"
+                      style={{ width: '100%', background: 'transparent', border: 'none', fontSize: '14px', color: 'var(--color-on-surface)', outline: 'none' }}
+                      placeholder="e.g. ATM withdrawal, savings deposit, credit card settlement"
+                      type="text"
+                      value={transferData.description}
+                      onChange={(e) => setTransferData(prev => ({ ...prev, description: e.target.value }))}
+                    />
+                  </div>
+                </div>
+
+                {/* Date Picker */}
+                <div style={{ marginTop: '12px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', backgroundColor: 'var(--color-surface-container-low)', padding: '10px 14px', borderRadius: '16px' }}>
+                    <label style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <Icon name="calendar_today" size={16} color="var(--color-primary)" /> Transfer Date
+                    </label>
+                    <input
+                      id="transfer-date"
+                      className="date-input"
+                      style={{ background: 'transparent', border: 'none', fontSize: '14px', fontWeight: 600, color: 'var(--color-on-surface)', outline: 'none', cursor: 'pointer' }}
+                      type="date"
+                      value={transferData.date}
+                      onChange={(e) => setTransferData(prev => ({ ...prev, date: e.target.value }))}
+                    />
+                  </div>
+                </div>
+
+                {/* Information Callout */}
+                <div style={{ marginTop: '12px', backgroundColor: 'var(--color-surface-container)', padding: '12px', borderRadius: '14px', display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                  <Icon name="sync_alt" size={18} color="var(--color-primary)" />
+                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--color-on-surface-variant)', lineHeight: 1.4 }}>
+                    Transfers record a <b>Transfer Out</b> row for {transferData.fromAccount} and a <b>Transfer In</b> row for {transferData.toAccount} in Google Sheets. Individual account balances update accurately while total net balance is preserved.
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
-
-          {/* Multi-Entry Transaction Cards Stack */}
-          <div style={{ padding: '0 16px', marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          ) : (
+            /* Multi-Entry Transaction Cards Stack */
+            <div style={{ padding: '0 16px', marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {cards.map((card, idx) => {
               const cardNum = idx + 1;
               const isFocused = card.id === activeCardId;
@@ -493,19 +798,32 @@ export default function AddTransaction() {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', backgroundColor: 'var(--color-surface-container-low)', padding: '10px', borderRadius: '16px' }}>
-                      <label style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <Icon name="account_balance_wallet" size={16} color="var(--color-secondary)" /> Account
-                      </label>
-                      <select
-                        className="account-select"
-                        style={{ background: 'transparent', border: 'none', fontSize: '13px', fontWeight: 600, color: 'var(--color-on-surface)', outline: 'none', cursor: 'pointer' }}
-                        value={card.accountType}
-                        onChange={(e) => updateCardField(card.id, 'accountType', e.target.value)}
-                      >
-                        {ACCOUNT_OPTIONS.map(opt => (
-                          <option key={opt} value={opt}>{opt}</option>
-                        ))}
-                      </select>
+                      {(() => {
+                        const accKey = normalizeAccountKey(card.accountType);
+                        const accCfg = ACCOUNT_CONFIG[accKey] || ACCOUNT_CONFIG['Cash Wallet'];
+                        return (
+                          <>
+                            <label style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                              <Icon name={accCfg.icon} size={16} color={accCfg.color} /> Account
+                            </label>
+                            <select
+                              className="account-select"
+                              style={{ background: 'transparent', border: 'none', fontSize: '13px', fontWeight: 600, color: 'var(--color-on-surface)', outline: 'none', cursor: 'pointer' }}
+                              value={card.accountType}
+                              onChange={(e) => updateCardField(card.id, 'accountType', e.target.value)}
+                            >
+                              {ACCOUNT_OPTIONS.map(opt => {
+                                const cfg = ACCOUNT_CONFIG[opt];
+                                return (
+                                  <option key={opt} value={opt}>
+                                    {cfg ? cfg.name : opt}
+                                  </option>
+                                );
+                              })}
+                            </select>
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
                 </div>
@@ -527,45 +845,79 @@ export default function AddTransaction() {
               </button>
             )}
           </div>
+        )}
         </div>
 
         {/* Floating Fixed Bottom Submit Dock */}
         <div className="bottom-submit-dock">
           <div className="submit-dock-inner">
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--color-on-surface-variant)', fontSize: '13px', fontWeight: 600 }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--color-secondary)' }}></span>
-                <span>
-                  {isEditMode ? 'Editing 1 Entry' : `${cards.length} ${cards.length === 1 ? 'Entry' : 'Entries'} added`}
-                </span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                <span style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--color-on-surface-variant)', fontWeight: 600 }}>Total</span>
-                <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-on-surface)', letterSpacing: '-0.01em' }}>
-                  LKR {totalBatchAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </span>
-              </div>
-            </div>
+            {currentType === 'transfer' ? (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--color-on-surface-variant)', fontSize: '13px', fontWeight: 600 }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--color-primary)' }}></span>
+                    <span>Account Transfer</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--color-on-surface-variant)', fontWeight: 600 }}>Amount</span>
+                    <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-on-surface)', letterSpacing: '-0.01em' }}>
+                      LKR {(parseFloat(transferData.amount) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                </div>
 
-            <button
-              id="btn-submit-batch"
-              className="btn-primary"
-              style={{ width: '100%', fontSize: '16px' }}
-              onClick={handleSubmitBatch}
-              disabled={isSubmitting}
-              type="button"
-            >
-              <Icon name="send" size={20} color="#ffffff" />
-              <span>
-                {isSubmitting
-                  ? (isEditMode ? 'Updating in Google Sheet...' : 'Sending to Google Sheet...')
-                  : (isEditMode
-                      ? 'Update Entry in Google Sheet'
-                      : (cards.length === 1
-                          ? `Submit ${currentType === 'expense' ? 'Expense' : 'Income'} Entry`
-                          : `Submit All (${cards.length} Entries)`))}
-              </span>
-            </button>
+                <button
+                  id="btn-submit-transfer"
+                  className="btn-primary"
+                  style={{ width: '100%', fontSize: '16px' }}
+                  onClick={handleSubmitTransfer}
+                  disabled={isSubmitting}
+                  type="button"
+                >
+                  <Icon name="swap_horiz" size={20} color="#ffffff" />
+                  <span>
+                    {isSubmitting ? 'Transferring in Google Sheet...' : 'Execute Account Transfer'}
+                  </span>
+                </button>
+              </>
+            ) : (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--color-on-surface-variant)', fontSize: '13px', fontWeight: 600 }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: 'var(--color-secondary)' }}></span>
+                    <span>
+                      {isEditMode ? 'Editing 1 Entry' : `${cards.length} ${cards.length === 1 ? 'Entry' : 'Entries'} added`}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                    <span style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--color-on-surface-variant)', fontWeight: 600 }}>Total</span>
+                    <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-on-surface)', letterSpacing: '-0.01em' }}>
+                      LKR {totalBatchAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  id="btn-submit-batch"
+                  className="btn-primary"
+                  style={{ width: '100%', fontSize: '16px' }}
+                  onClick={handleSubmitBatch}
+                  disabled={isSubmitting}
+                  type="button"
+                >
+                  <Icon name="send" size={20} color="#ffffff" />
+                  <span>
+                    {isSubmitting
+                      ? (isEditMode ? 'Updating in Google Sheet...' : 'Sending to Google Sheet...')
+                      : (isEditMode
+                          ? 'Update Entry in Google Sheet'
+                          : (cards.length === 1
+                              ? `Submit ${currentType === 'expense' ? 'Expense' : 'Income'} Entry`
+                              : `Submit All (${cards.length} Entries)`))}
+                  </span>
+                </button>
+              </>
+            )}
           </div>
         </div>
 

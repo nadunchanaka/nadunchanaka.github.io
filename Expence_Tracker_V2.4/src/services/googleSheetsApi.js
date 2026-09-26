@@ -1,5 +1,5 @@
 /**
- * Google Sheets API Service for Kosh Expense Tracker
+ * Google Sheets API Service for Expense Tracker
  * Single Source of Truth architecture with lightweight change detection
  * and zero-amount row prevention.
  */
@@ -7,7 +7,7 @@ import { DEFAULT_SCRIPT_URL, STORAGE_KEYS } from '../utils/constants';
 
 // Get current Google Sheets Web App URL
 export function getGoogleSheetUrl() {
-  const stored = localStorage.getItem(STORAGE_KEYS.SHEETS_URL);
+  const stored = localStorage.getItem(STORAGE_KEYS.SHEETS_URL) || localStorage.getItem('KOSH_GOOGLE_SHEETS_URL');
   if (stored && stored.trim()) return stored.trim();
   return (window.GOOGLE_SHEETS_SCRIPT_URL || DEFAULT_SCRIPT_URL || '').trim();
 }
@@ -23,7 +23,7 @@ export function setGoogleSheetUrl(url) {
 
 // Get confirmed Google Sheet spreadsheet URL
 export function getConfirmedSheetUrl() {
-  return localStorage.getItem(STORAGE_KEYS.CONFIRMED_SHEET_URL) || '';
+  return localStorage.getItem(STORAGE_KEYS.CONFIRMED_SHEET_URL) || localStorage.getItem('KOSH_CONFIRMED_SHEET_URL') || '';
 }
 
 /**
@@ -402,7 +402,7 @@ export async function testGoogleSheetConnection(customUrl) {
  * Custom Categories Storage
  */
 export function getCustomCategories() {
-  const raw = localStorage.getItem(STORAGE_KEYS.CUSTOM_CATEGORIES);
+  const raw = localStorage.getItem(STORAGE_KEYS.CUSTOM_CATEGORIES) || localStorage.getItem('KOSH_CUSTOM_CATEGORIES');
   if (!raw) return null;
   try {
     return JSON.parse(raw);

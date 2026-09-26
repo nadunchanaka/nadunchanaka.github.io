@@ -5,13 +5,28 @@ import Header from '../components/Header';
 import DonutChart from '../components/DonutChart';
 import CategoryLegend from '../components/CategoryLegend';
 import RecentTransactions from '../components/RecentTransactions';
+import AccountBreakdown from '../components/AccountBreakdown';
 import Icon from '../components/Icon';
-import { MONTH_NAMES } from '../utils/constants';
+import { MONTH_NAMES, ACCOUNT_CONFIG, normalizeAccountKey, isTransactionInflow, isTransactionOutflow, isTransfer } from '../utils/constants';
+
+function matchesPeriod(dateStr, year, month) {
+  if (!dateStr) return false;
+  const clean = String(dateStr).trim().replace(/\//g, '-');
+  const datePart = clean.split('T')[0];
+  const parts = datePart.split('-');
+  if (parts.length >= 2) {
+    const yr = parseInt(parts[0], 10);
+    const mo = parseInt(parts[1], 10) - 1;
+    return yr === year && mo === month;
+  }
+  return false;
+}
 
 export default function Home() {
   const navigate = useNavigate();
   const { transactions, selectedMonth, selectedYear } = useApp();
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedAccount, setSelectedAccount] = useState(null);
 
   // Time-of-day dynamic greeting for Nadun
   const greeting = useMemo(() => {
@@ -39,32 +54,27 @@ export default function Home() {
     };
   }, []);
 
-  // Filter transactions for current selected period
-  const monthStr = String(selectedMonth + 1).padStart(2, '0');
-  const targetPeriod = `${selectedYear}-${monthStr}`;
-
+  // Filter transactions for current selected period (Month + Year)
   const filteredTransactions = useMemo(() => {
-    return transactions.filter(t => {
-      if (!t.date) return false;
-      return t.date.startsWith(targetPeriod);
-    });
-  }, [transactions, targetPeriod]);
+    return transactions.filter(t => matchesPeriod(t.date, selectedYear, selectedMonth));
+  }, [transactions, selectedYear, selectedMonth]);
 
-  // Aggregate numbers
-  const { totalIncome, totalExpenses, categoryTotals, netBalance } = useMemo(() => {
+  // Overall totals for the entire month across all accounts
+  const overallTotals = useMemo(() => {
     let income = 0;
     let expenses = 0;
     const catTotals = {};
 
     filteredTransactions.forEach(t => {
       const amt = parseFloat(t.amount) || 0;
-      const isIncome = String(t.type).toLowerCase() === 'income';
-      if (isIncome) {
-        income += amt;
-      } else {
-        expenses += amt;
-        const cat = t.category || 'Other';
-        catTotals[cat] = (catTotals[cat] || 0) + amt;
+      if (!isTransfer(t)) {
+        if (isTransactionInflow(t)) {
+          income += amt;
+        } else if (isTransactionOutflow(t)) {
+          expenses += amt;
+          const cat = t.category || 'Other';
+          catTotals[cat] = (catTotals[cat] || 0) + amt;
+        }
       }
     });
 
@@ -76,11 +86,66 @@ export default function Home() {
     };
   }, [filteredTransactions]);
 
-  const expensePctOfIncome = totalIncome > 0 ? ((totalExpenses / totalIncome) * 100).toFixed(1) : '0';
+  const selectedAccountConfig = useMemo(() => {
+    if (!selectedAccount) return null;
+    return ACCOUNT_CONFIG[selectedAccount] || null;
+  }, [selectedAccount]);
+
+  // Account-filtered breakdown when an account is selected
+  const dashboardMetrics = useMemo(() => {
+    if (!selectedAccount) {
+      return {
+        income: overallTotals.totalIncome,
+        expenses: overallTotals.totalExpenses,
+        netBalance: overallTotals.netBalance,
+        categoryTotals: overallTotals.categoryTotals,
+        txCount: filteredTransactions.length
+      };
+    }
+    let accIncome = 0;
+    let accExpenses = 0;
+    const accCatTotals = {};
+    let count = 0;
+
+    filteredTransactions.forEach(t => {
+      if (normalizeAccountKey(t.accountType) === selectedAccount) {
+        const amt = parseFloat(t.amount) || 0;
+        count += 1;
+        if (isTransactionInflow(t)) {
+          accIncome += amt;
+        } else if (isTransactionOutflow(t)) {
+          accExpenses += amt;
+          const cat = t.category || 'Other';
+          accCatTotals[cat] = (accCatTotals[cat] || 0) + amt;
+        }
+      }
+    });
+
+    return {
+      income: accIncome,
+      expenses: accExpenses,
+      netBalance: accIncome - accExpenses,
+      categoryTotals: accCatTotals,
+      txCount: count
+    };
+  }, [filteredTransactions, selectedAccount, overallTotals]);
+
+  // Transactions filtered by selected account for recent list
+  const displayedTransactions = useMemo(() => {
+    if (!selectedAccount) return filteredTransactions;
+    return filteredTransactions.filter(t => normalizeAccountKey(t.accountType) === selectedAccount);
+  }, [filteredTransactions, selectedAccount]);
+
+  const expensePctOfIncome = useMemo(() => {
+    if (dashboardMetrics.income > 0) {
+      return ((dashboardMetrics.expenses / dashboardMetrics.income) * 100).toFixed(1);
+    }
+    return '0';
+  }, [dashboardMetrics.income, dashboardMetrics.expenses]);
 
   return (
     <>
-      <Header title="Expenses Dashboard" />
+      <Header title="Expense Tracker" />
 
       <main className="page-container">
         <div className="content-wrap">
@@ -127,22 +192,49 @@ export default function Home() {
             <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '16px', zIndex: 10 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <Icon name="account_balance_wallet" size={18} color="#dad7ff" />
+                  <Icon name={selectedAccountConfig ? selectedAccountConfig.icon : "account_balance_wallet"} size={18} color="#dad7ff" />
                   <span style={{ fontSize: '12px', color: '#dad7ff', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>
-                    Net Balance
+                    {selectedAccountConfig ? `${selectedAccountConfig.name} Balance` : 'Net Balance'}
                   </span>
                 </div>
-                <div id="hero-trend-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: '9999px', backgroundColor: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(8px)', color: '#6ffbbe', fontSize: '11px', fontWeight: 700 }}>
-                  <Icon name={netBalance >= 0 ? 'trending_up' : 'trending_down'} size={14} color="#6ffbbe" />
-                  <span>{netBalance >= 0 ? '+Surplus' : '-Deficit'}</span>
+                <div id="hero-trend-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 10px', borderRadius: '9999px', backgroundColor: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(8px)', color: dashboardMetrics.netBalance >= 0 ? '#6ffbbe' : '#ffb2b7', fontSize: '11px', fontWeight: 700 }}>
+                  <Icon name={dashboardMetrics.netBalance >= 0 ? 'trending_up' : 'trending_down'} size={14} color={dashboardMetrics.netBalance >= 0 ? '#6ffbbe' : '#ffb2b7'} />
+                  <span>{dashboardMetrics.netBalance >= 0 ? '+Surplus' : '-Deficit'}</span>
                 </div>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontSize: '12px', color: '#dad7ff' }}>Sri Lankan Rupee (LKR)</span>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: '12px', color: '#dad7ff' }}>
+                    {selectedAccountConfig ? `${selectedAccountConfig.name} • Sri Lankan Rupee (LKR)` : 'Sri Lankan Rupee (LKR)'}
+                  </span>
+                  {selectedAccountConfig && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedAccount(null)}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.18)',
+                        border: 'none',
+                        color: '#ffffff',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        padding: '2px 8px',
+                        borderRadius: '9999px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                      title="Clear account filter and show all"
+                    >
+                      <span>Show All</span>
+                      <Icon name="close" size={12} color="#ffffff" />
+                    </button>
+                  )}
+                </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginTop: '2px' }}>
                   <span id="hero-net-balance" style={{ fontSize: '36px', fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1.15 }}>
-                    LKR {netBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    LKR {dashboardMetrics.netBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>
@@ -156,10 +248,12 @@ export default function Home() {
                     <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 700 }}>Income</span>
                   </div>
                   <span style={{ fontSize: '18px', fontWeight: 800, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    LKR {totalIncome.toLocaleString('en-US')}
+                    LKR {dashboardMetrics.income.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                   <span style={{ fontSize: '10px', color: '#6ffbbe', marginTop: '2px' }}>
-                    {totalIncome > 0 ? `${MONTH_NAMES[selectedMonth].substring(0, 3)} inflow` : 'No income recorded'}
+                    {dashboardMetrics.income > 0
+                      ? `${selectedAccountConfig ? selectedAccountConfig.shortName : MONTH_NAMES[selectedMonth].substring(0, 3)} inflow`
+                      : 'No income recorded'}
                   </span>
                 </div>
 
@@ -170,15 +264,32 @@ export default function Home() {
                     <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 700 }}>Expenses</span>
                   </div>
                   <span style={{ fontSize: '18px', fontWeight: 800, color: '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    LKR {totalExpenses.toLocaleString('en-US')}
+                    LKR {dashboardMetrics.expenses.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                   <span style={{ fontSize: '10px', color: '#ffd0d2', marginTop: '2px' }}>
-                    {totalIncome > 0 ? `${expensePctOfIncome}% of inflow` : '0% of inflow'}
+                    {dashboardMetrics.income > 0
+                      ? `${expensePctOfIncome}% of inflow`
+                      : (overallTotals.totalExpenses > 0 && selectedAccount
+                          ? `${((dashboardMetrics.expenses / overallTotals.totalExpenses) * 100).toFixed(1)}% of all spent`
+                          : '0% of inflow')}
                   </span>
                 </div>
               </div>
             </div>
           </section>
+
+          {/* Interactive Accounts & Wallets Breakdown */}
+          <AccountBreakdown
+            transactions={filteredTransactions}
+            allTransactions={transactions}
+            selectedAccount={selectedAccount}
+            onSelectAccount={(acc) => {
+              setSelectedAccount(acc);
+              setSelectedCategory(null);
+            }}
+            totalExpenses={overallTotals.totalExpenses}
+            totalIncome={overallTotals.totalIncome}
+          />
 
           {/* Quick Action Shortcuts */}
           <section className="quick-actions-row">
@@ -235,7 +346,9 @@ export default function Home() {
           <section className="card-surface">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
               <div>
-                <h2 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--color-on-surface)' }}>Expense Breakdown</h2>
+                <h2 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--color-on-surface)' }}>
+                  Expense Breakdown {selectedAccountConfig ? `• ${selectedAccountConfig.name}` : ''}
+                </h2>
                 <p id="breakdown-date-range" style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', margin: '2px 0 0 0' }}>
                   {MONTH_NAMES[selectedMonth]} {selectedYear}
                 </p>
@@ -243,23 +356,26 @@ export default function Home() {
               <button
                 className="btn-secondary"
                 style={{ minHeight: '32px', padding: '4px 12px', fontSize: '12px' }}
-                onClick={() => setSelectedCategory(null)}
+                onClick={() => {
+                  setSelectedCategory(null);
+                  if (selectedAccount) setSelectedAccount(null);
+                }}
                 type="button"
               >
-                <span>{selectedCategory ? 'Reset View' : 'Categories'}</span>
+                <span>{selectedAccount ? 'All Accounts' : (selectedCategory ? 'Reset View' : 'Categories')}</span>
               </button>
             </div>
 
             <DonutChart
-              categoryTotals={categoryTotals}
-              totalExpenses={totalExpenses}
+              categoryTotals={dashboardMetrics.categoryTotals}
+              totalExpenses={dashboardMetrics.expenses}
               selectedCategory={selectedCategory}
               onSelectCategory={setSelectedCategory}
             />
 
             <CategoryLegend
-              categoryTotals={categoryTotals}
-              totalExpenses={totalExpenses}
+              categoryTotals={dashboardMetrics.categoryTotals}
+              totalExpenses={dashboardMetrics.expenses}
               selectedCategory={selectedCategory}
               onSelectCategory={setSelectedCategory}
             />
@@ -267,9 +383,11 @@ export default function Home() {
 
           {/* Recent Transactions Section */}
           <RecentTransactions
-            transactions={filteredTransactions}
+            transactions={displayedTransactions}
             selectedMonth={selectedMonth}
             selectedYear={selectedYear}
+            selectedAccount={selectedAccountConfig ? selectedAccountConfig.name : null}
+            onClearAccount={() => setSelectedAccount(null)}
           />
 
           {/* Sri Lankan Local Advice Card */}

@@ -6,7 +6,7 @@ import QuickEditModal from '../components/QuickEditModal';
 import DeleteModal from '../components/DeleteModal';
 import Icon from '../components/Icon';
 import { exportStatementCSV, exportStatementPDF } from '../services/exportService';
-import { MONTH_NAMES, CATEGORY_CONFIG, STORAGE_KEYS } from '../utils/constants';
+import { MONTH_NAMES, CATEGORY_CONFIG, ACCOUNT_CONFIG, normalizeAccountKey, isTransactionInflow, isTransactionOutflow, isTransfer, STORAGE_KEYS } from '../utils/constants';
 
 export default function History() {
   const navigate = useNavigate();
@@ -21,6 +21,7 @@ export default function History() {
 
   const [activeHorizonFilter, setActiveHorizonFilter] = useState('this_month');
   const [activeCategoryFilter, setActiveCategoryFilter] = useState('all');
+  const [activeAccountFilter, setActiveAccountFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
@@ -64,13 +65,20 @@ export default function History() {
       }
 
       // Category / Type filter
-      const isIncome = String(t.type).toLowerCase() === 'income';
+      const isInflow = isTransactionInflow(t);
       if (activeCategoryFilter === 'income') {
-        if (!isIncome) return false;
+        if (!isInflow) return false;
       } else if (activeCategoryFilter === 'expense') {
-        if (isIncome) return false;
+        if (isInflow) return false;
+      } else if (activeCategoryFilter === 'transfer') {
+        if (!isTransfer(t)) return false;
       } else if (activeCategoryFilter !== 'all') {
         if (t.category !== activeCategoryFilter) return false;
+      }
+
+      // Account filter
+      if (activeAccountFilter !== 'all') {
+        if (normalizeAccountKey(t.accountType) !== activeAccountFilter) return false;
       }
 
       // Search query
@@ -82,7 +90,7 @@ export default function History() {
 
       return true;
     });
-  }, [transactions, selectedMonth, selectedYear, activeHorizonFilter, activeCategoryFilter, searchQuery]);
+  }, [transactions, selectedMonth, selectedYear, activeHorizonFilter, activeCategoryFilter, activeAccountFilter, searchQuery]);
 
   // Aggregate figures
   const { totalIncome, totalExpenses, netFlow } = useMemo(() => {
@@ -90,7 +98,7 @@ export default function History() {
     let exp = 0;
     filteredTransactions.forEach(t => {
       const amt = parseFloat(t.amount) || 0;
-      if (String(t.type).toLowerCase() === 'income') inc += amt;
+      if (isTransactionInflow(t)) inc += amt;
       else exp += amt;
     });
     return {
@@ -156,8 +164,15 @@ export default function History() {
       setIsExportOpen(false);
       setIsExporting(true);
       showToast('Generating PDF statement...');
-      const filename = await exportStatementPDF(filteredTransactions, selectedMonth, selectedYear);
-      showToast(`${filename} downloaded.`);
+      const filterMeta = {
+        accountFilter: activeAccountFilter,
+        categoryFilter: activeCategoryFilter,
+        horizonFilter: activeHorizonFilter,
+        searchQuery: searchQuery,
+        allTransactions: transactions
+      };
+      const filename = await exportStatementPDF(filteredTransactions, selectedMonth, selectedYear, filterMeta, transactions);
+      showToast(`${filename} downloaded.`, 'verified');
     } catch (err) {
       alert(err.message);
     } finally {
@@ -425,6 +440,31 @@ export default function History() {
                 );
               })}
             </div>
+
+            {/* Account Pills */}
+            <div className="no-scrollbar" style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', padding: '2px 16px' }}>
+              <button
+                type="button"
+                className={`pill-filter ${activeAccountFilter === 'all' ? 'active' : ''}`}
+                onClick={() => setActiveAccountFilter('all')}
+              >
+                <span>All Accounts</span>
+              </button>
+              {Object.values(ACCOUNT_CONFIG).map(cfg => {
+                const isSel = activeAccountFilter === cfg.key;
+                return (
+                  <button
+                    key={cfg.key}
+                    type="button"
+                    className={`pill-filter ${isSel ? 'active' : ''}`}
+                    onClick={() => setActiveAccountFilter(cfg.key)}
+                  >
+                    <Icon name={cfg.icon} size={14} color={isSel ? '#ffffff' : cfg.color} />
+                    <span>{cfg.name}</span>
+                  </button>
+                );
+              })}
+            </div>
           </section>
 
           {/* Hint Notification Bar */}
@@ -475,13 +515,15 @@ export default function History() {
                   {/* Cards Stack */}
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     {group.transactions.map((t, idx) => {
-                      const isIncome = String(t.type).toLowerCase() === 'income';
-                      const config = CATEGORY_CONFIG[t.category] || (isIncome ? CATEGORY_CONFIG['Salary'] : CATEGORY_CONFIG['Other']);
+                      const isInflow = isTransactionInflow(t);
+                      const config = CATEGORY_CONFIG[t.category] || (isInflow ? CATEGORY_CONFIG['Salary'] : CATEGORY_CONFIG['Other']);
                       const amt = parseFloat(t.amount) || 0;
-                      const amtDisplay = isIncome
+                      const amtDisplay = isInflow
                         ? `+LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
                         : `-LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-                      const amtColor = isIncome ? 'var(--color-secondary)' : 'var(--color-tertiary)';
+                      const amtColor = isInflow ? 'var(--color-secondary)' : 'var(--color-tertiary)';
+                      const accKey = normalizeAccountKey(t.accountType);
+                      const accConfig = ACCOUNT_CONFIG[accKey] || ACCOUNT_CONFIG['Cash Wallet'];
 
                       return (
                         <article
@@ -511,10 +553,21 @@ export default function History() {
                                 <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--color-on-surface)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                   {t.description || t.category}
                                 </span>
-                                <span style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                  {t.accountType || 'Cash Wallet'}
-                                </span>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px', flexWrap: 'wrap' }}>
+                                  <span style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    padding: '2px 7px',
+                                    borderRadius: '6px',
+                                    backgroundColor: accConfig.bg,
+                                    color: accConfig.color,
+                                    fontSize: '11px',
+                                    fontWeight: 600
+                                  }}>
+                                    <Icon name={accConfig.icon} size={13} color={accConfig.color} />
+                                    <span>{accConfig.name}</span>
+                                  </span>
                                   <span style={{ padding: '2px 8px', borderRadius: '9999px', backgroundColor: 'var(--color-surface-container)', fontSize: '11px', fontWeight: 500, color: 'var(--color-on-surface-variant)' }}>
                                     {t.category}
                                   </span>

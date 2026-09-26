@@ -1,4 +1,4 @@
-# Kosh Expense Tracker V2.4 (React-Only / Pure CSS)
+# Expense Tracker V2.4 (React-Only / Pure CSS)
 
 A modern, high-performance personal finance tracking web application built exclusively with **React 18 + Vite 5 and Pure CSS**, completely free of Tailwind CSS, PostCSS, or external icon font CDNs.
 
