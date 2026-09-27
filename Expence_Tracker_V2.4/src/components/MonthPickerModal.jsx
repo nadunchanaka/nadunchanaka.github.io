@@ -67,11 +67,44 @@ export default function MonthPickerModal() {
         </div>
 
         <div className="no-scrollbar" style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '260px', overflowY: 'auto' }}>
+          {/* All Time Option */}
+          <button
+            type="button"
+            style={{
+              width: '100%',
+              padding: '10px 14px',
+              borderRadius: '12px',
+              border: 'none',
+              backgroundColor: (selectedMonth === 'ALL' || selectedYear === 'ALL') ? 'var(--color-primary)' : 'var(--color-surface-container-low)',
+              color: (selectedMonth === 'ALL' || selectedYear === 'ALL') ? '#ffffff' : 'var(--color-on-surface)',
+              fontSize: '14px',
+              fontWeight: (selectedMonth === 'ALL' || selectedYear === 'ALL') ? 700 : 500,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              cursor: 'pointer',
+              transition: 'background-color 0.15s ease'
+            }}
+            onClick={() => {
+              updatePeriod('ALL', 'ALL');
+              setIsMonthPickerOpen(false);
+              showToast('Switched to All Time');
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Icon name="all_inclusive" size={18} color={(selectedMonth === 'ALL' || selectedYear === 'ALL') ? '#ffffff' : 'var(--color-primary)'} />
+              <span>All Time</span>
+            </div>
+            {(selectedMonth === 'ALL' || selectedYear === 'ALL') && (
+              <Icon name="check" size={18} color="#ffffff" />
+            )}
+          </button>
+
           {periods.map(pKey => {
             const [yrStr, moStr] = pKey.split('-');
-            const yr = parseInt(yrStr);
-            const mo = parseInt(moStr) - 1;
-            const isSelected = yr === selectedYear && mo === selectedMonth;
+            const yr = parseInt(yrStr, 10);
+            const mo = parseInt(moStr, 10) - 1;
+            const isSelected = selectedMonth !== 'ALL' && selectedYear !== 'ALL' && yr === selectedYear && mo === selectedMonth;
 
             return (
               <button

@@ -18,7 +18,7 @@
 
   <!-- Static Hosting (GitHub Pages) Redirect to compiled distribution -->
   <script>
-    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1' && !window.location.pathname.endsWith('/dist/') && !window.location.pathname.endsWith('/dist/index.html')) {
+    if (window.location.hostname.endsWith('github.io') && !window.location.pathname.includes('/dist/')) {
       var currentPath = window.location.pathname;
       if (!currentPath.endsWith('/')) currentPath += '/';
       window.location.replace(currentPath + 'dist/' + (window.location.hash || ''));

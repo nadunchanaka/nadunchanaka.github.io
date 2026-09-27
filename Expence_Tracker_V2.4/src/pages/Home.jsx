@@ -10,6 +10,7 @@ import Icon from '../components/Icon';
 import { MONTH_NAMES, ACCOUNT_CONFIG, normalizeAccountKey, isTransactionInflow, isTransactionOutflow, isTransfer } from '../utils/constants';
 
 function matchesPeriod(dateStr, year, month) {
+  if (year === 'ALL' || month === 'ALL') return true;
   if (!dateStr) return false;
   const clean = String(dateStr).trim().replace(/\//g, '-');
   const datePart = clean.split('T')[0];
@@ -24,7 +25,7 @@ function matchesPeriod(dateStr, year, month) {
 
 export default function Home() {
   const navigate = useNavigate();
-  const { transactions, selectedMonth, selectedYear } = useApp();
+  const { transactions, selectedMonth, selectedYear, allAccountConfig = ACCOUNT_CONFIG, customAccounts = {} } = useApp();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedAccount, setSelectedAccount] = useState(null);
 
@@ -88,8 +89,8 @@ export default function Home() {
 
   const selectedAccountConfig = useMemo(() => {
     if (!selectedAccount) return null;
-    return ACCOUNT_CONFIG[selectedAccount] || null;
-  }, [selectedAccount]);
+    return allAccountConfig[selectedAccount] || null;
+  }, [selectedAccount, allAccountConfig]);
 
   // Account-filtered breakdown when an account is selected
   const dashboardMetrics = useMemo(() => {
@@ -108,7 +109,7 @@ export default function Home() {
     let count = 0;
 
     filteredTransactions.forEach(t => {
-      if (normalizeAccountKey(t.accountType) === selectedAccount) {
+      if (normalizeAccountKey(t.accountType, customAccounts) === selectedAccount) {
         const amt = parseFloat(t.amount) || 0;
         count += 1;
         if (isTransactionInflow(t)) {
@@ -128,13 +129,14 @@ export default function Home() {
       categoryTotals: accCatTotals,
       txCount: count
     };
-  }, [filteredTransactions, selectedAccount, overallTotals]);
+  }, [filteredTransactions, selectedAccount, overallTotals, customAccounts]);
 
   // Transactions filtered by selected account for recent list
   const displayedTransactions = useMemo(() => {
     if (!selectedAccount) return filteredTransactions;
-    return filteredTransactions.filter(t => normalizeAccountKey(t.accountType) === selectedAccount);
-  }, [filteredTransactions, selectedAccount]);
+    return filteredTransactions.filter(t => normalizeAccountKey(t.accountType, customAccounts) === selectedAccount);
+  }, [filteredTransactions, selectedAccount, customAccounts]);
+
 
   const expensePctOfIncome = useMemo(() => {
     if (dashboardMetrics.income > 0) {
@@ -252,7 +254,7 @@ export default function Home() {
                   </span>
                   <span style={{ fontSize: '10px', color: '#6ffbbe', marginTop: '2px' }}>
                     {dashboardMetrics.income > 0
-                      ? `${selectedAccountConfig ? selectedAccountConfig.shortName : MONTH_NAMES[selectedMonth].substring(0, 3)} inflow`
+                      ? `${selectedAccountConfig ? selectedAccountConfig.shortName : (selectedMonth === 'ALL' ? 'All Time' : MONTH_NAMES[selectedMonth].substring(0, 3))} inflow`
                       : 'No income recorded'}
                   </span>
                 </div>
@@ -350,7 +352,7 @@ export default function Home() {
                   Expense Breakdown {selectedAccountConfig ? `• ${selectedAccountConfig.name}` : ''}
                 </h2>
                 <p id="breakdown-date-range" style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', margin: '2px 0 0 0' }}>
-                  {MONTH_NAMES[selectedMonth]} {selectedYear}
+                  {selectedMonth === 'ALL' ? 'All Time' : `${MONTH_NAMES[selectedMonth]} ${selectedYear}`}
                 </p>
               </div>
               <button

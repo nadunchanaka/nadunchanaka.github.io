@@ -49,7 +49,7 @@ export default function Header({ title = 'Expense Tracker', showSheetConfig = fa
             type="button"
           >
             <span id="month-selector-text">
-              {MONTH_NAMES[selectedMonth]} {selectedYear}
+              {selectedMonth === 'ALL' ? 'All Time' : `${MONTH_NAMES[selectedMonth]} ${selectedYear}`}
             </span>
             <Icon name="keyboard_arrow_down" size={18} color="var(--color-on-surface-variant)" />
           </button>

@@ -3,7 +3,14 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import Header from '../components/Header';
 import Icon from '../components/Icon';
-import { ACCOUNT_OPTIONS, ACCOUNT_CONFIG, normalizeAccountKey, STORAGE_KEYS } from '../utils/constants';
+import {
+  formatAmountInput,
+  parseRawAmount,
+  ACCOUNT_OPTIONS,
+  ACCOUNT_CONFIG,
+  normalizeAccountKey,
+  STORAGE_KEYS
+} from '../utils/constants';
 
 export default function AddTransaction() {
   const navigate = useNavigate();
@@ -15,8 +22,13 @@ export default function AddTransaction() {
     updateTransaction,
     sheetUrl,
     updateSheetUrl,
-    showToast
+    showToast,
+    customAccounts = {},
+    allAccountConfig = ACCOUNT_CONFIG,
+    allAccountOptions = ACCOUNT_OPTIONS,
+    getNormalizedAccountKey
   } = useApp();
+
 
   const [currentType, setCurrentType] = useState('expense');
   const [isEditMode, setIsEditMode] = useState(false);
@@ -181,7 +193,7 @@ export default function AddTransaction() {
 
   // Batch total calculation
   const totalBatchAmount = cards.reduce((sum, c) => {
-    const amt = parseFloat(c.amount) || 0;
+    const amt = parseRawAmount(c.amount);
     return sum + amt;
   }, 0);
 
@@ -189,7 +201,7 @@ export default function AddTransaction() {
   const validateEntries = () => {
     for (let i = 0; i < cards.length; i++) {
       const c = cards[i];
-      const amt = parseFloat(c.amount);
+      const amt = parseRawAmount(c.amount);
       if (isNaN(amt) || amt <= 0) {
         showToast(`Please enter a valid amount for Entry #${i + 1}`, 'error');
         return false;
@@ -216,7 +228,7 @@ export default function AddTransaction() {
         date: card.date,
         type: currentType === 'expense' ? 'Expense' : 'Income',
         category: card.category,
-        amount: parseFloat(card.amount),
+        amount: parseRawAmount(card.amount),
         description: card.description.trim(),
         accountType: card.accountType,
         createdAt: editingTransaction.createdAt || new Date().toISOString()
@@ -244,7 +256,7 @@ export default function AddTransaction() {
       date: c.date,
       type: currentType === 'expense' ? 'Expense' : 'Income',
       category: c.category,
-      amount: parseFloat(c.amount),
+      amount: parseRawAmount(c.amount),
       description: c.description.trim(),
       accountType: c.accountType,
       createdAt: nowIso
@@ -280,14 +292,14 @@ export default function AddTransaction() {
   const handleSubmitTransfer = async () => {
     if (isSubmitting) return;
 
-    const amt = parseFloat(transferData.amount);
+    const amt = parseRawAmount(transferData.amount);
     if (isNaN(amt) || amt <= 0) {
       showToast('Please enter a valid transfer amount greater than 0', 'error');
       return;
     }
 
-    const fromAccKey = normalizeAccountKey(transferData.fromAccount);
-    const toAccKey = normalizeAccountKey(transferData.toAccount);
+    const fromAccKey = getNormalizedAccountKey ? getNormalizedAccountKey(transferData.fromAccount) : normalizeAccountKey(transferData.fromAccount, customAccounts);
+    const toAccKey = getNormalizedAccountKey ? getNormalizedAccountKey(transferData.toAccount) : normalizeAccountKey(transferData.toAccount, customAccounts);
 
     if (fromAccKey === toAccKey) {
       showToast('Source and Destination accounts cannot be the same', 'error');
@@ -302,8 +314,8 @@ export default function AddTransaction() {
     setIsSubmitting(true);
 
     const nowIso = new Date().toISOString();
-    const fromCfg = ACCOUNT_CONFIG[fromAccKey] || { name: transferData.fromAccount };
-    const toCfg = ACCOUNT_CONFIG[toAccKey] || { name: transferData.toAccount };
+    const fromCfg = allAccountConfig[fromAccKey] || { name: transferData.fromAccount };
+    const toCfg = allAccountConfig[toAccKey] || { name: transferData.toAccount };
     const memo = transferData.description.trim();
 
     const transferRecords = [
@@ -328,6 +340,7 @@ export default function AddTransaction() {
         createdAt: nowIso
       }
     ];
+
 
     const result = await addTransactions(transferRecords);
     setIsSubmitting(false);
@@ -498,8 +511,8 @@ export default function AddTransaction() {
                 <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   {/* From Account Selector */}
                   {(() => {
-                    const fromKey = normalizeAccountKey(transferData.fromAccount);
-                    const fromCfg = ACCOUNT_CONFIG[fromKey] || ACCOUNT_CONFIG['Commercial Bank'];
+                    const fromKey = normalizeAccountKey(transferData.fromAccount, customAccounts);
+                    const fromCfg = allAccountConfig[fromKey] || allAccountConfig['Commercial Bank'];
                     return (
                       <div style={{ backgroundColor: 'var(--color-surface-container-low)', padding: '14px', borderRadius: '18px', border: '1px solid var(--color-outline-variant)' }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
@@ -522,8 +535,8 @@ export default function AddTransaction() {
                             value={transferData.fromAccount}
                             onChange={(e) => setTransferData(prev => ({ ...prev, fromAccount: e.target.value }))}
                           >
-                            {ACCOUNT_OPTIONS.map(opt => {
-                              const cfg = ACCOUNT_CONFIG[opt];
+                            {allAccountOptions.map(opt => {
+                              const cfg = allAccountConfig[opt];
                               return (
                                 <option key={opt} value={opt}>
                                   {cfg ? cfg.name : opt}
@@ -545,9 +558,9 @@ export default function AddTransaction() {
 
                   {/* To Account Selector */}
                   {(() => {
-                    const toKey = normalizeAccountKey(transferData.toAccount);
-                    const toCfg = ACCOUNT_CONFIG[toKey] || ACCOUNT_CONFIG['Cash Wallet'];
-                    const isSameAccount = normalizeAccountKey(transferData.fromAccount) === normalizeAccountKey(transferData.toAccount);
+                    const toKey = normalizeAccountKey(transferData.toAccount, customAccounts);
+                    const toCfg = allAccountConfig[toKey] || allAccountConfig['Cash Wallet'];
+                    const isSameAccount = normalizeAccountKey(transferData.fromAccount, customAccounts) === normalizeAccountKey(transferData.toAccount, customAccounts);
 
                     return (
                       <div style={{ backgroundColor: 'var(--color-surface-container-low)', padding: '14px', borderRadius: '18px', border: isSameAccount ? '1px solid var(--color-error)' : '1px solid var(--color-outline-variant)' }}>
@@ -571,8 +584,8 @@ export default function AddTransaction() {
                             value={transferData.toAccount}
                             onChange={(e) => setTransferData(prev => ({ ...prev, toAccount: e.target.value }))}
                           >
-                            {ACCOUNT_OPTIONS.map(opt => {
-                              const cfg = ACCOUNT_CONFIG[opt];
+                            {allAccountOptions.map(opt => {
+                              const cfg = allAccountConfig[opt];
                               return (
                                 <option key={opt} value={opt}>
                                   {cfg ? cfg.name : opt}
@@ -612,15 +625,16 @@ export default function AddTransaction() {
                       className="amount-input"
                       style={{ width: '100%', background: 'transparent', border: 'none', fontSize: '32px', fontWeight: 800, color: 'var(--color-on-surface)', letterSpacing: '-0.02em', outline: 'none' }}
                       placeholder="0.00"
-                      step="0.01"
-                      type="number"
+                      type="text"
+                      inputMode="decimal"
                       value={transferData.amount}
-                      onChange={(e) => setTransferData(prev => ({ ...prev, amount: e.target.value }))}
+                      onChange={(e) => setTransferData(prev => ({ ...prev, amount: formatAmountInput(e.target.value) }))}
                     />
                   </div>
                 </div>
 
                 {/* Description / Memo */}
+
                 <div style={{ marginTop: '12px' }}>
                   <label style={{ fontSize: '12px', color: 'var(--color-on-surface-variant)', marginBottom: '4px', display: 'block', fontWeight: 600 }}>
                     Transfer Description / Memo *
@@ -748,10 +762,10 @@ export default function AddTransaction() {
                         className="amount-input"
                         style={{ width: '100%', background: 'transparent', border: 'none', fontSize: '32px', fontWeight: 800, color: 'var(--color-on-surface)', letterSpacing: '-0.02em', outline: 'none' }}
                         placeholder="0.00"
-                        step="0.01"
-                        type="number"
+                        type="text"
+                        inputMode="decimal"
                         value={card.amount}
-                        onChange={(e) => updateCardField(card.id, 'amount', e.target.value)}
+                        onChange={(e) => updateCardField(card.id, 'amount', formatAmountInput(e.target.value))}
                       />
                     </div>
                   </div>
@@ -799,8 +813,8 @@ export default function AddTransaction() {
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', backgroundColor: 'var(--color-surface-container-low)', padding: '10px', borderRadius: '16px' }}>
                       {(() => {
-                        const accKey = normalizeAccountKey(card.accountType);
-                        const accCfg = ACCOUNT_CONFIG[accKey] || ACCOUNT_CONFIG['Cash Wallet'];
+                        const accKey = normalizeAccountKey(card.accountType, customAccounts);
+                        const accCfg = allAccountConfig[accKey] || allAccountConfig['Cash Wallet'];
                         return (
                           <>
                             <label style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -812,8 +826,8 @@ export default function AddTransaction() {
                               value={card.accountType}
                               onChange={(e) => updateCardField(card.id, 'accountType', e.target.value)}
                             >
-                              {ACCOUNT_OPTIONS.map(opt => {
-                                const cfg = ACCOUNT_CONFIG[opt];
+                              {allAccountOptions.map(opt => {
+                                const cfg = allAccountConfig[opt];
                                 return (
                                   <option key={opt} value={opt}>
                                     {cfg ? cfg.name : opt}
@@ -829,6 +843,7 @@ export default function AddTransaction() {
                 </div>
               );
             })}
+
 
             {/* "+ Add New Entry" Button */}
             {!isEditMode && (
@@ -861,7 +876,7 @@ export default function AddTransaction() {
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
                     <span style={{ fontSize: '11px', textTransform: 'uppercase', color: 'var(--color-on-surface-variant)', fontWeight: 600 }}>Amount</span>
                     <span style={{ fontSize: '18px', fontWeight: 800, color: 'var(--color-on-surface)', letterSpacing: '-0.01em' }}>
-                      LKR {(parseFloat(transferData.amount) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      LKR {(parseRawAmount(transferData.amount) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                 </div>

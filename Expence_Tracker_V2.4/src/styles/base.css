@@ -24,14 +24,22 @@ body {
   overscroll-behavior: none;
   background-color: var(--color-background);
   color: var(--color-on-surface);
+  font-family: var(--font-family);
   display: flex;
   flex-direction: column;
+}
+
+input, button, select, textarea, optgroup, option {
+  font-family: var(--font-family);
+  font-size: inherit;
+  color: inherit;
 }
 
 #root {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  font-family: var(--font-family);
 }
 
 /* Safe Area Insets for Mobile Devices */

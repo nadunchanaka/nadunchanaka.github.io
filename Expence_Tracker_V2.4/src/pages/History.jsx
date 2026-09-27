@@ -16,8 +16,12 @@ export default function History() {
     selectedYear,
     updateTransaction,
     deleteTransaction,
-    showToast
+    showToast,
+    customAccounts = {},
+    allAccountConfig = ACCOUNT_CONFIG,
+    allAccountOptions = []
   } = useApp();
+
 
   const [activeHorizonFilter, setActiveHorizonFilter] = useState('this_month');
   const [activeCategoryFilter, setActiveCategoryFilter] = useState('all');
@@ -51,13 +55,17 @@ export default function History() {
     return transactions.filter(t => {
       // Horizon filter
       if (activeHorizonFilter === 'this_month') {
-        if (!t.date || !t.date.startsWith(targetPeriod)) return false;
+        if (selectedMonth !== 'ALL' && selectedYear !== 'ALL') {
+          if (!t.date || !t.date.startsWith(targetPeriod)) return false;
+        }
       } else if (activeHorizonFilter === 'last_month') {
-        let lastMo = selectedMonth - 1;
-        let lastYr = selectedYear;
-        if (lastMo < 0) { lastMo = 11; lastYr -= 1; }
-        const lastMoStr = String(lastMo + 1).padStart(2, '0');
-        if (!t.date || !t.date.startsWith(`${lastYr}-${lastMoStr}`)) return false;
+        if (selectedMonth !== 'ALL' && selectedYear !== 'ALL') {
+          let lastMo = selectedMonth - 1;
+          let lastYr = selectedYear;
+          if (lastMo < 0) { lastMo = 11; lastYr -= 1; }
+          const lastMoStr = String(lastMo + 1).padStart(2, '0');
+          if (!t.date || !t.date.startsWith(`${lastYr}-${lastMoStr}`)) return false;
+        }
       } else if (activeHorizonFilter === 'last_7_days') {
         if (!t.date) return false;
         const d = new Date(t.date);
@@ -78,8 +86,9 @@ export default function History() {
 
       // Account filter
       if (activeAccountFilter !== 'all') {
-        if (normalizeAccountKey(t.accountType) !== activeAccountFilter) return false;
+        if (normalizeAccountKey(t.accountType, customAccounts) !== activeAccountFilter) return false;
       }
+
 
       // Search query
       if (searchQuery.trim()) {
@@ -169,8 +178,11 @@ export default function History() {
         categoryFilter: activeCategoryFilter,
         horizonFilter: activeHorizonFilter,
         searchQuery: searchQuery,
-        allTransactions: transactions
+        allTransactions: transactions,
+        allAccountConfig,
+        customAccounts
       };
+
       const filename = await exportStatementPDF(filteredTransactions, selectedMonth, selectedYear, filterMeta, transactions);
       showToast(`${filename} downloaded.`, 'verified');
     } catch (err) {
@@ -244,7 +256,7 @@ export default function History() {
                 >
                   <Icon name="file_download" size={18} color="var(--color-primary)" />
                   <span style={{ maxWidth: '170px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    Statement_{MONTH_NAMES[selectedMonth]}_{selectedYear}
+                    Statement_{selectedMonth === 'ALL' ? 'All_Time' : `${MONTH_NAMES[selectedMonth]}_${selectedYear}`}
                   </span>
                   <Icon
                     name="keyboard_arrow_down"
@@ -335,7 +347,7 @@ export default function History() {
               <div style={{ position: 'relative', zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.04em', color: '#dad7ff', fontWeight: 600 }}>
-                    Net Monthly Flow
+                    {selectedMonth === 'ALL' ? 'Net Cumulative Flow' : 'Net Monthly Flow'}
                   </span>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginTop: '2px' }}>
                     <span style={{ fontSize: '18px', fontWeight: 600, color: '#dad7ff' }}>LKR</span>
@@ -394,7 +406,7 @@ export default function History() {
             {/* Horizon Pills */}
             <div className="no-scrollbar" style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', padding: '2px 16px' }}>
               {[
-                { id: 'this_month', label: `${MONTH_NAMES[selectedMonth]} ${selectedYear}`, icon: 'calendar_today' },
+                { id: 'this_month', label: selectedMonth === 'ALL' ? 'All Time' : `${MONTH_NAMES[selectedMonth]} ${selectedYear}`, icon: 'calendar_today' },
                 { id: 'last_month', label: 'Last Month' },
                 { id: 'last_7_days', label: 'Last 7 Days' },
                 { id: 'all_time', label: 'All Time' }
@@ -450,14 +462,15 @@ export default function History() {
               >
                 <span>All Accounts</span>
               </button>
-              {Object.values(ACCOUNT_CONFIG).map(cfg => {
-                const isSel = activeAccountFilter === cfg.key;
+              {allAccountOptions.map(opt => {
+                const cfg = allAccountConfig[opt] || { name: opt, icon: 'account_balance', color: '#0052cc', bg: '#ebf3ff' };
+                const isSel = activeAccountFilter === opt;
                 return (
                   <button
-                    key={cfg.key}
+                    key={opt}
                     type="button"
                     className={`pill-filter ${isSel ? 'active' : ''}`}
-                    onClick={() => setActiveAccountFilter(cfg.key)}
+                    onClick={() => setActiveAccountFilter(opt)}
                   >
                     <Icon name={cfg.icon} size={14} color={isSel ? '#ffffff' : cfg.color} />
                     <span>{cfg.name}</span>
@@ -522,8 +535,9 @@ export default function History() {
                         ? `+LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
                         : `-LKR ${amt.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
                       const amtColor = isInflow ? 'var(--color-secondary)' : 'var(--color-tertiary)';
-                      const accKey = normalizeAccountKey(t.accountType);
-                      const accConfig = ACCOUNT_CONFIG[accKey] || ACCOUNT_CONFIG['Cash Wallet'];
+                      const accKey = normalizeAccountKey(t.accountType, customAccounts);
+                      const accConfig = allAccountConfig[accKey] || allAccountConfig['Cash Wallet'] || { name: accKey, icon: 'account_balance', color: '#0052cc', bg: '#ebf3ff' };
+
 
                       return (
                         <article

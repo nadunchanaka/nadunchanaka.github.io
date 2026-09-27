@@ -47,7 +47,9 @@ export function exportStatementCSV(transactions, selectedMonth, selectedYear) {
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
-  const filename = `Statement_${MONTH_NAMES[selectedMonth]}_${selectedYear}.csv`;
+  const monthStr = selectedMonth === 'ALL' ? 'All_Time' : (MONTH_NAMES[selectedMonth] || 'All');
+  const yearStr = selectedYear === 'ALL' ? '' : `_${selectedYear}`;
+  const filename = `Statement_${monthStr}${yearStr}.csv`;
   link.setAttribute("href", url);
   link.setAttribute("download", filename);
   document.body.appendChild(link);
@@ -72,7 +74,7 @@ export async function exportStatementPDF(transactions, selectedMonth, selectedYe
   const margin = 36;
   const contentWidth = pageWidth - (margin * 2); // 523.28 pt
 
-  const monthName = MONTH_NAMES[selectedMonth] || 'All';
+  const monthName = selectedMonth === 'ALL' ? 'All Time' : (MONTH_NAMES[selectedMonth] || 'All');
 
   // 1. Calculate summary totals matching the History page logic
   let totalIncome = 0;
@@ -101,10 +103,13 @@ export async function exportStatementPDF(transactions, selectedMonth, selectedYe
     : (totalExpenses > 0 ? '100+' : '0');
 
   // Calculate Accounts & Wallets statistics matching Home Dashboard logic
+  const accConfig = (filterMeta && filterMeta.allAccountConfig) ? filterMeta.allAccountConfig : ACCOUNT_CONFIG;
+  const customAccs = (filterMeta && filterMeta.customAccounts) ? filterMeta.customAccounts : {};
+
   const accountStats = {};
-  Object.keys(ACCOUNT_CONFIG).forEach(key => {
+  Object.keys(accConfig).forEach(key => {
     accountStats[key] = {
-      config: ACCOUNT_CONFIG[key],
+      config: accConfig[key],
       count: 0,
       inflow: 0,
       outflow: 0,
@@ -118,7 +123,7 @@ export async function exportStatementPDF(transactions, selectedMonth, selectedYe
     : (allTransactions && allTransactions.length > 0 ? allTransactions : transactions);
 
   fullLedger.forEach(t => {
-    const accKey = normalizeAccountKey(t.accountType);
+    const accKey = normalizeAccountKey(t.accountType, customAccs);
     if (accountStats[accKey]) {
       const amt = parseFloat(t.amount) || 0;
       if (isTransactionInflow(t)) {
@@ -130,7 +135,7 @@ export async function exportStatementPDF(transactions, selectedMonth, selectedYe
   });
 
   transactions.forEach(t => {
-    const accKey = normalizeAccountKey(t.accountType);
+    const accKey = normalizeAccountKey(t.accountType, customAccs);
     if (accountStats[accKey]) {
       const amt = parseFloat(t.amount) || 0;
       accountStats[accKey].count += 1;
@@ -142,13 +147,13 @@ export async function exportStatementPDF(transactions, selectedMonth, selectedYe
     }
   });
 
-  const accountList = Object.keys(ACCOUNT_CONFIG).map(key => {
+  const accountList = Object.keys(accConfig).map(key => {
     const item = accountStats[key];
     const available = item.allTimeInflow - item.allTimeOutflow;
     const expenseSharePct = totalExpenses > 0 ? ((item.outflow / totalExpenses) * 100) : 0;
     return {
       key,
-      config: item.config,
+      config: item.config || { name: key, icon: 'account_balance', color: '#0052cc', bg: '#ebf3ff' },
       count: item.count,
       inflow: item.inflow,
       outflow: item.outflow,
@@ -157,12 +162,13 @@ export async function exportStatementPDF(transactions, selectedMonth, selectedYe
     };
   });
 
+
   const totalCombinedAvailable = accountList.reduce((acc, a) => acc + a.available, 0);
 
   const generatedDateStr = new Date().toLocaleDateString('en-US', {
     year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
   });
-  const refNumber = `REF: EXP-STMT-${selectedYear}${String(selectedMonth + 1).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
+  const refNumber = `REF: EXP-STMT-${selectedYear === 'ALL' ? 'ALL' : selectedYear}${selectedMonth === 'ALL' ? '' : String(selectedMonth + 1).padStart(2, '0')}-${Math.floor(1000 + Math.random() * 9000)}`;
 
   // Construct active filter description
   const activeFilters = [];
@@ -197,7 +203,7 @@ export async function exportStatementPDF(transactions, selectedMonth, selectedYe
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(8.5);
     doc.setTextColor(70, 69, 85);
-    const subTitleText = isPageOne ? 'Monthly Financial Statement • LKR Account' : 'Statement Feed Continued';
+    const subTitleText = isPageOne ? (selectedMonth === 'ALL' ? 'All Time Financial Statement • LKR Account' : 'Monthly Financial Statement • LKR Account') : 'Statement Feed Continued';
     doc.text(subTitleText, margin + 36, y + 25);
 
     // Live Badge (Page 1)
@@ -213,7 +219,7 @@ export async function exportStatementPDF(transactions, selectedMonth, selectedYe
     }
 
     // Right Side: Period Badge & Metadata
-    const periodText = `${monthName.toUpperCase()} ${selectedYear}`;
+    const periodText = selectedMonth === 'ALL' ? 'ALL TIME' : `${monthName.toUpperCase()} ${selectedYear}`;
     doc.setFillColor(234, 237, 255);
     const periodWidth = doc.getTextWidth(periodText) + 16;
     doc.roundedRect(pageWidth - margin - periodWidth, y, periodWidth, 18, 9, 9, 'F');
@@ -261,7 +267,7 @@ export async function exportStatementPDF(transactions, selectedMonth, selectedYe
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
   doc.setTextColor(218, 215, 255);
-  doc.text('NET MONTHLY FLOW (LKR)', margin + 14, y + 16);
+  doc.text(selectedMonth === 'ALL' ? 'NET CUMULATIVE FLOW (LKR)' : 'NET MONTHLY FLOW (LKR)', margin + 14, y + 16);
 
   // Surplus / Deficit Badge Pill
   const statusText = isSurplus ? '+ Surplus' : '- Deficit';
@@ -326,14 +332,16 @@ export async function exportStatementPDF(transactions, selectedMonth, selectedYe
   doc.setTextColor(19, 27, 46);
   doc.text('ACCOUNTS & WALLETS STATUS', margin, y + 10);
 
-  // Badge: 5 ACCOUNTS
+  // Badge: ACCOUNTS COUNT
   const accTitleW = doc.getTextWidth('ACCOUNTS & WALLETS STATUS');
+  const accBadgeText = `${accountList.length} ACCOUNTS`;
+  const badgeW = doc.getTextWidth(accBadgeText) + 12;
   doc.setFillColor(234, 237, 255);
-  doc.roundedRect(margin + accTitleW + 8, y + 1, 52, 11, 4, 4, 'F');
+  doc.roundedRect(margin + accTitleW + 8, y + 1, badgeW, 11, 4, 4, 'F');
   doc.setTextColor(53, 37, 205);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(6.5);
-  doc.text('5 ACCOUNTS', margin + accTitleW + 13, y + 8.5);
+  doc.text(accBadgeText, margin + accTitleW + 14, y + 8.5);
 
   // Right Side: Total Combined Available Balance
   const totalAvailLabel = 'Total Available: ';
@@ -354,8 +362,10 @@ export async function exportStatementPDF(transactions, selectedMonth, selectedYe
   y += 15;
 
   const cardGap = 6;
-  const cardW = (contentWidth - (4 * cardGap)) / 5; // ~99.85 pt
+  const numAccs = Math.max(1, accountList.length);
+  const cardW = (contentWidth - ((numAccs - 1) * cardGap)) / numAccs;
   const cardH = 72;
+
 
   accountList.forEach((stat, i) => {
     const cardX = margin + i * (cardW + cardGap);
@@ -679,7 +689,7 @@ export async function exportStatementPDF(transactions, selectedMonth, selectedYe
   const accSuffix = filterMeta.accountFilter && filterMeta.accountFilter !== 'all'
     ? `_${filterMeta.accountFilter.replace(/\s+/g, '_')}`
     : '';
-  const filename = `Statement_${monthName}_${selectedYear}${accSuffix}.pdf`;
+  const filename = `Statement_${selectedMonth === 'ALL' ? 'All_Time' : monthName}_${selectedYear === 'ALL' ? 'All' : selectedYear}${accSuffix}.pdf`;
 
   // Trigger browser file download
   doc.save(filename);

@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useApp } from '../context/AppContext';
 import { ACCOUNT_CONFIG, normalizeAccountKey, isTransactionInflow, isTransactionOutflow } from '../utils/constants';
 import Icon from './Icon';
 
@@ -10,14 +11,16 @@ export default function AccountBreakdown({
   totalExpenses,
   totalIncome
 }) {
-  // Aggregate statistics for each of the 5 accounts
+  const { selectedMonth, allAccountConfig = ACCOUNT_CONFIG, allAccountOptions = [], customAccounts = {} } = useApp();
+
+  // Aggregate statistics for all accounts (default + custom)
   const accountStats = useMemo(() => {
     const stats = {};
 
-    // Initialize all 5 accounts
-    Object.keys(ACCOUNT_CONFIG).forEach(key => {
+    // Initialize all accounts from allAccountConfig
+    Object.keys(allAccountConfig).forEach(key => {
       stats[key] = {
-        config: ACCOUNT_CONFIG[key],
+        config: allAccountConfig[key],
         txns: [],
         inflow: 0,
         outflow: 0,
@@ -30,7 +33,7 @@ export default function AccountBreakdown({
     // Populate all-time available balances from full ledger
     const ledger = allTransactions && allTransactions.length > 0 ? allTransactions : transactions;
     ledger.forEach(t => {
-      const normalizedKey = normalizeAccountKey(t.accountType);
+      const normalizedKey = normalizeAccountKey(t.accountType, customAccounts);
       if (stats[normalizedKey]) {
         const amt = parseFloat(t.amount) || 0;
         if (isTransactionInflow(t)) {
@@ -43,7 +46,7 @@ export default function AccountBreakdown({
 
     // Populate period statistics using current filtered transactions
     transactions.forEach(t => {
-      const normalizedKey = normalizeAccountKey(t.accountType);
+      const normalizedKey = normalizeAccountKey(t.accountType, customAccounts);
       if (stats[normalizedKey]) {
         const amt = parseFloat(t.amount) || 0;
         stats[normalizedKey].txns.push(t);
@@ -57,7 +60,7 @@ export default function AccountBreakdown({
     });
 
     // Compute net, available balance, and percentages
-    return Object.keys(ACCOUNT_CONFIG).map(key => {
+    return Object.keys(allAccountConfig).map(key => {
       const item = stats[key];
       const net = item.inflow - item.outflow;
       const available = item.allTimeInflow - item.allTimeOutflow;
@@ -65,7 +68,7 @@ export default function AccountBreakdown({
 
       return {
         key,
-        config: item.config,
+        config: item.config || { name: key, icon: 'account_balance', color: '#0052cc', bg: '#ebf3ff' },
         count: item.count,
         inflow: item.inflow,
         outflow: item.outflow,
@@ -74,7 +77,7 @@ export default function AccountBreakdown({
         expensePct
       };
     });
-  }, [transactions, allTransactions, totalExpenses]);
+  }, [transactions, allTransactions, totalExpenses, allAccountConfig, customAccounts]);
 
   const activeStat = accountStats.find(s => s.key === selectedAccount);
 
@@ -87,9 +90,10 @@ export default function AccountBreakdown({
             Accounts & Wallets
           </h2>
           <span style={{ padding: '2px 8px', borderRadius: '9999px', backgroundColor: 'var(--color-surface-container)', fontSize: '11px', fontWeight: 600, color: 'var(--color-primary)' }}>
-            5 Accounts
+            {allAccountOptions.length} Accounts
           </span>
         </div>
+
 
         {selectedAccount && (
           <button
@@ -220,7 +224,7 @@ export default function AccountBreakdown({
                 </span>
               </div>
               <span style={{ fontSize: '11px', color: 'var(--color-on-surface-variant)' }}>
-                {activeStat.count} transactions in selected period &bull; {activeStat.expensePct.toFixed(1)}% of total expenses
+                {activeStat.count} transactions in {selectedMonth === 'ALL' ? 'All Time' : 'selected period'} &bull; {activeStat.expensePct.toFixed(1)}% of total expenses
               </span>
             </div>
           </div>

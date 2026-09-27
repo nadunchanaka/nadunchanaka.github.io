@@ -67,8 +67,8 @@ export default function RecentTransactions({
             <Icon name="receipt_long" size={32} color="var(--color-outline)" />
             <span style={{ fontSize: '14px', fontWeight: 600 }}>
               {selectedAccount
-                ? `No transactions for ${selectedAccount} in ${MONTH_NAMES[selectedMonth]} ${selectedYear}`
-                : `No transactions for ${MONTH_NAMES[selectedMonth]} ${selectedYear}`}
+                ? `No transactions for ${selectedAccount} in ${selectedMonth === 'ALL' ? 'All Time' : `${MONTH_NAMES[selectedMonth]} ${selectedYear}`}`
+                : `No transactions for ${selectedMonth === 'ALL' ? 'All Time' : `${MONTH_NAMES[selectedMonth]} ${selectedYear}`}`}
             </span>
             <span style={{ fontSize: '12px', color: 'var(--color-outline)' }}>
               {selectedAccount

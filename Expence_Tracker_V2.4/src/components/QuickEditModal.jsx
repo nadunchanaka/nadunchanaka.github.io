@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { ACCOUNT_OPTIONS, ACCOUNT_CONFIG, normalizeAccountKey } from '../utils/constants';
+import { useApp } from '../context/AppContext';
+import { ACCOUNT_OPTIONS, ACCOUNT_CONFIG, normalizeAccountKey, formatAmountInput, parseRawAmount } from '../utils/constants';
 import Icon from './Icon';
 
 export default function QuickEditModal({ isOpen, transaction, onClose, onSave }) {
+  const { allAccountConfig = ACCOUNT_CONFIG, allAccountOptions = ACCOUNT_OPTIONS, customAccounts = {} } = useApp();
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
@@ -14,7 +16,7 @@ export default function QuickEditModal({ isOpen, transaction, onClose, onSave })
   useEffect(() => {
     if (transaction) {
       setDescription(transaction.description || '');
-      setAmount(transaction.amount ? String(transaction.amount) : '');
+      setAmount(transaction.amount ? formatAmountInput(transaction.amount) : '');
       setCategory(transaction.category || 'General');
       setAccountType(transaction.accountType || 'Commercial Bank');
       setDate(transaction.date || new Date().toISOString().split('T')[0]);
@@ -24,12 +26,12 @@ export default function QuickEditModal({ isOpen, transaction, onClose, onSave })
 
   if (!isOpen || !transaction) return null;
 
-  const currentAccKey = normalizeAccountKey(accountType);
-  const currentAccCfg = ACCOUNT_CONFIG[currentAccKey] || ACCOUNT_CONFIG['Cash Wallet'];
+  const currentAccKey = normalizeAccountKey(accountType, customAccounts);
+  const currentAccCfg = allAccountConfig[currentAccKey] || allAccountConfig['Cash Wallet'] || { name: accountType, icon: 'account_balance', color: '#0052cc' };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const valAmt = parseFloat(amount);
+    const valAmt = parseRawAmount(amount);
     if (isNaN(valAmt) || valAmt <= 0) {
       alert('Please enter a valid amount greater than 0.');
       return;
@@ -52,6 +54,7 @@ export default function QuickEditModal({ isOpen, transaction, onClose, onSave })
     });
     setIsSaving(false);
   };
+
 
   return (
     <div
@@ -104,10 +107,10 @@ export default function QuickEditModal({ isOpen, transaction, onClose, onSave })
                 id="modalAmountInput"
                 className="input-base"
                 required
-                step="0.01"
-                type="number"
+                type="text"
+                inputMode="decimal"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={(e) => setAmount(formatAmountInput(e.target.value))}
               />
             </div>
             <div style={{ width: '50%', display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -147,8 +150,8 @@ export default function QuickEditModal({ isOpen, transaction, onClose, onSave })
                 value={accountType}
                 onChange={(e) => setAccountType(e.target.value)}
               >
-                {ACCOUNT_OPTIONS.map(opt => {
-                  const cfg = ACCOUNT_CONFIG[opt];
+                {allAccountOptions.map(opt => {
+                  const cfg = allAccountConfig[opt];
                   return (
                     <option key={opt} value={opt}>{cfg ? cfg.name : opt}</option>
                   );
@@ -156,6 +159,7 @@ export default function QuickEditModal({ isOpen, transaction, onClose, onSave })
               </select>
             </div>
           </div>
+
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
             <button
