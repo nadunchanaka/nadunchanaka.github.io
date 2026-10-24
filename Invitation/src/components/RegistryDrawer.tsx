@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { GuestRsvp } from '../types';
+import { Icon } from './Icon';
 
 interface RegistryDrawerProps {
   isOpen: boolean;
@@ -87,7 +88,7 @@ export const RegistryDrawer: React.FC<RegistryDrawerProps> = ({
             aria-label="Close registry"
             className="w-8 h-8 rounded-full bg-[#f5f3f7] hover:bg-[#e9e7eb] flex items-center justify-center text-[#4a454d] transition-colors cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[18px]">close</span>
+            <Icon name="close" className="text-[18px]" />
           </button>
         </div>
 
@@ -173,16 +174,14 @@ export const RegistryDrawer: React.FC<RegistryDrawerProps> = ({
               type="button"
               className="w-full sm:w-auto px-4 py-2 bg-[#6a5581] hover:bg-[#846d9b] text-white rounded-lg text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-sm"
             >
-              <span className="material-symbols-outlined text-[16px]">file_download</span>
+              <Icon name="file_download" className="text-[16px]" />
               <span>Export CSV</span>
             </button>
           </div>
 
           {/* Search Bar */}
           <div className="relative">
-            <span className="material-symbols-outlined absolute left-3 top-2.5 text-[#7b757e] text-[18px]">
-              search
-            </span>
+            <Icon name="search" className="absolute left-3 top-2.5 text-[#7b757e] text-[18px]" />
             <input
               type="text"
               value={search}

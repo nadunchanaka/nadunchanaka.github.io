@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from './Icon';
 
 interface FooterProps {
   onOpenRegistry: () => void;
@@ -22,7 +23,7 @@ export const Footer: React.FC<FooterProps> = ({
         </p>
         <div className="flex items-center justify-center gap-3 py-1">
           <div className="h-[1px] w-8 bg-[#846d9b]/40"></div>
-          <span className="material-symbols-outlined text-[#6a5581] text-[18px]">favorite</span>
+          <Icon name="favorite" className="text-[#6a5581] text-[18px]" />
           <div className="h-[1px] w-8 bg-[#846d9b]/40"></div>
         </div>
         <div className="text-xs text-[#4a454d] space-y-1">

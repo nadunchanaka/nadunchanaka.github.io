@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { TabType } from '../types';
+import { Icon, type IconName } from './Icon';
 
 interface HeaderProps {
   currentTab: TabType;
@@ -90,7 +91,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-[#f5f3f7] hover:bg-[#efdbff] text-[#6a5581] transition-colors border border-[#ccc4ce]/30 cursor-pointer"
               title="Open Classic Invitation Envelope"
             >
-              <span className="material-symbols-outlined text-[15px]">mail</span>
+              <Icon name="mail" className="text-[15px]" />
               <span>Invitation</span>
             </button>
 
@@ -102,7 +103,7 @@ export const Header: React.FC<HeaderProps> = ({
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-[#efdbff] text-[#25123a] border border-[#6a5581]/40 cursor-pointer shadow-sm hover:bg-[#d7bcef] transition-colors"
                   title="Admin: View Guest Registry & Headcount"
                 >
-                  <span className="material-symbols-outlined text-[15px]">list_alt</span>
+                  <Icon name="list_alt" className="text-[15px]" />
                   <span>Registry ({guestCount})</span>
                 </button>
                 <button
@@ -111,7 +112,7 @@ export const Header: React.FC<HeaderProps> = ({
                   title="Logout Admin"
                   aria-label="Logout Admin"
                 >
-                  <span className="material-symbols-outlined text-[16px]">logout</span>
+                  <Icon name="logout" className="text-[16px]" />
                 </button>
               </div>
             ) : (
@@ -122,7 +123,7 @@ export const Header: React.FC<HeaderProps> = ({
                 title="Organizer Login"
                 aria-label="Organizer Login"
               >
-                <span className="material-symbols-outlined text-[16px]">lock</span>
+                <Icon name="lock" className="text-[16px]" />
               </button>
             )}
 
@@ -136,9 +137,7 @@ export const Header: React.FC<HeaderProps> = ({
                   : 'bg-[#e9e7eb] text-[#4a454d] hover:text-[#6a5581] hover:bg-[#f5f3f7]'
               }`}
             >
-              <span className="material-symbols-outlined text-[18px]">
-                {isLiked ? 'favorite' : 'favorite_border'}
-              </span>
+              <Icon name={(isLiked ? 'favorite' : 'favorite_border') as IconName} className="text-[18px]" />
             </button>
 
             {/* Mobile menu trigger */}
@@ -147,9 +146,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="md:hidden w-9 h-9 rounded-full bg-[#e9e7eb] flex items-center justify-center text-[#4a454d]"
               aria-label="Toggle navigation menu"
             >
-              <span className="material-symbols-outlined text-[20px]">
-                {mobileMenuOpen ? 'close' : 'menu'}
-              </span>
+              <Icon name={(mobileMenuOpen ? 'close' : 'menu') as IconName} className="text-[20px]" />
             </button>
           </div>
         </div>
@@ -181,7 +178,7 @@ export const Header: React.FC<HeaderProps> = ({
                 }}
                 className="text-xs uppercase tracking-wider text-[#6a5581] font-semibold flex items-center gap-1.5"
               >
-                <span className="material-symbols-outlined text-[16px]">mail</span>
+                <Icon name="mail" className="text-[16px]" />
                 Open Envelope
               </button>
 
@@ -193,7 +190,7 @@ export const Header: React.FC<HeaderProps> = ({
                   }}
                   className="text-xs uppercase tracking-wider text-[#6a5581] font-semibold flex items-center gap-1.5"
                 >
-                  <span className="material-symbols-outlined text-[16px]">list_alt</span>
+                  <Icon name="list_alt" className="text-[16px]" />
                   Admin Registry ({guestCount})
                 </button>
               ) : (
@@ -204,7 +201,7 @@ export const Header: React.FC<HeaderProps> = ({
                   }}
                   className="text-xs uppercase tracking-wider text-[#7b757e] hover:text-[#6a5581] flex items-center gap-1"
                 >
-                  <span className="material-symbols-outlined text-[14px]">lock</span>
+                  <Icon name="lock" className="text-[14px]" />
                   Admin Login
                 </button>
               )}
@@ -216,7 +213,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Heart Toast feedback */}
       {showHeartToast && (
         <div className="fixed bottom-6 right-6 z-50 bg-[#25123a] text-white px-4 py-2.5 rounded-xl shadow-lg text-xs flex items-center gap-2 animate-fade-in border border-[#efdbff]/30">
-          <span className="material-symbols-outlined text-[#efdbff] text-[18px]">favorite</span>
+          <Icon name="favorite" className="text-[#efdbff] text-[18px]" />
           <span>{isLiked ? 'Date saved in your heart!' : 'Date removed from favorites'}</span>
         </div>
       )}

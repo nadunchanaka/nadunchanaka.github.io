@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { GuestbookNote } from '../types';
+import { Icon } from './Icon';
 
 interface GuestbookModalProps {
   isOpen: boolean;
@@ -66,7 +67,7 @@ export const GuestbookModal: React.FC<GuestbookModalProps> = ({
             aria-label="Close guestbook"
             className="w-8 h-8 rounded-full bg-[#f5f3f7] hover:bg-[#e9e7eb] flex items-center justify-center text-[#4a454d] transition-colors cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[18px]">close</span>
+            <Icon name="close" className="text-[18px]" />
           </button>
         </div>
 
@@ -75,7 +76,7 @@ export const GuestbookModal: React.FC<GuestbookModalProps> = ({
           {/* Submit New Note Form */}
           <div className="bg-[#f5f3f7] rounded-xl p-5 border border-[#ccc4ce]/30">
             <h4 className="font-headline text-base text-[#1b1b1e] font-medium mb-3 flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#6a5581] text-[18px]">edit_note</span>
+              <Icon name="edit_note" className="text-[#6a5581] text-[18px]" />
               <span>Leave a Blessing for the Happy Couple</span>
             </h4>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -108,9 +109,7 @@ export const GuestbookModal: React.FC<GuestbookModalProps> = ({
 
               <div className="flex flex-col sm:flex-row items-center gap-3">
                 <div className="w-full relative flex-1">
-                  <span className="material-symbols-outlined absolute left-3 top-2.5 text-[16px] text-[#6a5581]">
-                    music_note
-                  </span>
+                  <Icon name="music_note" className="absolute left-3 top-2.5 text-[16px] text-[#6a5581]" />
                   <input
                     type="text"
                     value={songRequest}
@@ -165,7 +164,7 @@ export const GuestbookModal: React.FC<GuestbookModalProps> = ({
 
                   {note.songRequest && (
                     <div className="pt-2 border-t border-[#ccc4ce]/20 flex items-center gap-1.5 text-[11px] text-[#6a5581]">
-                      <span className="material-symbols-outlined text-[14px]">music_note</span>
+                      <Icon name="music_note" className="text-[14px]" />
                       <span className="font-medium">Requested: {note.songRequest}</span>
                     </div>
                   )}

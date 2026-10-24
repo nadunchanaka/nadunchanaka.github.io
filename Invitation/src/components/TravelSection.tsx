@@ -1,5 +1,6 @@
 import React from 'react';
 import { RECOMMENDED_HOTELS } from '../data/initialData';
+import { Icon } from './Icon';
 
 interface TravelSectionProps {
   onOpenVenueModal: () => void;
@@ -44,7 +45,7 @@ export const TravelSection: React.FC<TravelSectionProps> = ({ onOpenVenueModal }
               rel="noopener noreferrer"
               className="px-5 py-2.5 bg-[#6a5581] hover:bg-[#846d9b] text-white rounded-xl text-xs uppercase tracking-wider font-semibold transition-colors flex items-center gap-1.5 shadow-sm"
             >
-              <span className="material-symbols-outlined text-[16px]">navigation</span>
+              <Icon name="navigation" className="text-[16px]" />
               <span>Open in Google Maps</span>
             </a>
             <button
@@ -52,7 +53,7 @@ export const TravelSection: React.FC<TravelSectionProps> = ({ onOpenVenueModal }
               type="button"
               className="px-4 py-2.5 bg-[#f5f3f7] text-[#1b1b1e] border border-[#ccc4ce]/40 rounded-xl text-xs uppercase tracking-wider font-semibold hover:bg-[#efedf1] transition-colors inline-flex items-center gap-1.5 cursor-pointer"
             >
-              <span className="material-symbols-outlined text-[16px]">info</span>
+              <Icon name="info" className="text-[16px]" />
               <span>Transit Guide</span>
             </button>
           </div>
@@ -62,7 +63,7 @@ export const TravelSection: React.FC<TravelSectionProps> = ({ onOpenVenueModal }
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-[#6a5581]">
-              <span className="material-symbols-outlined text-[20px]">directions_car</span>
+              <Icon name="directions_car" className="text-[20px]" />
               <h4 className="font-semibold text-xs uppercase tracking-wider text-[#1b1b1e]">
                 Southern Expressway (E01)
               </h4>
@@ -74,7 +75,7 @@ export const TravelSection: React.FC<TravelSectionProps> = ({ onOpenVenueModal }
 
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-[#6a5581]">
-              <span className="material-symbols-outlined text-[20px]">train</span>
+              <Icon name="train" className="text-[20px]" />
               <h4 className="font-semibold text-xs uppercase tracking-wider text-[#1b1b1e]">
                 By Coastal Railway
               </h4>
@@ -86,7 +87,7 @@ export const TravelSection: React.FC<TravelSectionProps> = ({ onOpenVenueModal }
 
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-[#6a5581]">
-              <span className="material-symbols-outlined text-[20px]">flight</span>
+              <Icon name="flight" className="text-[20px]" />
               <h4 className="font-semibold text-xs uppercase tracking-wider text-[#1b1b1e]">
                 Airports &amp; Transfers
               </h4>

@@ -1,5 +1,9 @@
-import React from 'react';
-import { PhotoCarousel } from './PhotoCarousel';
+import React, { Suspense, lazy } from 'react';
+import { Icon } from './Icon';
+
+const PhotoCarousel = lazy(() =>
+  import('./PhotoCarousel').then((m) => ({ default: m.PhotoCarousel }))
+);
 
 interface DetailsSectionProps {
   onOpenGuestbook: () => void;
@@ -46,7 +50,13 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
       </div>
 
       {/* Photo Carousel: Collection of images of the couple */}
-      <PhotoCarousel />
+      <Suspense
+        fallback={
+          <div className="w-full aspect-[16/10] rounded-xl bg-[#f5f3f7] animate-pulse" aria-hidden />
+        }
+      >
+        <PhotoCarousel />
+      </Suspense>
 
       {/* Attire & Guidelines Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -54,7 +64,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
         <div className="bg-white rounded-2xl border border-[#ccc4ce]/40 p-6 md:p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-[#efdbff] flex items-center justify-center text-[#6a5581]">
-              <span className="material-symbols-outlined text-[20px]">checkroom</span>
+              <Icon name="checkroom" className="text-[20px]" />
             </div>
             <div>
               <span className="text-[11px] uppercase tracking-[0.2em] text-[#6a5581] font-semibold block">
@@ -96,7 +106,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
         <div className="bg-white rounded-2xl border border-[#ccc4ce]/40 p-6 md:p-8 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-full bg-[#efdbff] flex items-center justify-center text-[#6a5581]">
-              <span className="material-symbols-outlined text-[20px]">photo_camera</span>
+              <Icon name="photo_camera" className="text-[20px]" />
             </div>
             <div>
               <span className="text-[11px] uppercase tracking-[0.2em] text-[#6a5581] font-semibold block">
@@ -117,7 +127,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
       {/* Gifts & Registry + Guestbook Callout */}
       <div className="bg-[#f5f3f7] rounded-2xl border border-[#ccc4ce]/40 p-8 shadow-sm text-center">
         <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-white flex items-center justify-center text-[#6a5581] shadow-sm">
-          <span className="material-symbols-outlined text-[24px]">card_giftcard</span>
+          <Icon name="card_giftcard" className="text-[24px]" />
         </div>
         <h4 className="font-headline text-2xl text-[#1b1b1e] mb-2">
           Gifts &amp; Well Wishes
@@ -132,7 +142,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
             type="button"
             className="px-6 py-3 bg-[#6a5581] text-white rounded-xl text-xs uppercase tracking-wider font-semibold hover:bg-[#846d9b] transition-colors flex items-center gap-2 cursor-pointer shadow-sm"
           >
-            <span className="material-symbols-outlined text-[18px]">history_edu</span>
+            <Icon name="history_edu" className="text-[18px]" />
             <span>Open Well-Wishes Guestbook</span>
           </button>
           <button
@@ -164,9 +174,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
           className="px-6 py-3.5 bg-[#6a5581] hover:bg-[#846d9b] text-white rounded-xl text-xs uppercase tracking-wider font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow-md shrink-0 group"
         >
           <span>View Celebration Schedule</span>
-          <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
-            arrow_forward
-          </span>
+          <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
     </div>

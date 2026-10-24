@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import couplePainting from '../assets/images/couple_painting_1792833487655.jpg';
-import coupleProposal from '../assets/images/couple_proposal_hudson_1792836119215.jpg';
-import coupleConservatory from '../assets/images/couple_conservatory_walk_1792836119528.jpg';
-import coupleToast from '../assets/images/couple_evening_toast_1792836119973.jpg';
+import couplePainting from '../assets/images/couple_painting.webp';
+import coupleProposal from '../assets/images/couple_proposal.webp';
+import coupleConservatory from '../assets/images/couple_conservatory.webp';
+import coupleToast from '../assets/images/couple_toast.webp';
+import couplePortrait from '../assets/images/couple_portrait.webp';
+import { Icon, type IconName } from './Icon';
 
 export interface CouplePhoto {
   id: string;
@@ -16,7 +18,7 @@ export interface CouplePhoto {
 export const COUPLE_GALLERY: CouplePhoto[] = [
   {
     id: 'photo-portrait',
-    url: './assets/aistudio/image_9f13b1f3.png',
+    url: couplePortrait,
     title: 'Nadun & Chathurika',
     caption: 'When love becomes a promise for eternity, surrounded by warmth and candlelight.',
     location: 'The Glasshouse Conservatory, Hudson Valley',
@@ -145,9 +147,7 @@ export const PhotoCarousel: React.FC = () => {
                 : 'bg-[#f5f3f7] text-[#4a454d] border-[#ccc4ce]/30 hover:bg-[#efedf1]'
             }`}
           >
-            <span className="material-symbols-outlined text-[16px]">
-              {isPlaying ? 'pause' : 'play_arrow'}
-            </span>
+            <Icon name={(isPlaying ? 'pause' : 'play_arrow') as IconName} className="text-[16px]" />
             <span>{isPlaying ? 'Pause' : 'Autoplay'}</span>
           </button>
 
@@ -158,7 +158,7 @@ export const PhotoCarousel: React.FC = () => {
             className="w-8 h-8 rounded-lg bg-[#f5f3f7] text-[#4a454d] hover:text-[#6a5581] hover:bg-[#efedf1] transition-colors flex items-center justify-center cursor-pointer border border-[#ccc4ce]/30"
             title="View Fullscreen"
           >
-            <span className="material-symbols-outlined text-[18px]">fullscreen</span>
+            <Icon name="fullscreen" className="text-[18px]" />
           </button>
         </div>
       </div>
@@ -176,9 +176,8 @@ export const PhotoCarousel: React.FC = () => {
           src={currentPhoto.url}
           alt={currentPhoto.title}
           className="w-full h-full object-cover transition-opacity duration-500 animate-fade-in"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = '/assets/aistudio/Image_1_bb92a67d.png';
-          }}
+          decoding="async"
+          fetchPriority={currentIndex === 0 ? 'high' : 'auto'}
         />
 
         {/* Gradient Scrim for caption */}
@@ -203,7 +202,7 @@ export const PhotoCarousel: React.FC = () => {
           aria-label="Previous photo"
           className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-[#1b1b1e] backdrop-blur-md shadow-md flex items-center justify-center transition-all opacity-80 md:opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer z-10"
         >
-          <span className="material-symbols-outlined text-[20px]">chevron_left</span>
+          <Icon name="chevron_left" className="text-[20px]" />
         </button>
 
         {/* Next Button */}
@@ -213,7 +212,7 @@ export const PhotoCarousel: React.FC = () => {
           aria-label="Next photo"
           className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-[#1b1b1e] backdrop-blur-md shadow-md flex items-center justify-center transition-all opacity-80 md:opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer z-10"
         >
-          <span className="material-symbols-outlined text-[20px]">chevron_right</span>
+          <Icon name="chevron_right" className="text-[20px]" />
         </button>
 
         {/* Slide Counter Badge */}
@@ -239,6 +238,8 @@ export const PhotoCarousel: React.FC = () => {
               src={photo.url}
               alt={photo.title}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+              loading="lazy"
+              decoding="async"
             />
             {currentIndex === idx && (
               <div className="absolute inset-0 bg-[#6a5581]/15 pointer-events-none"></div>
@@ -255,7 +256,7 @@ export const PhotoCarousel: React.FC = () => {
             aria-label="Close fullscreen"
             className="absolute top-6 right-6 w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center transition-colors cursor-pointer z-50"
           >
-            <span className="material-symbols-outlined text-[24px]">close</span>
+            <Icon name="close" className="text-[24px]" />
           </button>
 
           <div className="relative max-w-4xl max-h-[85vh] flex flex-col items-center">
@@ -263,6 +264,7 @@ export const PhotoCarousel: React.FC = () => {
               src={currentPhoto.url}
               alt={currentPhoto.title}
               className="max-h-[70vh] w-auto max-w-full rounded-xl shadow-2xl object-contain border border-white/20"
+              decoding="async"
             />
             <div className="mt-4 text-center text-white space-y-1">
               <h4 className="font-headline text-2xl">{currentPhoto.title}</h4>
@@ -280,7 +282,7 @@ export const PhotoCarousel: React.FC = () => {
                 onClick={prevSlide}
                 className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-xs uppercase tracking-wider flex items-center gap-1 cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[16px]">chevron_left</span>
+                <Icon name="chevron_left" className="text-[16px]" />
                 Previous
               </button>
               <span className="text-xs font-mono text-[#efdbff]">
@@ -291,7 +293,7 @@ export const PhotoCarousel: React.FC = () => {
                 className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg text-xs uppercase tracking-wider flex items-center gap-1 cursor-pointer"
               >
                 Next
-                <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+                <Icon name="chevron_right" className="text-[16px]" />
               </button>
             </div>
           </div>

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import embossedPaper from '../assets/images/embossed_floral_paper_1792839477543.jpg';
+import embossedPaper from '../assets/images/embossed_floral_paper.webp';
+import couplePortrait from '../assets/images/couple_portrait.webp';
+import { Icon } from './Icon';
 
 interface EnvelopeModalProps {
   isOpen: boolean;
@@ -42,7 +44,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
             className="text-xs uppercase tracking-widest text-[#efdbff] hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer bg-white/10 hover:bg-white/20 px-3.5 py-1.5 rounded-full backdrop-blur-sm shadow-sm"
           >
             <span>Skip to RSVP</span>
-            <span className="material-symbols-outlined text-[16px]">close</span>
+            <Icon name="close" className="text-[16px]" />
           </button>
         </div>
 
@@ -59,7 +61,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
           <div className="absolute inset-0 bg-gradient-to-b from-[#faf6f0] via-[#f5ede3] to-[#ebdcc9] flex items-center justify-center p-4">
             {/* Subtle watermark crest */}
             <div className="text-center opacity-15 text-[#6a5581] pointer-events-none select-none">
-              <span className="material-symbols-outlined text-[80px]">filter_vintage</span>
+              <Icon name="filter_vintage" className="text-[80px]" />
               <p className="font-headline italic text-3xl font-light">Nadun &amp; Chathurika</p>
             </div>
           </div>
@@ -83,9 +85,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
           >
             <div className="absolute inset-0 bg-[#faf8f4]/60 backdrop-blur-[1px]"></div>
             <div className="relative h-full flex items-center justify-center pt-1 text-[#b89552]">
-              <span className="material-symbols-outlined text-[24px] drop-shadow-sm">
-                filter_vintage
-              </span>
+              <Icon name="filter_vintage" className="text-[24px] drop-shadow-sm" />
             </div>
           </div>
 
@@ -105,9 +105,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
           >
             <div className="absolute inset-0 bg-[#faf8f4]/60 backdrop-blur-[1px]"></div>
             <div className="relative h-full flex items-center justify-center pb-2 text-[#b89552]">
-              <span className="material-symbols-outlined text-[24px] drop-shadow-sm">
-                filter_vintage
-              </span>
+              <Icon name="filter_vintage" className="text-[24px] drop-shadow-sm" />
             </div>
           </div>
 
@@ -193,9 +191,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
             <div className="relative w-24 h-24 rounded-full flex items-center justify-center shadow-2xl bg-gradient-to-br from-[#f2e2be] via-[#d4af66] to-[#99732f] border-4 border-[#faebcb]/90">
               {/* Embossed flower relief interior */}
               <div className="w-18 h-18 rounded-full border border-[#855e1c]/40 flex flex-col items-center justify-center text-[#543b12] shadow-inner bg-gradient-to-tr from-[#cfa557] via-[#ebcf8f] to-[#be9543]">
-                <span className="material-symbols-outlined text-[34px] drop-shadow-[0_1px_1px_rgba(255,255,255,0.6)]">
-                  filter_vintage
-                </span>
+                <Icon name="filter_vintage" className="text-[34px] drop-shadow-[0_1px_1px_rgba(255,255,255,0.6)]" />
                 <span className="font-headline italic text-[11px] font-bold text-[#45300d] -mt-1 tracking-wider drop-shadow-sm">
                   N&amp;C
                 </span>
@@ -207,9 +203,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
 
             {/* Tap Prompt Label */}
             <div className="mt-4 bg-[#25123a]/90 backdrop-blur-md px-4 py-1.5 rounded-full shadow-lg border border-[#faebcb]/40 flex items-center gap-2">
-              <span className="material-symbols-outlined text-[#faebcb] text-[16px] animate-bounce">
-                touch_app
-              </span>
+              <Icon name="touch_app" className="text-[#faebcb] text-[16px] animate-bounce" />
               <span className="text-[11px] uppercase tracking-widest text-[#faebcb] font-bold">
                 Tap Seal to Open
               </span>
@@ -235,7 +229,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
             <div>
               <div className="inline-flex items-center justify-center gap-2 text-[#6a5581] mb-1">
                 <span className="h-[1px] w-6 bg-[#846d9b]/50"></span>
-                <span className="material-symbols-outlined text-[18px]">local_florist</span>
+                <Icon name="local_florist" className="text-[18px]" />
                 <span className="h-[1px] w-6 bg-[#846d9b]/50"></span>
               </div>
               <span className="text-[10px] uppercase tracking-[0.25em] text-[#6a5581] font-semibold block">
@@ -249,9 +243,11 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
             {/* The Authentic Couple Portrait Photo */}
             <div className="relative mx-auto w-full max-w-xs sm:max-w-sm rounded-xl overflow-hidden shadow-lg border-2 border-[#efdbff] my-2 group">
               <img
-                src="./assets/aistudio/image_9f13b1f3.png"
+                src={couplePortrait}
                 alt="Nadun & Chathurika - Engagement Portrait"
                 className="w-full h-56 sm:h-64 object-cover object-center transform group-hover:scale-102 transition-transform duration-700"
+                fetchPriority="high"
+                decoding="async"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#25123a]/80 via-transparent to-transparent flex flex-col justify-end p-3 text-white text-center">
                 <p className="font-headline italic text-xs sm:text-sm text-white/95">
@@ -279,9 +275,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
                 className="w-full sm:w-auto px-6 py-3 bg-[#6a5581] hover:bg-[#846d9b] text-white rounded-xl text-xs uppercase tracking-[0.2em] font-semibold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 group"
               >
                 <span>Proceed to Celebration &amp; RSVP</span>
-                <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
-                  arrow_forward
-                </span>
+                <Icon name="arrow_forward" className="text-[16px] group-hover:translate-x-1 transition-transform" />
               </button>
 
               <button
@@ -289,7 +283,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
                 type="button"
                 className="w-full sm:w-auto px-4 py-2.5 bg-[#f5f3f7] hover:bg-[#e9e7eb] text-[#4a454d] rounded-xl text-xs uppercase tracking-wider font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
               >
-                <span className="material-symbols-outlined text-[16px]">replay</span>
+                <Icon name="replay" className="text-[16px]" />
                 <span>Re-seal Envelope</span>
               </button>
             </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from './Icon';
 
 interface VenueModalProps {
   isOpen: boolean;
@@ -26,7 +27,7 @@ export const VenueModal: React.FC<VenueModalProps> = ({ isOpen, onClose }) => {
             aria-label="Close venue details"
             className="w-8 h-8 rounded-full bg-[#f5f3f7] hover:bg-[#e9e7eb] flex items-center justify-center text-[#4a454d] transition-colors cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[18px]">close</span>
+            <Icon name="close" className="text-[18px]" />
           </button>
         </div>
 
@@ -55,7 +56,7 @@ export const VenueModal: React.FC<VenueModalProps> = ({ isOpen, onClose }) => {
                 className="text-[#6a5581] font-semibold hover:underline inline-flex items-center gap-1"
               >
                 <span>Open in Google Maps</span>
-                <span className="material-symbols-outlined text-[14px]">open_in_new</span>
+                <Icon name="open_in_new" className="text-[14px]" />
               </a>
             </div>
           </div>
@@ -63,7 +64,7 @@ export const VenueModal: React.FC<VenueModalProps> = ({ isOpen, onClose }) => {
           {/* Valet & Parking */}
           <div className="space-y-1.5">
             <h5 className="font-semibold text-xs uppercase tracking-wider text-[#1b1b1e] flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-[#6a5581] text-[16px]">local_parking</span>
+              <Icon name="local_parking" className="text-[#6a5581] text-[16px]" />
               <span>Complimentary Valet &amp; Parking</span>
             </h5>
             <p className="leading-relaxed">
@@ -74,7 +75,7 @@ export const VenueModal: React.FC<VenueModalProps> = ({ isOpen, onClose }) => {
           {/* Southern Expressway directions */}
           <div className="space-y-1.5">
             <h5 className="font-semibold text-xs uppercase tracking-wider text-[#1b1b1e] flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-[#6a5581] text-[16px]">directions_car</span>
+              <Icon name="directions_car" className="text-[#6a5581] text-[16px]" />
               <span>Southern Expressway (E01)</span>
             </h5>
             <p className="leading-relaxed">
@@ -85,7 +86,7 @@ export const VenueModal: React.FC<VenueModalProps> = ({ isOpen, onClose }) => {
           {/* Train directions */}
           <div className="space-y-1.5">
             <h5 className="font-semibold text-xs uppercase tracking-wider text-[#1b1b1e] flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-[#6a5581] text-[16px]">train</span>
+              <Icon name="train" className="text-[#6a5581] text-[16px]" />
               <span>By Train (Beliatta Terminus)</span>
             </h5>
             <p className="leading-relaxed">

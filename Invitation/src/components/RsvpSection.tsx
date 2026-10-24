@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { GuestRsvp, AttendanceStatus } from '../types';
 import { getGoogleCalendarUrl, downloadIcsFile } from '../utils/calendar';
+import { Icon } from './Icon';
+import couplePortrait from '../assets/images/couple_portrait.webp';
 
 interface RsvpSectionProps {
   onRsvpSubmitted: (rsvp: GuestRsvp) => void;
@@ -118,7 +120,9 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
             <img
               alt="Nadun &amp; Chathurika"
               className="w-full h-80 object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
-              src="./assets/aistudio/image_9f13b1f3.png"
+              src={couplePortrait}
+              fetchPriority="high"
+              decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#25123a]/85 via-[#25123a]/25 to-transparent flex flex-col justify-end p-5 text-white">
               <span className="text-[10px] uppercase tracking-[0.2em] text-[#efdbff] font-semibold mb-0.5">
@@ -136,9 +140,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
           {/* Engagement Soirée Note */}
           <div className="bg-[#f5f3f7] rounded-xl p-5 border border-[#ccc4ce]/30">
             <div className="flex items-start gap-3">
-              <span className="material-symbols-outlined text-[#6a5581] text-[22px] mt-0.5">
-                favorite
-              </span>
+              <Icon name="favorite" className="text-[#6a5581] text-[22px] mt-0.5" />
               <div>
                 <h4 className="font-headline text-base text-[#1b1b1e] font-medium">
                   Engagement Soirée
@@ -163,7 +165,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                 <div className="relative flex items-center justify-center my-auto">
                   <div className="w-20 h-20 rounded-full border border-[#6a5581]/20 flex items-center justify-center bg-[#6a5581]/5 animate-pulse">
                     <div className="w-10 h-10 rounded-full bg-[#6a5581] text-white flex items-center justify-center shadow-md">
-                      <span className="material-symbols-outlined text-[20px]">location_on</span>
+                      <Icon name="location_on" className="text-[20px]" />
                     </div>
                   </div>
                 </div>
@@ -197,7 +199,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                   rel="noopener noreferrer"
                   className="flex-1 py-2 px-3 rounded-lg bg-[#6a5581] hover:bg-[#846d9b] text-white text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors shadow-sm"
                 >
-                  <span className="material-symbols-outlined text-[16px]">navigation</span>
+                  <Icon name="navigation" className="text-[16px]" />
                   <span>Google Maps</span>
                 </a>
                 <button
@@ -206,7 +208,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                   className="py-2 px-3 rounded-lg bg-[#e3e2e6] hover:bg-[#ccc4ce] text-[#1b1b1e] text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1 transition-colors border border-[#ccc4ce]/30 cursor-pointer"
                   title="View Route & Transit Tips"
                 >
-                  <span className="material-symbols-outlined text-[16px]">info</span>
+                  <Icon name="info" className="text-[16px]" />
                   <span>Directions</span>
                 </button>
               </div>
@@ -294,7 +296,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                                 : 'bg-[#e3e2e6] text-[#7b757e]'
                             }`}
                           >
-                            <span className="material-symbols-outlined text-[16px]">check</span>
+                            <Icon name="check" className="text-[16px]" />
                           </div>
                           <span
                             className={`text-[10px] uppercase tracking-widest font-bold ${
@@ -331,7 +333,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                                 : 'bg-[#e3e2e6] text-[#7b757e]'
                             }`}
                           >
-                            <span className="material-symbols-outlined text-[16px]">close</span>
+                            <Icon name="close" className="text-[16px]" />
                           </div>
                           <span
                             className={`text-[10px] uppercase tracking-widest font-bold ${
@@ -442,9 +444,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                       className="w-full py-3.5 bg-[#6a5581] hover:bg-[#846d9b] text-white rounded-xl text-xs uppercase tracking-[0.2em] shadow-md transition-all flex items-center justify-center gap-2 group cursor-pointer font-semibold"
                     >
                       <span>Confirm RSVP</span>
-                      <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
-                        arrow_forward
-                      </span>
+                      <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform" />
                     </button>
                     <p className="text-xs text-[#7b757e] text-center mt-3">
                       Your response will be recorded for Nadun &amp; Chathurika's guest registry.
@@ -458,7 +458,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
             {showFeedback && confirmedRsvp.status === 'accept' && (
               <div className="text-center py-6 px-4 animate-fade-in">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#efdbff] flex items-center justify-center text-[#6a5581] shadow-sm">
-                  <span className="material-symbols-outlined text-[32px]">celebration</span>
+                  <Icon name="celebration" className="text-[32px]" />
                 </div>
                 <span className="text-xs uppercase tracking-[0.22em] text-[#6a5581] font-semibold block mb-1">
                   With Joyful Anticipation
@@ -565,7 +565,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                     className="px-5 py-2.5 rounded-lg bg-[#6a5581] text-white text-xs uppercase tracking-wider font-semibold hover:bg-[#846d9b] transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
                   >
                     <span>View Celebration Details</span>
-                    <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    <Icon name="arrow_forward" className="text-[16px]" />
                   </button>
 
                   <div className="relative inline-block">
@@ -574,9 +574,9 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                       type="button"
                       className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-[#f5f3f7] text-[#1b1b1e] border border-[#ccc4ce]/40 text-xs uppercase tracking-wider font-semibold hover:bg-[#efedf1] transition-colors inline-flex items-center justify-center gap-1.5 cursor-pointer"
                     >
-                      <span className="material-symbols-outlined text-[16px]">calendar_add_on</span>
+                      <Icon name="calendar_add_on" className="text-[16px]" />
                       <span>Add to Calendar</span>
-                      <span className="material-symbols-outlined text-[16px]">expand_more</span>
+                      <Icon name="expand_more" className="text-[16px]" />
                     </button>
 
                     {calendarMenuOpen && (
@@ -588,9 +588,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                           onClick={() => setCalendarMenuOpen(false)}
                           className="flex items-center gap-2 px-3 py-2 text-xs text-[#1b1b1e] hover:bg-[#f5f3f7] rounded-lg transition-colors"
                         >
-                          <span className="material-symbols-outlined text-[#6a5581] text-[18px]">
-                            event
-                          </span>
+                          <Icon name="event" className="text-[#6a5581] text-[18px]" />
                           <span>Google Calendar</span>
                         </a>
                         <button
@@ -601,9 +599,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
                           type="button"
                           className="w-full flex items-center gap-2 px-3 py-2 text-xs text-[#1b1b1e] hover:bg-[#f5f3f7] rounded-lg transition-colors text-left cursor-pointer"
                         >
-                          <span className="material-symbols-outlined text-[#6a5581] text-[18px]">
-                            download
-                          </span>
+                          <Icon name="download" className="text-[#6a5581] text-[18px]" />
                           <span>Apple / Outlook (.ics)</span>
                         </button>
                       </div>
@@ -625,7 +621,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
             {showFeedback && confirmedRsvp.status === 'decline' && (
               <div className="text-center py-10 px-4 animate-fade-in">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#e9e7eb] flex items-center justify-center text-[#7b757e] shadow-sm">
-                  <span className="material-symbols-outlined text-[32px]">favorite_border</span>
+                  <Icon name="favorite_border" className="text-[32px]" />
                 </div>
                 <span className="text-xs uppercase tracking-[0.22em] text-[#7b757e] font-semibold block mb-1">
                   With Sincere Fondness

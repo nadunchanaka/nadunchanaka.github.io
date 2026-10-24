@@ -1,4 +1,5 @@
 import React from 'react';
+import { Icon } from './Icon';
 
 interface MetadataStripProps {
   onOpenVenueModal?: () => void;
@@ -11,9 +12,7 @@ export const MetadataStrip: React.FC<MetadataStripProps> = ({ onOpenVenueModal }
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 divide-y md:divide-y-0 md:divide-x divide-[#ccc4ce]/30 text-center">
           {/* Date */}
           <div className="flex flex-col items-center justify-center p-2">
-            <span className="material-symbols-outlined text-[#6a5581] text-[20px] mb-1">
-              calendar_today
-            </span>
+            <Icon name="calendar_today" className="text-[#6a5581] text-[20px] mb-1" />
             <span className="text-[11px] uppercase tracking-widest text-[#6a5581] font-semibold">
               Date
             </span>
@@ -25,9 +24,7 @@ export const MetadataStrip: React.FC<MetadataStripProps> = ({ onOpenVenueModal }
 
           {/* Commencement */}
           <div className="flex flex-col items-center justify-center p-2 pt-4 md:pt-2">
-            <span className="material-symbols-outlined text-[#6a5581] text-[20px] mb-1">
-              schedule
-            </span>
+            <Icon name="schedule" className="text-[#6a5581] text-[20px] mb-1" />
             <span className="text-[11px] uppercase tracking-widest text-[#6a5581] font-semibold">
               Commencement
             </span>
@@ -43,9 +40,7 @@ export const MetadataStrip: React.FC<MetadataStripProps> = ({ onOpenVenueModal }
             className="flex flex-col items-center justify-center p-2 pt-4 md:pt-2 cursor-pointer group"
             title="Click to view venue & transit details"
           >
-            <span className="material-symbols-outlined text-[#6a5581] text-[20px] mb-1 group-hover:scale-110 transition-transform">
-              location_on
-            </span>
+            <Icon name="location_on" className="text-[#6a5581] text-[20px] mb-1 group-hover:scale-110 transition-transform" />
             <span className="text-[11px] uppercase tracking-widest text-[#6a5581] font-semibold">
               Venue
             </span>
@@ -57,9 +52,7 @@ export const MetadataStrip: React.FC<MetadataStripProps> = ({ onOpenVenueModal }
 
           {/* Kindly Respond */}
           <div className="flex flex-col items-center justify-center p-2 pt-4 md:pt-2">
-            <span className="material-symbols-outlined text-[#6a5581] text-[20px] mb-1">
-              mark_email_read
-            </span>
+            <Icon name="mark_email_read" className="text-[#6a5581] text-[20px] mb-1" />
             <span className="text-[11px] uppercase tracking-widest text-[#6a5581] font-semibold">
               Kindly Respond
             </span>

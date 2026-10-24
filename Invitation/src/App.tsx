@@ -1,18 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { TabType, GuestRsvp, GuestbookNote } from './types';
 import { INITIAL_GUESTS, INITIAL_GUESTBOOK_NOTES } from './data/initialData';
 import { Header } from './components/Header';
 import { MetadataStrip } from './components/MetadataStrip';
 import { RsvpSection } from './components/RsvpSection';
-import { DetailsSection } from './components/DetailsSection';
-import { ScheduleSection } from './components/ScheduleSection';
-import { TravelSection } from './components/TravelSection';
-import { RegistryDrawer } from './components/RegistryDrawer';
-import { GuestbookModal } from './components/GuestbookModal';
-import { VenueModal } from './components/VenueModal';
-import { EnvelopeModal } from './components/EnvelopeModal';
-import { AdminLoginModal } from './components/AdminLoginModal';
 import { Footer } from './components/Footer';
+import { Icon } from './components/Icon';
+import { EnvelopeModal } from './components/EnvelopeModal';
+
+const DetailsSection = lazy(() =>
+  import('./components/DetailsSection').then((m) => ({ default: m.DetailsSection }))
+);
+const ScheduleSection = lazy(() =>
+  import('./components/ScheduleSection').then((m) => ({ default: m.ScheduleSection }))
+);
+const TravelSection = lazy(() =>
+  import('./components/TravelSection').then((m) => ({ default: m.TravelSection }))
+);
+const RegistryDrawer = lazy(() =>
+  import('./components/RegistryDrawer').then((m) => ({ default: m.RegistryDrawer }))
+);
+const GuestbookModal = lazy(() =>
+  import('./components/GuestbookModal').then((m) => ({ default: m.GuestbookModal }))
+);
+const VenueModal = lazy(() =>
+  import('./components/VenueModal').then((m) => ({ default: m.VenueModal }))
+);
+const AdminLoginModal = lazy(() =>
+  import('./components/AdminLoginModal').then((m) => ({ default: m.AdminLoginModal }))
+);
+
+function TabFallback() {
+  return (
+    <div className="max-w-5xl mx-auto px-6 py-16 flex justify-center" aria-hidden>
+      <div className="h-8 w-8 rounded-full border-2 border-[#6a5581]/30 border-t-[#6a5581] animate-spin" />
+    </div>
+  );
+}
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<TabType>('rsvp');
@@ -21,7 +45,6 @@ export default function App() {
   const [isVenueModalOpen, setIsVenueModalOpen] = useState(false);
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
 
-  // Admin authentication state
   const [isAdmin, setIsAdmin] = useState<boolean>(() => {
     try {
       return localStorage.getItem('nc_admin_logged_in') === 'true';
@@ -30,7 +53,6 @@ export default function App() {
     }
   });
 
-  // Visitor confirmation state
   const [confirmedRsvp, setConfirmedRsvp] = useState<GuestRsvp | null>(() => {
     try {
       const saved = localStorage.getItem('nc_confirmed_rsvp');
@@ -42,7 +64,6 @@ export default function App() {
 
   const isConfirmed = !!confirmedRsvp;
 
-  // Envelope modal state - shows on first visit, or when replayed
   const [showEnvelope, setShowEnvelope] = useState<boolean>(() => {
     try {
       const seen = sessionStorage.getItem('nc_envelope_seen');
@@ -52,7 +73,6 @@ export default function App() {
     }
   });
 
-  // Local storage persistence for RSVPs
   const [rsvps, setRsvps] = useState<GuestRsvp[]>(() => {
     try {
       const saved = localStorage.getItem('nc_rsvps');
@@ -62,7 +82,6 @@ export default function App() {
     }
   });
 
-  // Local storage persistence for Guestbook notes
   const [guestbookNotes, setGuestbookNotes] = useState<GuestbookNote[]>(() => {
     try {
       const saved = localStorage.getItem('nc_guestbook');
@@ -91,7 +110,6 @@ export default function App() {
       localStorage.setItem('nc_confirmed_rsvp', JSON.stringify(newRsvp));
     } catch {}
 
-    // Auto-add message to guestbook if provided
     if (newRsvp.message && newRsvp.message.trim().length > 0) {
       const autoNote: GuestbookNote = {
         id: `note-rsvp-${Date.now()}`,
@@ -140,7 +158,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#fbf8fc] text-[#1b1b1e] flex flex-col font-body selection:bg-[#efdbff] selection:text-[#25123a]">
-      {/* 1. Header with Top Bar Contract & Role-Based Affordances */}
       <Header
         currentTab={currentTab}
         onSelectTab={handleTabSelect}
@@ -153,11 +170,10 @@ export default function App() {
         isConfirmed={isConfirmed}
       />
 
-      {/* Admin Mode Ribbon if logged in */}
       {isAdmin && (
         <div className="bg-[#25123a] text-white text-xs py-2 px-6 flex items-center justify-between sticky top-20 z-30 border-b border-[#efdbff]/30">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#efdbff] text-[16px]">verified_user</span>
+            <Icon name="verified_user" className="text-[#efdbff] text-[16px]" />
             <span className="font-semibold tracking-wider uppercase text-[11px]">
               Organizer Admin Mode Active
             </span>
@@ -170,7 +186,7 @@ export default function App() {
               onClick={() => setIsRegistryOpen(true)}
               className="text-[#efdbff] hover:text-white font-semibold underline text-xs cursor-pointer flex items-center gap-1"
             >
-              <span className="material-symbols-outlined text-[14px]">table_chart</span>
+              <Icon name="table_chart" className="text-[14px]" />
               <span>Open Guest Registry</span>
             </button>
             <button
@@ -184,13 +200,11 @@ export default function App() {
       )}
 
       <main className="w-full pt-20 flex-1">
-        {/* 2. Hero Section */}
         <section className="relative w-full pt-12 pb-8 px-6 overflow-hidden">
           <div className="max-w-4xl mx-auto text-center relative z-10">
-            {/* Florist insignia */}
             <div className="inline-flex items-center justify-center gap-2 text-[#6a5581] mb-3">
               <span className="h-[1px] w-6 bg-[#846d9b]/60"></span>
-              <span className="material-symbols-outlined text-[18px]">local_florist</span>
+              <Icon name="local_florist" className="text-[18px]" />
               <span className="h-[1px] w-6 bg-[#846d9b]/60"></span>
             </div>
 
@@ -204,24 +218,21 @@ export default function App() {
               Nadun &amp; Chathurika warmly invite you to celebrate their engagement and upcoming union with an evening of music, dining, and shared joy.
             </p>
 
-            {/* Quick Unfolded Envelope Replay Link */}
             <div className="mt-4">
               <button
                 onClick={handleReplayEnvelope}
                 type="button"
                 className="inline-flex items-center gap-1.5 text-xs text-[#6a5581] hover:text-[#846d9b] font-medium tracking-wide underline cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[16px]">mail</span>
+                <Icon name="mail" className="text-[16px]" />
                 <span>Open Formal Wedding Envelope &amp; Couple Portrait</span>
               </button>
             </div>
           </div>
         </section>
 
-        {/* 3. Essential Event Metadata Strip */}
         <MetadataStrip onOpenVenueModal={() => setIsVenueModalOpen(true)} />
 
-        {/* 4. Tab Content Area */}
         {currentTab === 'rsvp' && (
           <RsvpSection
             onRsvpSubmitted={handleRsvpSubmitted}
@@ -231,65 +242,66 @@ export default function App() {
           />
         )}
 
-        {currentTab === 'details' && (
-          <DetailsSection
-            onOpenGuestbook={() => setIsGuestbookOpen(true)}
-            onGoToRsvp={() => handleTabSelect('rsvp')}
-            onGoToSchedule={() => handleTabSelect('schedule')}
-          />
-        )}
+        <Suspense fallback={<TabFallback />}>
+          {currentTab === 'details' && (
+            <DetailsSection
+              onOpenGuestbook={() => setIsGuestbookOpen(true)}
+              onGoToRsvp={() => handleTabSelect('rsvp')}
+              onGoToSchedule={() => handleTabSelect('schedule')}
+            />
+          )}
 
-        {currentTab === 'schedule' && (
-          <ScheduleSection
-            onGoToTravel={() => handleTabSelect('travel')}
-          />
-        )}
+          {currentTab === 'schedule' && (
+            <ScheduleSection onGoToTravel={() => handleTabSelect('travel')} />
+          )}
 
-        {currentTab === 'travel' && (
-          <TravelSection onOpenVenueModal={() => setIsVenueModalOpen(true)} />
-        )}
+          {currentTab === 'travel' && (
+            <TravelSection onOpenVenueModal={() => setIsVenueModalOpen(true)} />
+          )}
+        </Suspense>
       </main>
 
-      {/* 5. Minimalist Editorial Footer */}
       <Footer
         onOpenRegistry={() => setIsRegistryOpen(true)}
         onOpenAdminLogin={() => setIsAdminLoginOpen(true)}
         isAdmin={isAdmin}
       />
 
-      {/* 6. Classic Wedding Envelope Pop-up Unfolding Animation with Painting */}
-      <EnvelopeModal
-        isOpen={showEnvelope}
-        onClose={handleCloseEnvelope}
-      />
+      <EnvelopeModal isOpen={showEnvelope} onClose={handleCloseEnvelope} />
 
-      {/* 7. Organizer Admin Login Modal */}
-      <AdminLoginModal
-        isOpen={isAdminLoginOpen}
-        onClose={() => setIsAdminLoginOpen(false)}
-        onLoginSuccess={handleAdminLoginSuccess}
-      />
+      <Suspense fallback={null}>
+        {isAdminLoginOpen && (
+          <AdminLoginModal
+            isOpen={isAdminLoginOpen}
+            onClose={() => setIsAdminLoginOpen(false)}
+            onLoginSuccess={handleAdminLoginSuccess}
+          />
+        )}
 
-      {/* 8. Admin Guest Registry Drawer */}
-      <RegistryDrawer
-        isOpen={isRegistryOpen}
-        onClose={() => setIsRegistryOpen(false)}
-        rsvps={rsvps}
-      />
+        {isRegistryOpen && (
+          <RegistryDrawer
+            isOpen={isRegistryOpen}
+            onClose={() => setIsRegistryOpen(false)}
+            rsvps={rsvps}
+          />
+        )}
 
-      {/* 9. Interactive Well-Wishes Guestbook Modal */}
-      <GuestbookModal
-        isOpen={isGuestbookOpen}
-        onClose={() => setIsGuestbookOpen(false)}
-        notes={guestbookNotes}
-        onAddNote={(note) => setGuestbookNotes((prev) => [note, ...prev])}
-      />
+        {isGuestbookOpen && (
+          <GuestbookModal
+            isOpen={isGuestbookOpen}
+            onClose={() => setIsGuestbookOpen(false)}
+            notes={guestbookNotes}
+            onAddNote={(note) => setGuestbookNotes((prev) => [note, ...prev])}
+          />
+        )}
 
-      {/* 10. Interactive Venue Directions Modal */}
-      <VenueModal
-        isOpen={isVenueModalOpen}
-        onClose={() => setIsVenueModalOpen(false)}
-      />
+        {isVenueModalOpen && (
+          <VenueModal
+            isOpen={isVenueModalOpen}
+            onClose={() => setIsVenueModalOpen(false)}
+          />
+        )}
+      </Suspense>
     </div>
   );
 }

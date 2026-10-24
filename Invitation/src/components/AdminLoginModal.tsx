@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Icon, type IconName } from './Icon';
 
 interface AdminLoginModalProps {
   isOpen: boolean;
@@ -42,7 +43,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
         <div className="p-6 bg-[#fbf8fc] border-b border-[#ccc4ce]/30 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-full bg-[#efdbff] flex items-center justify-center text-[#6a5581]">
-              <span className="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+              <Icon name="admin_panel_settings" className="text-[18px]" />
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-[0.2em] text-[#6a5581] font-semibold block">
@@ -58,7 +59,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
             aria-label="Close login modal"
             className="w-8 h-8 rounded-full bg-[#f5f3f7] hover:bg-[#e9e7eb] flex items-center justify-center text-[#4a454d] transition-colors cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[18px]">close</span>
+            <Icon name="close" className="text-[18px]" />
           </button>
         </div>
 
@@ -89,14 +90,12 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-2.5 text-[#7b757e] hover:text-[#1b1b1e] cursor-pointer"
               >
-                <span className="material-symbols-outlined text-[18px]">
-                  {showPassword ? 'visibility_off' : 'visibility'}
-                </span>
+                <Icon name={(showPassword ? 'visibility_off' : 'visibility') as IconName} className="text-[18px]" />
               </button>
             </div>
             {error && (
               <p className="text-xs text-[#ba1a1a] mt-1.5 flex items-center gap-1 font-medium">
-                <span className="material-symbols-outlined text-[14px]">error</span>
+                <Icon name="error" className="text-[14px]" />
                 <span>Incorrect passcode. Please try again.</span>
               </p>
             )}
@@ -127,7 +126,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
               className="px-5 py-2 rounded-lg bg-[#6a5581] hover:bg-[#846d9b] text-white text-xs uppercase tracking-wider font-semibold shadow-sm transition-colors cursor-pointer flex items-center gap-1.5"
             >
               <span>Unlock Admin Portal</span>
-              <span className="material-symbols-outlined text-[16px]">lock_open</span>
+              <Icon name="lock_open" className="text-[16px]" />
             </button>
           </div>
         </form>

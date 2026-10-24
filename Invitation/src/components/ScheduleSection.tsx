@@ -1,6 +1,7 @@
 import React from 'react';
 import { SCHEDULE_EVENTS } from '../data/initialData';
 import { getGoogleCalendarUrl, downloadIcsFile } from '../utils/calendar';
+import { Icon } from './Icon';
 
 interface ScheduleSectionProps {
   onGoToTravel: () => void;
@@ -48,7 +49,7 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({ onGoToTravel }
                   {item.title}
                 </h3>
                 <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#4e6447] bg-[#cde7c2]/40 px-2.5 py-1 rounded-md shrink-0">
-                  <span className="material-symbols-outlined text-[14px]">pin_drop</span>
+                  <Icon name="pin_drop" className="text-[14px]" />
                   <span>{item.location}</span>
                 </span>
               </div>
@@ -75,7 +76,7 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({ onGoToTravel }
             rel="noopener noreferrer"
             className="px-4 py-2 bg-[#6a5581] text-white rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-[#846d9b] transition-colors inline-flex items-center gap-1.5"
           >
-            <span className="material-symbols-outlined text-[16px]">calendar_today</span>
+            <Icon name="calendar_today" className="text-[16px]" />
             <span>Google Calendar</span>
           </a>
           <button
@@ -83,7 +84,7 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({ onGoToTravel }
             type="button"
             className="px-4 py-2 bg-white text-[#1b1b1e] border border-[#ccc4ce]/50 rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-[#efedf1] transition-colors inline-flex items-center gap-1.5 cursor-pointer"
           >
-            <span className="material-symbols-outlined text-[16px]">download</span>
+            <Icon name="download" className="text-[16px]" />
             <span>Apple / Outlook (.ics)</span>
           </button>
         </div>
@@ -108,9 +109,7 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({ onGoToTravel }
           className="px-6 py-3.5 bg-[#6a5581] hover:bg-[#846d9b] text-white rounded-xl text-xs uppercase tracking-wider font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow-md shrink-0 group"
         >
           <span>Plan Your Travel</span>
-          <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
-            arrow_forward
-          </span>
+          <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
     </div>

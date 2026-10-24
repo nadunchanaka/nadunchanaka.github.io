@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev.html --port=3000 --host=0.0.0.0",
-    "build": "vite build && node -e \"const fs=require('fs'); fs.copyFileSync('dist/dev.html', 'dist/index.html'); fs.copyFileSync('dist/dev.html', 'index.html'); fs.cpSync('dist/assets', 'assets', {recursive: true});\"",
+    "build": "vite build && node -e \"const fs=require('fs'); fs.copyFileSync('dist/dev.html', 'dist/index.html'); fs.copyFileSync('dist/dev.html', 'index.html'); fs.rmSync('assets', {recursive: true, force: true}); fs.cpSync('dist/assets', 'assets', {recursive: true});\"",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit"
