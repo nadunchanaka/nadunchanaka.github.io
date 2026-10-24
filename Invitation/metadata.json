@@ -1,0 +1,6 @@
+{
+  "name": "Nadun & Chathurika - Engagement Celebration",
+  "description": "Formal engagement invitation and RSVP portal for Nadun & Chathurika at Grand Landewela, Beliatta, Sri Lanka on 20 November 2026.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
