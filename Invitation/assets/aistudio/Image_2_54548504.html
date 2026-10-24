@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="web_standard" name="shell-type"/>
+<title>Engagement RSVP — Nadun &amp; Chathurika</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "inverse-surface": "#303033",
+            "primary-container": "#846d9b",
+            "secondary-container": "#cde7c2",
+            "on-tertiary": "#ffffff",
+            "secondary": "#4e6447",
+            "surface-bright": "#fbf8fc",
+            "on-tertiary-container": "#ffffff",
+            "secondary-fixed": "#d0eac5",
+            "on-primary-fixed": "#25123a",
+            "surface-dim": "#dbd9dd",
+            "on-error-container": "#93000a",
+            "on-tertiary-fixed-variant": "#4f4060",
+            "tertiary": "#675878",
+            "error": "#ba1a1a",
+            "primary": "#6a5581",
+            "tertiary-fixed-dim": "#d3bfe5",
+            "secondary-fixed-dim": "#b5ceaa",
+            "on-primary": "#ffffff",
+            "error-container": "#ffdad6",
+            "primary-fixed-dim": "#d7bcef",
+            "tertiary-fixed": "#efdbff",
+            "on-background": "#1b1b1e",
+            "surface-variant": "#e3e2e6",
+            "outline": "#7b757e",
+            "surface-container-low": "#f5f3f7",
+            "surface-container-highest": "#e3e2e6",
+            "surface-container": "#efedf1",
+            "on-surface-variant": "#4a454d",
+            "surface": "#fbf8fc",
+            "on-surface": "#1b1b1e",
+            "on-tertiary-fixed": "#231532",
+            "tertiary-container": "#817092",
+            "background": "#fbf8fc",
+            "on-secondary-container": "#52694b",
+            "on-secondary-fixed": "#0c2009",
+            "inverse-on-surface": "#f2f0f4",
+            "surface-tint": "#6b5581",
+            "on-primary-container": "#ffffff",
+            "surface-container-high": "#e9e7eb",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed-variant": "#374c31",
+            "primary-fixed": "#efdbff",
+            "inverse-primary": "#d7bcef",
+            "on-error": "#ffffff",
+            "on-primary-fixed-variant": "#523e68",
+            "outline-variant": "#ccc4ce",
+            "on-secondary": "#ffffff"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          spacing: {
+            "space-md": "1rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2.5rem",
+            "margin-mobile": "1.25rem",
+            "space-2xl": "4rem",
+            gutter: "1.5rem",
+            "space-sm": "0.5rem",
+            "space-lg": "1.75rem",
+            margin: "3rem",
+            "gutter-mobile": "1rem"
+          },
+          fontFamily: {
+            "headline-lg": ["Playfair Display", "serif"],
+            "headline-md": ["Playfair Display", "serif"],
+            "headline-sm": ["Playfair Display", "serif"],
+            "title-md": ["Plus Jakarta Sans", "sans-serif"],
+            "body-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "body-md": ["Plus Jakarta Sans", "sans-serif"],
+            "body-sm": ["Plus Jakarta Sans", "sans-serif"],
+            "label-lg": ["Plus Jakarta Sans", "sans-serif"],
+            "label-md": ["Plus Jakarta Sans", "sans-serif"],
+            "label-sm": ["Plus Jakarta Sans", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Header -->
+<header class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30">
+<div class="h-20 max-w-6xl mx-auto px-gutter flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-headline-sm italic text-lg font-normal shadow-sm">
+          N&amp;C
+        </div>
+<a class="font-headline-sm text-lg tracking-wider text-on-surface hover:text-primary transition-colors" href="#">
+          Nadun &amp; Chathurika
+        </a>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-xs uppercase tracking-[0.16em] font-medium text-on-surface-variant hover:text-primary transition-colors" href="#">Details</a>
+<a class="text-xs uppercase tracking-[0.16em] font-medium text-on-surface-variant hover:text-primary transition-colors" href="#">Schedule</a>
+<a class="text-xs uppercase tracking-[0.16em] font-medium text-on-surface-variant hover:text-primary transition-colors" href="#">Travel</a>
+<a class="text-xs uppercase tracking-[0.16em] font-semibold text-primary border-b-2 border-primary pb-1" href="#">RSVP</a>
+</nav>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</div>
+</div>
+</div>
+</header>
+<main class="w-full pt-20 bg-surface min-h-screen">
+<!-- Hero / Headline Section -->
+<section class="relative w-full pt-12 pb-8 px-gutter overflow-hidden">
+<div class="max-w-4xl mx-auto text-center relative z-10">
+<div class="inline-flex items-center justify-center gap-2 text-primary mb-3">
+<span class="h-[1px] w-6 bg-primary-container/60"></span>
+<span class="material-symbols-outlined text-[18px]">local_florist</span>
+<span class="h-[1px] w-6 bg-primary-container/60"></span>
+</div>
+<p class="text-xs uppercase tracking-[0.25em] text-primary font-semibold mb-2">The Joy of Our Engagement</p>
+<h1 class="font-headline-lg text-3xl md:text-5xl text-on-surface mb-3 font-normal tracking-tight">Celebrating Our Engagement</h1>
+<p class="font-headline-sm text-base md:text-xl italic text-on-surface-variant max-w-2xl mx-auto font-light">Nadun &amp; Chathurika warmly invite you to celebrate their engagement and upcoming union with an evening of music, dining, and shared joy.</p>
+</div>
+</section>
+<!-- Essential Event Metadata Strip -->
+<div class="max-w-5xl mx-auto px-gutter mb-12">
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/40 p-4 md:p-6 shadow-sm">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 divide-y md:divide-y-0 md:divide-x divide-outline-variant/30 text-center">
+<div class="flex flex-col items-center justify-center p-2">
+<span class="material-symbols-outlined text-primary text-[20px] mb-1">calendar_today</span>
+<span class="text-[11px] uppercase tracking-widest text-primary font-semibold">Date</span>
+<span class="font-headline-sm text-sm md:text-base text-on-surface font-medium mt-0.5">Saturday, Sep 20, 2025</span>
+<span class="text-xs text-on-surface-variant">Engagement Soirée</span>
+</div>
+<div class="flex flex-col items-center justify-center p-2 pt-4 md:pt-2">
+<span class="material-symbols-outlined text-primary text-[20px] mb-1">schedule</span>
+<span class="text-[11px] uppercase tracking-widest text-primary font-semibold">Commencement</span>
+<span class="font-headline-sm text-sm md:text-base text-on-surface font-medium mt-0.5">4:30 PM EDT</span>
+<span class="text-xs text-on-surface-variant">Dinner &amp; Dancing to follow</span>
+</div>
+<div class="flex flex-col items-center justify-center p-2 pt-4 md:pt-2">
+<span class="material-symbols-outlined text-primary text-[20px] mb-1">location_on</span>
+<span class="text-[11px] uppercase tracking-widest text-primary font-semibold">Venue</span>
+<span class="font-headline-sm text-sm md:text-base text-on-surface font-medium mt-0.5">The Glasshouse</span>
+<span class="text-xs text-on-surface-variant">Hudson Valley, New York</span>
+</div>
+<div class="flex flex-col items-center justify-center p-2 pt-4 md:pt-2">
+<span class="material-symbols-outlined text-primary text-[20px] mb-1">mark_email_read</span>
+<span class="text-[11px] uppercase tracking-widest text-primary font-semibold">Kindly Respond</span>
+<span class="inline-block mt-1 bg-primary-fixed text-on-primary-fixed px-2.5 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider">
+              By August 15, 2025
+            </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Main RSVP Card Layout -->
+<div class="max-w-5xl mx-auto px-gutter pb-16">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<!-- Refined Lilac Side Image & Celebration Note -->
+<div class="lg:col-span-4 flex flex-col gap-5">
+<div class="relative rounded-xl overflow-hidden shadow-sm border border-outline-variant/30 group">
+<img alt="Serene Lilac Florals" class="w-full h-80 object-cover transform group-hover:scale-105 transition-transform duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsXqiswCisrOCB5Z6KaDcW-Rr3GMDtT_kjOZ7o0SxLNZd7YliDd_yAcRxuDLv2NnQn81_uQ7zPwQqZ0vwvmEy8sO385fSL-Qp3eO1Cg5yQ24GRt-_N7rjqa-kY8-x9CHPeMod386lJ2jM8OkZeE6RCP2GOEZy3m6Kv4LOQjiKf6HaF1ela7CbkQrWsenkdPnpanu8EkvAckQq-_ajRJN3NHn5vXrsr5xWzmk-TyLufcwVTaJGMB-_oFm7WZG2gq2KOXAs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/70 via-inverse-surface/20 to-transparent flex flex-col justify-end p-5 text-white">
+<span class="text-[10px] uppercase tracking-[0.2em] text-primary-fixed font-semibold mb-0.5">Botanical Splendor</span>
+<h3 class="font-headline-sm text-lg text-white font-normal">Nadun &amp; Chathurika</h3>
+<p class="text-xs text-white/80 mt-1">Surrounded by vibrant blooms, soft lilacs, and loved ones.</p>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl p-5 border border-outline-variant/30">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[22px] mt-0.5">favorite</span>
+<div><h4 class="font-headline-sm text-base text-on-surface font-medium">Engagement Soirée</h4>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">
+  Join us for celebratory champagne, sunset hors d'oeuvres, and an intimate toast in honour of our betrothal under the glass conservatory. Cocktail formal attire.
+</p></div>
+</div>
+</div><div class="bg-surface-container-low rounded-xl border border-outline-variant/30 overflow-hidden shadow-sm">
+<div class="relative h-36 bg-surface-container-high overflow-hidden border-b border-outline-variant/30 group">
+<!-- Styled Map Graphic Mockup -->
+<div class="absolute inset-0 bg-[#e8e4ec] opacity-90 flex flex-col justify-between p-3">
+<div class="w-full flex justify-between items-center text-[10px] uppercase font-bold text-outline tracking-wider">
+<span>Hudson Valley, NY</span>
+<span class="flex items-center gap-1 text-primary"><span class="w-2 h-2 rounded-full bg-primary"></span> 41.5033° N</span>
+</div>
+<div class="relative flex items-center justify-center my-auto">
+<div class="w-20 h-20 rounded-full border border-primary/20 flex items-center justify-center bg-primary/5 animate-pulse">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-[20px]">location_on</span>
+</div>
+</div>
+</div>
+<div class="text-[10px] font-semibold text-center text-primary bg-surface/90 backdrop-blur-sm py-0.5 rounded">
+        The Glasshouse Conservatory &amp; Gardens
+      </div>
+</div>
+</div>
+<div class="p-4 space-y-3">
+<div class="flex items-start justify-between gap-2">
+<div>
+<h5 class="font-headline-sm text-sm text-on-surface font-semibold">The Glasshouse</h5>
+<p class="text-xs text-on-surface-variant mt-0.5">480 Route 9D, Cold Spring, Hudson Valley, NY</p>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-primary-fixed text-on-primary-fixed shrink-0">
+        Venue
+      </span>
+</div>
+<p class="text-[11px] text-on-surface-variant leading-relaxed">
+<strong class="font-semibold text-on-surface">Arrival:</strong> Complimentary valet available at the Main Conservatory gates starting at 4:00 PM EDT.
+    </p>
+<a class="w-full py-2 px-3 rounded-lg bg-surface-container-highest hover:bg-primary hover:text-on-primary text-on-surface text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors border border-outline-variant/30" href="https://maps.google.com" rel="noopener" target="_blank">
+<span class="material-symbols-outlined text-[16px]">map</span>
+<span>Get Directions</span>
+</a>
+</div>
+</div>
+</div>
+<!-- RSVP Form Section -->
+<div class="lg:col-span-8">
+<div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/40 p-6 md:p-10 relative">
+<!-- Default Form Container -->
+<div id="rsvp-form-container">
+<div class="text-center mb-8">
+<span class="text-[11px] uppercase tracking-[0.22em] text-primary font-semibold block mb-1">Formal Reservation</span>
+<h2 class="font-headline-lg text-2xl md:text-3xl text-on-surface">Confirm Your Attendance</h2>
+<div class="w-12 h-0.5 bg-primary-container/40 mx-auto mt-3"></div>
+</div>
+<form class="space-y-6" id="rsvp-form">
+<!-- Guest Names -->
+<div>
+<label class="block text-xs uppercase tracking-wider text-on-surface font-semibold mb-2" for="guest-names">
+                    Full Name of Guest(s) <span class="text-error">*</span>
+</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg text-on-surface px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-outline" id="guest-names" name="names" placeholder="e.g. Nadun Perera &amp; Chathurika Silva" required="" type="text"/>
+<p class="text-xs text-outline mt-1.5 italic">Kindly list each attendee as indicated on your envelope.</p>
+</div>
+<!-- Email Address -->
+<div>
+<label class="block text-xs uppercase tracking-wider text-on-surface font-semibold mb-2" for="guest-email">
+                    Email Address for Confirmation <span class="text-error">*</span>
+</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg text-on-surface px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all placeholder:text-outline" id="guest-email" name="email" placeholder="nadun.chathurika@example.com" required="" type="email"/>
+</div>
+<!-- Attendance Toggle Cards -->
+<div>
+<span class="block text-xs uppercase tracking-wider text-on-surface font-semibold mb-2.5">
+                    Will You Be Attending? <span class="text-error">*</span>
+</span>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="attendance-options">
+<!-- Accept -->
+<label class="cursor-pointer p-4 rounded-xl flex flex-col justify-between bg-surface-container-low border-2 border-primary transition-all hover:bg-surface-container" id="label-accept">
+<input checked="" class="sr-only" name="attendance" onchange="toggleAttendanceFlow(this.value)" type="radio" value="accept"/>
+<div class="flex items-center justify-between mb-3">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<span class="text-[10px] uppercase tracking-widest text-primary font-bold">Joyfully</span>
+</div>
+<div>
+<div class="font-headline-sm text-base text-on-surface font-medium">Joyfully Accepts</div>
+<p class="text-xs text-on-surface-variant mt-0.5">We are delighted to celebrate with you.</p>
+</div>
+</label>
+<!-- Decline -->
+<label class="cursor-pointer p-4 rounded-xl flex flex-col justify-between bg-surface-container-low border-2 border-transparent transition-all hover:bg-surface-container" id="label-decline">
+<input class="sr-only" name="attendance" onchange="toggleAttendanceFlow(this.value)" type="radio" value="decline"/>
+<div class="flex items-center justify-between mb-3">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</div>
+<span class="text-[10px] uppercase tracking-widest text-outline font-bold">In Spirit</span>
+</div>
+<div>
+<div class="font-headline-sm text-base text-on-surface font-medium">Regretfully Declines</div>
+<p class="text-xs text-on-surface-variant mt-0.5">Sending warmest blessings from afar.</p>
+</div>
+</label>
+</div>
+</div>
+<!-- Attending Details (Seats & Dietary) -->
+<div class="space-y-5 pt-1 transition-all" id="attending-details">
+<div class="bg-surface-container-low rounded-xl p-5 border border-outline-variant/30 space-y-4">
+<div>
+<div class="flex items-center justify-between mb-2">
+<label class="text-xs uppercase tracking-wider text-on-surface font-semibold" for="party-count">Number of Seats Reserved</label>
+<span class="text-xs text-primary font-semibold" id="guest-counter-display">2 Guests</span>
+</div>
+<select class="w-full bg-surface-container-lowest border border-outline-variant/50 rounded-lg text-on-surface px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary" id="party-count" name="party_size">
+<option value="1">1 Guest (Solo)</option>
+<option selected="" value="2">2 Guests (Couple)</option>
+<option value="3">3 Guests (Small Group)</option>
+<option value="4">4 Guests (Family)</option>
+</select>
+</div>
+<div>
+<label class="block text-xs uppercase tracking-wider text-on-surface font-semibold mb-2">Dietary Considerations</label>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+<label class="flex items-center gap-2 p-2 bg-surface-container-lowest rounded-md border border-outline-variant/20 cursor-pointer text-xs text-on-surface hover:bg-surface-container transition-colors">
+<input class="rounded text-primary focus:ring-primary accent-primary" name="dietary" type="checkbox" value="vegetarian"/>
+<span>Vegetarian</span>
+</label>
+<label class="flex items-center gap-2 p-2 bg-surface-container-lowest rounded-md border border-outline-variant/20 cursor-pointer text-xs text-on-surface hover:bg-surface-container transition-colors">
+<input class="rounded text-primary focus:ring-primary accent-primary" name="dietary" type="checkbox" value="vegan"/>
+<span>Vegan</span>
+</label>
+<label class="flex items-center gap-2 p-2 bg-surface-container-lowest rounded-md border border-outline-variant/20 cursor-pointer text-xs text-on-surface hover:bg-surface-container transition-colors">
+<input class="rounded text-primary focus:ring-primary accent-primary" name="dietary" type="checkbox" value="gluten_free"/>
+<span>Gluten-Free</span>
+</label>
+<label class="flex items-center gap-2 p-2 bg-surface-container-lowest rounded-md border border-outline-variant/20 cursor-pointer text-xs text-on-surface hover:bg-surface-container transition-colors">
+<input class="rounded text-primary focus:ring-primary accent-primary" name="dietary" type="checkbox" value="dairy_free"/>
+<span>Dairy-Free</span>
+</label>
+<label class="flex items-center gap-2 p-2 bg-surface-container-lowest rounded-md border border-outline-variant/20 cursor-pointer text-xs text-on-surface hover:bg-surface-container transition-colors">
+<input class="rounded text-primary focus:ring-primary accent-primary" name="dietary" type="checkbox" value="halal"/>
+<span>Halal / Kosher</span>
+</label>
+<label class="flex items-center gap-2 p-2 bg-surface-container-lowest rounded-md border border-outline-variant/20 cursor-pointer text-xs text-on-surface hover:bg-surface-container transition-colors">
+<input class="rounded text-primary focus:ring-primary accent-primary" name="dietary" type="checkbox" value="nut_allergy"/>
+<span>Nut Allergy</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Personal Note -->
+<div>
+<label class="block text-xs uppercase tracking-wider text-on-surface font-semibold mb-2" for="guest-message">
+                    A Note for Nadun &amp; Chathurika (Optional)
+                  </label>
+<textarea class="w-full bg-surface-container-low border border-outline-variant/50 rounded-lg text-on-surface px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary placeholder:text-outline transition-all" id="guest-message" name="message" placeholder="Write a warm note, well wishes, or favorite dance song..." rows="3"></textarea>
+</div>
+<!-- Submit Button -->
+<div>
+<button class="w-full py-3.5 bg-primary text-on-primary rounded-xl font-label-lg text-xs uppercase tracking-[0.2em] shadow-md hover:bg-primary-container transition-all flex items-center justify-center gap-2 group cursor-pointer" type="submit">
+<span>Confirm RSVP</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<p class="text-xs text-outline text-center mt-3">
+                    Your response will be recorded for Nadun &amp; Chathurika's guest registry.
+                  </p>
+</div>
+</form>
+</div>
+<!-- Feedback State: Accepted -->
+<div class="hidden text-center py-10 px-4" id="rsvp-success-accept"><div class="w-16 h-16 mx-auto mb-4 rounded-full bg-primary-fixed flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-[32px]">celebration</span>
+</div>
+<span class="text-xs uppercase tracking-[0.22em] text-primary font-semibold block mb-1">With Joyful Anticipation</span>
+<h3 class="font-headline-lg text-2xl md:text-3xl text-on-surface mb-2">We Can't Wait to Celebrate!</h3>
+<p class="text-sm text-on-surface-variant max-w-md mx-auto mb-6">
+  Thank you for confirming your attendance at our engagement celebration. A formal calendar invite and itinerary have been sent to your email.
+</p>
+<!-- Prominent Countdown Timer -->
+<div class="bg-surface-container-low rounded-xl p-5 max-w-md mx-auto mb-6 border border-outline-variant/40 text-center">
+<span class="text-[11px] uppercase tracking-[0.2em] text-primary font-semibold block mb-3">Counting Down To Our Engagement</span>
+<div class="grid grid-cols-4 gap-2 text-center">
+<div class="p-2.5 bg-surface-container-lowest rounded-lg border border-outline-variant/30">
+<div class="font-headline-lg text-2xl font-bold text-primary">174</div>
+<span class="text-[10px] uppercase tracking-wider text-outline font-medium">Days</span>
+</div>
+<div class="p-2.5 bg-surface-container-lowest rounded-lg border border-outline-variant/30">
+<div class="font-headline-lg text-2xl font-bold text-primary">18</div>
+<span class="text-[10px] uppercase tracking-wider text-outline font-medium">Hours</span>
+</div>
+<div class="p-2.5 bg-surface-container-lowest rounded-lg border border-outline-variant/30">
+<div class="font-headline-lg text-2xl font-bold text-primary">42</div>
+<span class="text-[10px] uppercase tracking-wider text-outline font-medium">Mins</span>
+</div>
+<div class="p-2.5 bg-surface-container-lowest rounded-lg border border-outline-variant/30">
+<div class="font-headline-lg text-2xl font-bold text-primary">15</div>
+<span class="text-[10px] uppercase tracking-wider text-outline font-medium">Secs</span>
+</div>
+</div>
+<p class="text-xs italic text-on-surface-variant mt-3">Saturday, September 20, 2025 • Hudson Valley</p>
+</div>
+<div class="bg-surface-container-low rounded-xl p-4 max-w-sm mx-auto mb-6 text-left border border-outline-variant/30">
+<div class="text-[11px] uppercase tracking-wider text-primary font-semibold mb-2">Engagement Reservation Summary</div>
+<div class="text-xs text-on-surface space-y-1">
+<p><strong class="font-semibold text-on-surface">Couple:</strong> Nadun &amp; Chathurika</p>
+<p><strong class="font-semibold text-on-surface">Event:</strong> Formal Engagement Celebration</p>
+<p><strong class="font-semibold text-on-surface">Date &amp; Time:</strong> September 20, 2025 at 4:30 PM EDT</p>
+<p><strong class="font-semibold text-on-surface">Venue:</strong> The Glasshouse, Hudson Valley</p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row gap-3 justify-center">
+<button class="px-5 py-2.5 rounded-lg bg-surface-container-high text-on-surface text-xs uppercase tracking-wider font-semibold hover:bg-surface-container-highest transition-colors" onclick="resetRsvpView()" type="button">
+    Edit Response
+  </button>
+<a class="px-5 py-2.5 rounded-lg bg-primary text-on-primary text-xs uppercase tracking-wider font-semibold hover:bg-primary-container transition-colors inline-flex items-center justify-center gap-1.5" href="#">
+<span class="material-symbols-outlined text-[16px]">calendar_add_on</span>
+<span>Add to Calendar</span>
+</a>
+</div></div>
+<!-- Feedback State: Declined -->
+<div class="hidden text-center py-10 px-4" id="rsvp-success-decline">
+<div class="w-16 h-16 mx-auto mb-4 rounded-full bg-surface-container-high flex items-center justify-center text-outline shadow-sm">
+<span class="material-symbols-outlined text-[32px]">favorite_border</span>
+</div>
+<span class="text-xs uppercase tracking-[0.22em] text-outline font-semibold block mb-1">With Sincere Fondness</span>
+<h3 class="font-headline-lg text-2xl md:text-3xl text-on-surface mb-2">You Will Be Dearly Missed</h3>
+<p class="text-sm text-on-surface-variant max-w-md mx-auto mb-6">
+                While you cannot be with us in person, we carry your love and warm wishes in our hearts as we begin this new journey together.
+              </p>
+<div class="p-4 bg-surface-container-low rounded-xl max-w-sm mx-auto mb-6 border border-outline-variant/30">
+<p class="font-headline-sm text-sm italic text-on-surface-variant">"Distance never diminishes the quiet bonds of friendship and devotion."</p>
+</div>
+<button class="px-5 py-2.5 rounded-lg bg-surface-container-high text-on-surface text-xs uppercase tracking-wider font-semibold hover:bg-surface-container-highest transition-colors" onclick="resetRsvpView()" type="button">
+                Change Response
+              </button>
+</div>
+</div>
+</div>
+</div>
+<!-- State Preview Controls -->
+<div class="mt-12 bg-surface-container-low rounded-xl p-4 flex flex-wrap items-center justify-between gap-3 border border-outline-variant/30">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">tune</span>
+<span class="text-xs uppercase tracking-wider text-on-surface-variant font-medium">Preview States:</span>
+</div>
+<div class="flex items-center gap-2 flex-wrap">
+<button class="px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/40 rounded text-on-surface text-xs uppercase tracking-wider hover:bg-surface-container transition-colors" onclick="resetRsvpView()" type="button">
+            Default Form
+          </button>
+<button class="px-3 py-1.5 bg-primary-fixed text-on-primary-fixed rounded text-xs uppercase tracking-wider hover:bg-primary-fixed-dim transition-colors" onclick="simulateState('accept')" type="button">
+            Simulate Joyful Accept
+          </button>
+<button class="px-3 py-1.5 bg-secondary-container text-on-secondary-container rounded text-xs uppercase tracking-wider hover:bg-secondary-fixed transition-colors" onclick="simulateState('decline')" type="button">
+            Simulate Gracious Decline
+          </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Simplified Minimal Footer -->
+<footer class="w-full bg-surface-container-low border-t border-outline-variant/30 py-12">
+<div class="max-w-4xl mx-auto px-gutter text-center space-y-4">
+<div class="font-headline-sm text-2xl text-primary font-normal tracking-wide">Nadun &amp; Chathurika</div>
+<p class="font-headline-sm text-sm italic text-on-surface-variant max-w-md mx-auto">Together with their families, joyfully invite you to celebrate their engagement and future together.</p>
+<div class="flex items-center justify-center gap-3 py-1">
+<div class="h-[1px] w-8 bg-primary-container/40"></div>
+<span class="material-symbols-outlined text-primary text-[18px]">favorite</span>
+<div class="h-[1px] w-8 bg-primary-container/40"></div>
+</div>
+<div class="text-xs text-on-surface-variant space-y-1">
+<p class="font-semibold text-on-surface uppercase tracking-widest">Saturday, September 20, 2025</p>
+<p>The Glasshouse • Hudson Valley, New York</p>
+<p class="text-primary pt-1 font-medium">Inquiries: rsvp@nadunandchathurika.com</p>
+</div>
+<p class="pt-4 text-[11px] uppercase tracking-widest text-outline">
+        © 2025 Nadun &amp; Chathurika • All Rights Reserved
+      </p>
+</div>
+</footer>
+<script>
+    function toggleAttendanceFlow(value) {
+      const detailsSection = document.getElementById('attending-details');
+      const labelAccept = document.getElementById('label-accept');
+      const labelDecline = document.getElementById('label-decline');
+
+      if (value === 'accept') {
+        detailsSection.classList.remove('hidden');
+        labelAccept.classList.add('border-primary');
+        labelAccept.classList.remove('border-transparent');
+        labelDecline.classList.add('border-transparent');
+        labelDecline.classList.remove('border-outline');
+      } else {
+        detailsSection.classList.add('hidden');
+        labelDecline.classList.add('border-outline');
+        labelDecline.classList.remove('border-transparent');
+        labelAccept.classList.add('border-transparent');
+        labelAccept.classList.remove('border-primary');
+      }
+    }
+
+    const partySelect = document.getElementById('party-count');
+    const guestCounterDisplay = document.getElementById('guest-counter-display');
+    if (partySelect && guestCounterDisplay) {
+      partySelect.addEventListener('change', function() {
+        const text = this.options[this.selectedIndex].text.split('(')[0].trim();
+        guestCounterDisplay.textContent = text;
+      });
+    }
+
+    const rsvpForm = document.getElementById('rsvp-form');
+    if (rsvpForm) {
+      rsvpForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const selectedValue = document.querySelector('input[name="attendance"]:checked').value;
+        simulateState(selectedValue);
+      });
+    }
+
+    function simulateState(status) {
+      const formContainer = document.getElementById('rsvp-form-container');
+      const acceptState = document.getElementById('rsvp-success-accept');
+      const declineState = document.getElementById('rsvp-success-decline');
+
+      formContainer.classList.add('hidden');
+      if (status === 'accept') {
+        acceptState.classList.remove('hidden');
+        declineState.classList.add('hidden');
+      } else {
+        declineState.classList.remove('hidden');
+        acceptState.classList.add('hidden');
+      }
+    }
+
+    function resetRsvpView() {
+      document.getElementById('rsvp-form-container').classList.remove('hidden');
+      document.getElementById('rsvp-success-accept').classList.add('hidden');
+      document.getElementById('rsvp-success-decline').classList.add('hidden');
+    }
+
+    // Initialize state
+    toggleAttendanceFlow('accept');
+  </script>
+</body></html>
