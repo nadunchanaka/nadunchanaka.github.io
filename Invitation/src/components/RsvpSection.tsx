@@ -118,10 +118,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
             <img
               alt="Nadun &amp; Chathurika"
               className="w-full h-80 object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
-              src="/assets/aistudio/image_9f13b1f3.png"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = '/public/assets/aistudio/image_9f13b1f3.png';
-              }}
+              src="./assets/aistudio/image_9f13b1f3.png"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#25123a]/85 via-[#25123a]/25 to-transparent flex flex-col justify-end p-5 text-white">
               <span className="text-[10px] uppercase tracking-[0.2em] text-[#efdbff] font-semibold mb-0.5">

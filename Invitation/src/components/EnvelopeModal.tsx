@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import embossedPaper from '../assets/images/embossed_floral_paper_1792839477543.jpg';
 
 interface EnvelopeModalProps {
   isOpen: boolean;
@@ -71,7 +72,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
             className="absolute inset-x-0 top-0 h-[22%] z-20 transition-all duration-1000 ease-out origin-top pointer-events-none"
             style={{
               clipPath: 'polygon(0 0, 100% 0, 80% 100%, 20% 100%)',
-              backgroundImage: 'url(/src/assets/images/embossed_floral_paper_1792839477543.jpg)',
+              backgroundImage: `url(${embossedPaper})`,
               backgroundSize: 'cover',
               backgroundPosition: 'top center',
               boxShadow: '0 6px 16px rgba(0,0,0,0.12)',
@@ -93,7 +94,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
             className="absolute inset-x-0 bottom-0 h-[22%] z-20 transition-all duration-1000 ease-out origin-bottom pointer-events-none"
             style={{
               clipPath: 'polygon(20% 0, 80% 0, 100% 100%, 0 100%)',
-              backgroundImage: 'url(/src/assets/images/embossed_floral_paper_1792839477543.jpg)',
+              backgroundImage: `url(${embossedPaper})`,
               backgroundSize: 'cover',
               backgroundPosition: 'bottom center',
               boxShadow: '0 -6px 16px rgba(0,0,0,0.12)',
@@ -135,7 +136,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
             <div
               className="absolute inset-0 bg-cover bg-left shadow-lg"
               style={{
-                backgroundImage: 'url(/src/assets/images/embossed_floral_paper_1792839477543.jpg)',
+                backgroundImage: `url(${embossedPaper})`,
                 clipPath: 'polygon(0 0, 92% 0, 100% 25%, 90% 50%, 100% 75%, 92% 100%, 0 100%)',
                 borderRight: '1.5px solid rgba(197, 160, 89, 0.6)'
               }}
@@ -167,7 +168,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
             <div
               className="absolute inset-0 bg-cover bg-right shadow-lg"
               style={{
-                backgroundImage: 'url(/src/assets/images/embossed_floral_paper_1792839477543.jpg)',
+                backgroundImage: `url(${embossedPaper})`,
                 clipPath: 'polygon(8% 0, 100% 0, 100% 100%, 8% 100%, 0% 75%, 10% 50%, 0% 25%)',
                 borderLeft: '1.5px solid rgba(197, 160, 89, 0.6)'
               }}
@@ -248,12 +249,9 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
             {/* The Authentic Couple Portrait Photo */}
             <div className="relative mx-auto w-full max-w-xs sm:max-w-sm rounded-xl overflow-hidden shadow-lg border-2 border-[#efdbff] my-2 group">
               <img
-                src="/assets/aistudio/image_9f13b1f3.png"
+                src="./assets/aistudio/image_9f13b1f3.png"
                 alt="Nadun & Chathurika - Engagement Portrait"
                 className="w-full h-56 sm:h-64 object-cover object-center transform group-hover:scale-102 transition-transform duration-700"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/public/assets/aistudio/image_9f13b1f3.png';
-                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#25123a]/80 via-transparent to-transparent flex flex-col justify-end p-3 text-white text-center">
                 <p className="font-headline italic text-xs sm:text-sm text-white/95">

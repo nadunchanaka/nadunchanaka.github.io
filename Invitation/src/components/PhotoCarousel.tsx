@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
+import couplePainting from '../assets/images/couple_painting_1792833487655.jpg';
+import coupleProposal from '../assets/images/couple_proposal_hudson_1792836119215.jpg';
+import coupleConservatory from '../assets/images/couple_conservatory_walk_1792836119528.jpg';
+import coupleToast from '../assets/images/couple_evening_toast_1792836119973.jpg';
 
 export interface CouplePhoto {
   id: string;
@@ -12,7 +16,7 @@ export interface CouplePhoto {
 export const COUPLE_GALLERY: CouplePhoto[] = [
   {
     id: 'photo-portrait',
-    url: '/assets/aistudio/image_9f13b1f3.png',
+    url: './assets/aistudio/image_9f13b1f3.png',
     title: 'Nadun & Chathurika',
     caption: 'When love becomes a promise for eternity, surrounded by warmth and candlelight.',
     location: 'The Glasshouse Conservatory, Hudson Valley',
@@ -20,7 +24,7 @@ export const COUPLE_GALLERY: CouplePhoto[] = [
   },
   {
     id: 'photo-1',
-    url: '/src/assets/images/couple_painting_1792833487655.jpg',
+    url: couplePainting,
     title: 'The Betrothal Portrait',
     caption: 'Embracing amidst springtime lilacs, surrounded by the promise of tomorrow.',
     location: 'The Botanical Glass Pavilion',
@@ -28,7 +32,7 @@ export const COUPLE_GALLERY: CouplePhoto[] = [
   },
   {
     id: 'photo-2',
-    url: '/src/assets/images/couple_proposal_hudson_1792836119215.jpg',
+    url: coupleProposal,
     title: 'Sunset Over the Highlands',
     caption: 'Where Nadun asked Chathurika to walk hand-in-hand through life together.',
     location: 'Hudson River Overlook, Cold Spring',
@@ -36,7 +40,7 @@ export const COUPLE_GALLERY: CouplePhoto[] = [
   },
   {
     id: 'photo-3',
-    url: '/src/assets/images/couple_conservatory_walk_1792836119528.jpg',
+    url: coupleConservatory,
     title: 'Morning in the Glasshouse',
     caption: 'Laughing among morning wisteria and sunbeams pouring through the greenhouse arches.',
     location: 'The Glasshouse Conservatories',
@@ -44,7 +48,7 @@ export const COUPLE_GALLERY: CouplePhoto[] = [
   },
   {
     id: 'photo-4',
-    url: '/src/assets/images/couple_evening_toast_1792836119973.jpg',
+    url: coupleToast,
     title: 'Fairy Light Toast',
     caption: 'Raising a celebratory glass under the twilight stars and glowing lanterns.',
     location: 'Garden Pavilion, Hudson Valley',
