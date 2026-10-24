@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import couplePainting from '../assets/images/couple_painting.webp';
-import coupleProposal from '../assets/images/couple_proposal.webp';
-import coupleConservatory from '../assets/images/couple_conservatory.webp';
-import coupleToast from '../assets/images/couple_toast.webp';
-import couplePortrait from '../assets/images/couple_portrait.webp';
+import couple1 from '../assets/images/couple_1.webp';
+import couple2 from '../assets/images/couple_2.webp';
+import couple3 from '../assets/images/couple_3.webp';
+import couple4 from '../assets/images/couple_4.webp';
 import { Icon, type IconName } from './Icon';
 
 export interface CouplePhoto {
@@ -17,44 +16,36 @@ export interface CouplePhoto {
 
 export const COUPLE_GALLERY: CouplePhoto[] = [
   {
-    id: 'photo-portrait',
-    url: couplePortrait,
-    title: 'Nadun & Chathurika',
-    caption: 'When love becomes a promise for eternity, surrounded by warmth and candlelight.',
-    location: 'The Glasshouse Conservatory, Hudson Valley',
-    date: 'Autumn 2026'
-  },
-  {
     id: 'photo-1',
-    url: couplePainting,
-    title: 'The Betrothal Portrait',
-    caption: 'Embracing amidst springtime lilacs, surrounded by the promise of tomorrow.',
-    location: 'The Botanical Glass Pavilion',
-    date: 'Spring 2026'
+    url: couple1,
+    title: 'Road Trips & Joyful Smiles',
+    caption: 'Finding pure happiness in life’s spontaneous journeys, hand in hand.',
+    location: 'Southern Expressway, Sri Lanka',
+    date: '2026'
   },
   {
     id: 'photo-2',
-    url: coupleProposal,
-    title: 'Sunset Over the Highlands',
-    caption: 'Where Nadun asked Chathurika to walk hand-in-hand through life together.',
-    location: 'Hudson River Overlook, Cold Spring',
-    date: 'Autumn 2025'
+    url: couple2,
+    title: 'Shaded Sunshine & Laughter',
+    caption: 'Under the summer leaves, with hearts full of laughter and gentle joy.',
+    location: 'Southern Province, Sri Lanka',
+    date: '2026'
   },
   {
     id: 'photo-3',
-    url: coupleConservatory,
-    title: 'Morning in the Glasshouse',
-    caption: 'Laughing among morning wisteria and sunbeams pouring through the greenhouse arches.',
-    location: 'The Glasshouse Conservatories',
-    date: 'Summer 2025'
+    url: couple3,
+    title: 'Sunshine & Togetherness',
+    caption: 'Every step of this journey is sweeter because we walk it side by side.',
+    location: 'Scenic Southern Coast',
+    date: '2026'
   },
   {
     id: 'photo-4',
-    url: coupleToast,
-    title: 'Fairy Light Toast',
-    caption: 'Raising a celebratory glass under the twilight stars and glowing lanterns.',
-    location: 'Garden Pavilion, Hudson Valley',
-    date: 'Autumn 2025'
+    url: couple4,
+    title: 'A Promise for a Lifetime',
+    caption: 'Two souls, one beautiful tomorrow—ready to celebrate forever.',
+    location: 'Beliatta & Beyond',
+    date: '2026'
   }
 ];
 
@@ -165,34 +156,53 @@ export const PhotoCarousel: React.FC = () => {
 
       {/* Main Carousel Display Card */}
       <div
-        className="relative w-full aspect-[4/3] md:aspect-[16/10] bg-[#f5f3f7] rounded-xl overflow-hidden shadow-inner select-none cursor-grab active:cursor-grabbing group"
+        className="relative w-full h-[400px] sm:h-[480px] md:h-[540px] bg-[#1a0f26] rounded-2xl overflow-hidden shadow-lg select-none cursor-grab active:cursor-grabbing group"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Current Image */}
+        {/* Ambient Blurred Background (matches photo mood and fills frame gracefully) */}
         <img
-          key={currentPhoto.id}
+          key={`ambient-${currentPhoto.id}`}
           src={currentPhoto.url}
-          alt={currentPhoto.title}
-          className="w-full h-full object-cover transition-opacity duration-500 animate-fade-in"
-          decoding="async"
-          fetchPriority={currentIndex === 0 ? 'high' : 'auto'}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover blur-2xl scale-110 opacity-35 brightness-75 transition-opacity duration-700 pointer-events-none select-none"
         />
 
-        {/* Gradient Scrim for caption */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#25123a]/85 via-transparent to-transparent flex flex-col justify-end p-6 md:p-8 text-white pointer-events-none">
-          <div className="flex items-center gap-2 mb-1 text-[11px] font-medium text-[#efdbff] uppercase tracking-wider">
-            <span>{currentPhoto.location}</span>
-            <span>·</span>
-            <span>{currentPhoto.date}</span>
+        {/* Crisp Full Image Container */}
+        <div className="relative z-10 w-full h-full flex items-center justify-center p-3 sm:p-5 pb-24 sm:pb-28">
+          <img
+            key={currentPhoto.id}
+            src={currentPhoto.url}
+            alt={currentPhoto.title}
+            className="max-h-full max-w-full w-auto h-auto object-contain rounded-xl shadow-2xl transition-opacity duration-500 animate-fade-in"
+            decoding="async"
+            fetchPriority={currentIndex === 0 ? 'high' : 'auto'}
+          />
+        </div>
+
+        {/* Floating Glassmorphic Caption Card */}
+        <div className="absolute inset-x-3 sm:inset-x-6 bottom-3 sm:bottom-4 z-20 pointer-events-none">
+          <div className="bg-[#25123a]/85 backdrop-blur-md border border-white/15 rounded-xl p-3.5 sm:p-4 text-white max-w-xl mx-auto shadow-xl pointer-events-auto">
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-medium text-[#efdbff] uppercase tracking-wider">
+                <Icon name="location_on" className="text-[14px] text-[#efdbff]" />
+                <span>{currentPhoto.location}</span>
+                <span>·</span>
+                <span>{currentPhoto.date}</span>
+              </div>
+              <span className="text-[10px] font-mono text-[#efdbff] bg-white/15 px-2 py-0.5 rounded-full">
+                {currentIndex + 1} / {COUPLE_GALLERY.length}
+              </span>
+            </div>
+            <h4 className="font-headline text-base sm:text-xl text-white font-medium">
+              {currentPhoto.title}
+            </h4>
+            <p className="font-headline italic text-xs sm:text-sm text-white/90 mt-0.5">
+              "{currentPhoto.caption}"
+            </p>
           </div>
-          <h4 className="font-headline text-xl md:text-2xl text-white font-medium mb-1">
-            {currentPhoto.title}
-          </h4>
-          <p className="font-headline italic text-xs md:text-sm text-white/90 max-w-xl">
-            "{currentPhoto.caption}"
-          </p>
         </div>
 
         {/* Previous Button */}
@@ -200,9 +210,9 @@ export const PhotoCarousel: React.FC = () => {
           onClick={prevSlide}
           type="button"
           aria-label="Previous photo"
-          className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-[#1b1b1e] backdrop-blur-md shadow-md flex items-center justify-center transition-all opacity-80 md:opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer z-10"
+          className="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/85 hover:bg-white text-[#25123a] backdrop-blur-md shadow-lg flex items-center justify-center transition-all opacity-85 md:opacity-0 group-hover:opacity-100 hover:scale-110 cursor-pointer z-30"
         >
-          <Icon name="chevron_left" className="text-[20px]" />
+          <Icon name="chevron_left" className="text-[22px]" />
         </button>
 
         {/* Next Button */}
@@ -210,40 +220,38 @@ export const PhotoCarousel: React.FC = () => {
           onClick={nextSlide}
           type="button"
           aria-label="Next photo"
-          className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-[#1b1b1e] backdrop-blur-md shadow-md flex items-center justify-center transition-all opacity-80 md:opacity-0 group-hover:opacity-100 hover:scale-105 cursor-pointer z-10"
+          className="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/85 hover:bg-white text-[#25123a] backdrop-blur-md shadow-lg flex items-center justify-center transition-all opacity-85 md:opacity-0 group-hover:opacity-100 hover:scale-110 cursor-pointer z-30"
         >
-          <Icon name="chevron_right" className="text-[20px]" />
+          <Icon name="chevron_right" className="text-[22px]" />
         </button>
-
-        {/* Slide Counter Badge */}
-        <div className="absolute top-4 right-4 bg-[#25123a]/75 backdrop-blur-md text-[#efdbff] px-2.5 py-1 rounded-full text-[11px] font-mono tracking-wider">
-          {currentIndex + 1} / {COUPLE_GALLERY.length}
-        </div>
       </div>
 
       {/* Thumbnails Navigation Rail */}
-      <div className="grid grid-cols-5 gap-2 sm:gap-3 pt-2">
+      <div className="grid grid-cols-4 gap-2 sm:gap-3 pt-2">
         {COUPLE_GALLERY.map((photo, idx) => (
           <button
             key={photo.id}
             onClick={() => goToSlide(idx)}
             type="button"
-            className={`relative rounded-lg overflow-hidden aspect-[4/3] border-2 transition-all cursor-pointer group ${
+            className={`relative rounded-xl overflow-hidden aspect-[4/3] border-2 transition-all cursor-pointer group bg-[#f5f3f7] ${
               currentIndex === idx
                 ? 'border-[#6a5581] scale-102 shadow-md ring-2 ring-[#efdbff]'
-                : 'border-transparent opacity-70 hover:opacity-100'
+                : 'border-transparent opacity-75 hover:opacity-100'
             }`}
           >
             <img
               src={photo.url}
               alt={photo.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+              className="w-full h-full object-cover object-[center_20%] group-hover:scale-105 transition-transform duration-300"
               loading="lazy"
               decoding="async"
             />
             {currentIndex === idx && (
               <div className="absolute inset-0 bg-[#6a5581]/15 pointer-events-none"></div>
             )}
+            <div className="absolute bottom-1 right-1.5 text-[9px] font-mono bg-black/60 text-white px-1.5 py-0.5 rounded backdrop-blur-xs">
+              #{idx + 1}
+            </div>
           </button>
         ))}
       </div>

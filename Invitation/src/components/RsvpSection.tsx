@@ -119,7 +119,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
           <div className="relative rounded-xl overflow-hidden shadow-sm border border-[#ccc4ce]/30 group">
             <img
               alt="Nadun &amp; Chathurika"
-              className="w-full h-80 object-cover object-center transform group-hover:scale-105 transition-transform duration-700"
+              className="w-full h-80 object-cover object-[center_20%] transform group-hover:scale-105 transition-transform duration-700"
               src={couplePortrait}
               fetchPriority="high"
               decoding="async"

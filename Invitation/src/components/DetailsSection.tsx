@@ -1,9 +1,6 @@
-import React, { Suspense, lazy } from 'react';
+import React from 'react';
 import { Icon } from './Icon';
-
-const PhotoCarousel = lazy(() =>
-  import('./PhotoCarousel').then((m) => ({ default: m.PhotoCarousel }))
-);
+import { PhotoCarousel } from './PhotoCarousel';
 
 interface DetailsSectionProps {
   onOpenGuestbook: () => void;
@@ -50,13 +47,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
       </div>
 
       {/* Photo Carousel: Collection of images of the couple */}
-      <Suspense
-        fallback={
-          <div className="w-full aspect-[16/10] rounded-xl bg-[#f5f3f7] animate-pulse" aria-hidden />
-        }
-      >
-        <PhotoCarousel />
-      </Suspense>
+      <PhotoCarousel />
 
       {/* Attire & Guidelines Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

@@ -245,7 +245,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
               <img
                 src={couplePortrait}
                 alt="Nadun & Chathurika - Engagement Portrait"
-                className="w-full h-56 sm:h-64 object-cover object-center transform group-hover:scale-102 transition-transform duration-700"
+                className="w-full h-56 sm:h-64 object-cover object-[center_20%] transform group-hover:scale-102 transition-transform duration-700"
                 fetchPriority="high"
                 decoding="async"
               />
