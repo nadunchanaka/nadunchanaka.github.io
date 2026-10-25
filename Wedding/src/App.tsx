@@ -157,7 +157,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-stitch-body text-[#1e1a23] flex flex-col font-body selection:bg-[#f3daff] selection:text-[#2e004d]">
+    <div className="min-h-screen w-full bg-stitch-body text-[#1e1a23] flex flex-col font-body selection:bg-[#f3daff] selection:text-[#2e004d] overflow-x-hidden">
       <Header
         currentTab={currentTab}
         onSelectTab={handleTabSelect}
@@ -171,7 +171,7 @@ export default function App() {
       />
 
       {isAdmin && (
-        <div className="bg-[#240046] text-white text-xs py-2 px-6 flex items-center justify-between sticky top-20 z-40 border-b border-[#efdbff]/30 shadow-md">
+        <div className="bg-[#240046] text-white text-xs py-2 px-4 sm:px-6 flex flex-wrap items-center justify-between gap-2 sticky top-16 sm:top-20 z-40 border-b border-[#efdbff]/30 shadow-md">
           <div className="flex items-center gap-2">
             <Icon name="verified_user" className="text-[#efdbff] text-[16px]" />
             <span className="font-semibold tracking-wider uppercase text-[11px]">
@@ -199,44 +199,44 @@ export default function App() {
         </div>
       )}
 
-      <main className="w-full pt-20 flex-1 flex flex-col justify-start">
-        <div className="flex flex-col w-full items-center pb-12 bg-stitch-overlay">
+      <main className="w-full pt-16 sm:pt-20 flex-1 flex flex-col justify-start overflow-x-hidden">
+        <div className="flex flex-col w-full items-center pb-12 bg-stitch-overlay overflow-x-hidden">
           {/* Ambient Deep Violet Glow & Architectural Header */}
-          <div className="relative w-full max-w-[960px] flex flex-col items-center">
-            {/* Ambient Subtle Deep Violet Glow */}
+          <div className="relative w-full max-w-[960px] flex flex-col items-center px-2 sm:px-4 overflow-x-clip">
+            {/* Ambient Subtle Deep Violet Glow (Constrained to screen bounds) */}
             <div
-              className="absolute -top-12 left-1/2 -translate-x-1/2 w-[520px] h-[300px] rounded-full blur-3xl pointer-events-none -z-10"
+              className="absolute -top-12 left-1/2 -translate-x-1/2 rounded-full blur-3xl pointer-events-none -z-10 max-w-[100vw]"
               style={{
                 background:
                   'radial-gradient(circle, rgba(123, 67, 151, 0.35) 0%, rgba(59, 24, 95, 0.22) 40%, rgba(220, 184, 255, 0.2) 70%, transparent 100%)',
-                width: '720px',
-                height: '420px'
+                width: 'min(720px, 92vw)',
+                height: 'min(420px, 50vh)'
               }}
             ></div>
 
             {/* Header Section: Architectural & Editorial Typography */}
-            <header className="w-full pt-8 md:pt-14 pb-4 flex flex-col items-center text-center px-4">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#efe5f3]/90 border border-[#3b185f]/10 backdrop-blur-md mb-4 shadow-xs">
+            <header className="w-full pt-6 sm:pt-8 md:pt-14 pb-4 flex flex-col items-center text-center px-2 sm:px-4">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#efe5f3]/90 border border-[#3b185f]/10 backdrop-blur-md mb-3 sm:mb-4 shadow-xs">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#3b185f] animate-pulse"></span>
-                <span className="text-[11px] font-semibold tracking-widest uppercase text-[#3b185f]">
+                <span className="text-[10px] sm:text-[11px] font-semibold tracking-widest uppercase text-[#3b185f]">
                   Engagement Celebration
                 </span>
               </div>
 
-              <h1 className="font-headline text-3xl sm:text-5xl md:text-[56px] leading-tight md:leading-[68px] text-[#3b185f] tracking-tight max-w-2xl font-semibold">
+              <h1 className="font-headline text-3xl sm:text-5xl md:text-[56px] leading-tight md:leading-[68px] text-[#3b185f] tracking-tight max-w-2xl font-semibold break-words px-2">
                 Nadun &amp; Chathurika
               </h1>
 
-              <p className="font-headline text-lg sm:text-2xl text-[#784a99] mt-2 font-medium italic">
+              <p className="font-headline text-base sm:text-2xl text-[#784a99] mt-2 font-medium italic">
                 Friday, November 20, 2026
               </p>
 
-              <p className="text-sm sm:text-base text-[#4b444f] mt-1 max-w-lg">
+              <p className="text-xs sm:text-base text-[#4b444f] mt-1 max-w-lg px-2">
                 Grand Landewela • Beliatte - Tangalle Rd, Beliatta, Sri Lanka
               </p>
 
               {/* Quick Facts Minimal Pill Row */}
-              <div className="mt-5 w-full">
+              <div className="mt-4 sm:mt-5 w-full">
                 <MetadataStrip onOpenVenueModal={() => setIsVenueModalOpen(true)} />
               </div>
 
@@ -245,9 +245,9 @@ export default function App() {
                 <button
                   onClick={handleReplayEnvelope}
                   type="button"
-                  className="inline-flex items-center gap-1.5 text-xs text-[#784a99] hover:text-[#3b185f] font-medium tracking-wide underline cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-xs text-[#784a99] hover:text-[#3b185f] font-medium tracking-wide underline cursor-pointer text-center px-2"
                 >
-                  <Icon name="mail" className="text-[15px]" />
+                  <Icon name="mail" className="text-[15px] shrink-0" />
                   <span>Open Formal Wedding Envelope &amp; Couple Portrait</span>
                 </button>
               </div>

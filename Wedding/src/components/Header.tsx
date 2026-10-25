@@ -44,17 +44,17 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#fff7ff]/90 backdrop-blur-xl border-b border-[#e9dfed]/70 shadow-[0_2px_12px_rgba(59,24,95,0.04)] transition-all">
-        <div className="h-20 max-w-[960px] mx-auto px-4 md:px-6 flex items-center justify-between">
+        <div className="h-16 sm:h-20 max-w-[960px] mx-auto px-3 sm:px-6 flex items-center justify-between gap-2">
           {/* Brand */}
           <button
             onClick={() => onSelectTab('rsvp')}
-            className="group flex items-baseline gap-2 text-left cursor-pointer focus:outline-none"
+            className="group flex items-baseline gap-1.5 sm:gap-2 text-left cursor-pointer focus:outline-none min-w-0"
             aria-label="Home page"
           >
-            <span className="font-headline text-xl md:text-2xl font-semibold tracking-tight text-[#3b185f] group-hover:text-[#784a99] transition-colors">
+            <span className="font-headline text-lg sm:text-2xl font-semibold tracking-tight text-[#3b185f] group-hover:text-[#784a99] transition-colors truncate">
               Nadun &amp; Chathurika
             </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#3b185f]/40 group-hover:bg-[#3b185f] transition-colors"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#3b185f]/40 group-hover:bg-[#3b185f] transition-colors shrink-0"></span>
           </button>
 
           {/* Pill Navigation Bar */}

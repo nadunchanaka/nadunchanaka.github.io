@@ -37,7 +37,7 @@ export const FlipUnit: React.FC<FlipUnitProps> = ({ value, label }) => {
   return (
     <div className="flex flex-col items-center">
       {/* 3D Flip Card Container */}
-      <div className="relative w-12 h-14 sm:w-14 sm:h-16 rounded-lg shadow-md border border-white/20 bg-[#240046] overflow-hidden select-none flip-container">
+      <div className="relative w-10 h-12 sm:w-14 sm:h-16 rounded-lg shadow-md border border-white/20 bg-[#240046] overflow-hidden select-none flip-container">
         {/* Central hairline split seam - precisely centered */}
         <div className="absolute top-1/2 left-0 right-0 h-[1px] -translate-y-1/2 bg-black/50 z-30 pointer-events-none" />
 
@@ -47,10 +47,10 @@ export const FlipUnit: React.FC<FlipUnitProps> = ({ value, label }) => {
 
         {/* 1. Static Top Half (Shows currentVal) */}
         <div className="absolute top-0 left-0 right-0 h-1/2 overflow-hidden bg-gradient-to-b from-[#3d1263] to-[#2b0849]">
-          <div className="absolute top-0 left-0 right-0 h-14 sm:h-16 flex items-center justify-center">
+          <div className="absolute top-0 left-0 right-0 h-12 sm:h-16 flex items-center justify-center">
             <span
               style={{ fontVariantNumeric: 'tabular-nums lining-nums' }}
-              className="font-sans text-[24px] sm:text-[28px] font-extrabold text-white leading-none tracking-tight drop-shadow-xs"
+              className="font-sans text-[20px] sm:text-[28px] font-extrabold text-white leading-none tracking-tight drop-shadow-xs"
             >
               {currentStr}
             </span>
@@ -59,10 +59,10 @@ export const FlipUnit: React.FC<FlipUnitProps> = ({ value, label }) => {
 
         {/* 2. Static Bottom Half (Shows currentVal when resting, prevVal while flipping) */}
         <div className="absolute bottom-0 left-0 right-0 h-1/2 overflow-hidden bg-gradient-to-b from-[#22003d] to-[#18002b]">
-          <div className="absolute bottom-0 left-0 right-0 h-14 sm:h-16 flex items-center justify-center">
+          <div className="absolute bottom-0 left-0 right-0 h-12 sm:h-16 flex items-center justify-center">
             <span
               style={{ fontVariantNumeric: 'tabular-nums lining-nums' }}
-              className="font-sans text-[24px] sm:text-[28px] font-extrabold text-white leading-none tracking-tight drop-shadow-xs"
+              className="font-sans text-[20px] sm:text-[28px] font-extrabold text-white leading-none tracking-tight drop-shadow-xs"
             >
               {isFlipping ? prevStr : currentStr}
             </span>
@@ -72,10 +72,10 @@ export const FlipUnit: React.FC<FlipUnitProps> = ({ value, label }) => {
         {/* 3. Flipping Top Half (Folds down from 0deg to -90deg) */}
         {isFlipping && (
           <div className="absolute top-0 left-0 right-0 h-1/2 overflow-hidden bg-gradient-to-b from-[#3d1263] to-[#2b0849] z-20 flip-top-active">
-            <div className="absolute top-0 left-0 right-0 h-14 sm:h-16 flex items-center justify-center">
+            <div className="absolute top-0 left-0 right-0 h-12 sm:h-16 flex items-center justify-center">
               <span
                 style={{ fontVariantNumeric: 'tabular-nums lining-nums' }}
-                className="font-sans text-[24px] sm:text-[28px] font-extrabold text-white leading-none tracking-tight drop-shadow-xs"
+                className="font-sans text-[20px] sm:text-[28px] font-extrabold text-white leading-none tracking-tight drop-shadow-xs"
               >
                 {prevStr}
               </span>
@@ -88,10 +88,10 @@ export const FlipUnit: React.FC<FlipUnitProps> = ({ value, label }) => {
         {/* 4. Flipping Bottom Half (Unfolds down from 90deg to 0deg) */}
         {isFlipping && (
           <div className="absolute bottom-0 left-0 right-0 h-1/2 overflow-hidden bg-gradient-to-b from-[#22003d] to-[#18002b] z-20 flip-bottom-active">
-            <div className="absolute bottom-0 left-0 right-0 h-14 sm:h-16 flex items-center justify-center">
+            <div className="absolute bottom-0 left-0 right-0 h-12 sm:h-16 flex items-center justify-center">
               <span
                 style={{ fontVariantNumeric: 'tabular-nums lining-nums' }}
-                className="font-sans text-[24px] sm:text-[28px] font-extrabold text-white leading-none tracking-tight drop-shadow-xs"
+                className="font-sans text-[20px] sm:text-[28px] font-extrabold text-white leading-none tracking-tight drop-shadow-xs"
               >
                 {currentStr}
               </span>
@@ -103,7 +103,7 @@ export const FlipUnit: React.FC<FlipUnitProps> = ({ value, label }) => {
       </div>
 
       {/* Label */}
-      <span className="text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold text-[#efdbff]/90 mt-1.5 leading-none">
+      <span className="text-[9px] sm:text-[11px] uppercase tracking-wider font-semibold text-[#efdbff]/90 mt-1 sm:mt-1.5 leading-none">
         {label}
       </span>
     </div>

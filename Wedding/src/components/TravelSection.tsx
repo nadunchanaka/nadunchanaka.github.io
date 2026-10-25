@@ -38,23 +38,23 @@ export const TravelSection: React.FC<TravelSectionProps> = ({ onOpenVenueModal }
             </p>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 shrink-0">
             <a
               href="https://maps.app.goo.gl/HjQp3Kjc7KZ1MR14A"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-2.5 bg-[#3b185f] hover:bg-[#4e2277] text-white rounded-xl text-xs uppercase tracking-wider font-semibold transition-colors flex items-center gap-1.5 shadow-xs"
+              className="flex-1 sm:flex-none justify-center px-4 sm:px-5 py-2.5 bg-[#3b185f] hover:bg-[#4e2277] text-white rounded-xl text-xs uppercase tracking-wider font-semibold transition-colors flex items-center gap-1.5 shadow-xs"
             >
               <Icon name="navigation" className="text-[16px]" />
-              <span>Open in Google Maps</span>
+              <span className="whitespace-nowrap">Open in Maps</span>
             </a>
             <button
               onClick={onOpenVenueModal}
               type="button"
-              className="px-4 py-2.5 bg-[#fbf0ff] text-[#1e1a23] border border-[#e9dfed] rounded-xl text-xs uppercase tracking-wider font-semibold hover:bg-[#efe5f3] transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-xs"
+              className="flex-1 sm:flex-none justify-center px-3.5 sm:px-4 py-2.5 bg-[#fbf0ff] text-[#1e1a23] border border-[#e9dfed] rounded-xl text-xs uppercase tracking-wider font-semibold hover:bg-[#efe5f3] transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-xs"
             >
               <Icon name="info" className="text-[16px] text-[#3b185f]" />
-              <span>Transit Guide</span>
+              <span className="whitespace-nowrap">Transit Guide</span>
             </button>
           </div>
         </div>

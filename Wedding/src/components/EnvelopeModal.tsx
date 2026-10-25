@@ -30,27 +30,27 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-[#1e1a23]/80 backdrop-blur-md transition-all duration-700 overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-6 bg-[#1e1a23]/80 backdrop-blur-md transition-all duration-700 overflow-y-auto overflow-x-hidden">
       <div className="relative w-full max-w-xl my-auto flex flex-col items-center">
         {/* Top Control Header */}
-        <div className="w-full flex items-center justify-between mb-3 px-2">
-          <span className="text-[11px] uppercase tracking-[0.25em] text-[#efdbff] font-medium">
+        <div className="w-full flex items-center justify-between mb-2 sm:mb-3 px-1 sm:px-2">
+          <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#efdbff] font-medium">
             {phase === 'revealed' ? 'Your Formal Invitation' : 'An Invitation Worth Opening'}
           </span>
           <button
             onClick={onClose}
             type="button"
             aria-label="Skip to main page"
-            className="text-xs uppercase tracking-widest text-[#efdbff] hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer bg-white/10 hover:bg-white/20 px-3.5 py-1.5 rounded-full backdrop-blur-sm shadow-sm"
+            className="text-[11px] sm:text-xs uppercase tracking-widest text-[#efdbff] hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer bg-white/10 hover:bg-white/20 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full backdrop-blur-sm shadow-sm"
           >
             <span>Skip to RSVP</span>
-            <Icon name="close" className="text-[16px]" />
+            <Icon name="close" className="text-[14px] sm:text-[16px]" />
           </button>
         </div>
 
         {/* The Gatefold Luxury Envelope */}
         <div
-          className="relative w-full aspect-[3/4.2] max-h-[680px] bg-[#fbf9f5] rounded-2xl shadow-2xl overflow-hidden border border-[#e3dacf]/60"
+          className="relative w-full aspect-[3/4.2] max-h-[82vh] sm:max-h-[680px] bg-[#fbf9f5] rounded-2xl shadow-2xl overflow-hidden border border-[#e3dacf]/60"
           style={{
             perspective: '1400px'
           }}
@@ -192,7 +192,7 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
 
           {/* Sliding Formal Invitation Card */}
           <div
-            className={`absolute inset-2 sm:inset-4 z-25 bg-white rounded-xl border border-[#e9dfed] shadow-xl overflow-hidden flex flex-col justify-between p-5 sm:p-7 text-center transition-all duration-1000 ${
+            className={`absolute inset-2 sm:inset-4 z-25 bg-white rounded-xl border border-[#e9dfed] shadow-xl overflow-y-auto sm:overflow-hidden flex flex-col justify-between p-3.5 sm:p-7 text-center transition-all duration-1000 ${
               phase === 'revealed'
                 ? 'opacity-100 translate-y-0 scale-100'
                 : phase === 'opening'
@@ -204,40 +204,40 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
             }}
           >
             <div>
-              <div className="inline-flex items-center justify-center gap-2 text-[#784a99] mb-1">
-                <span className="h-[1px] w-6 bg-[#3b185f]/40"></span>
-                <Icon name="local_florist" className="text-[18px]" />
-                <span className="h-[1px] w-6 bg-[#3b185f]/40"></span>
+              <div className="inline-flex items-center justify-center gap-2 text-[#784a99] mb-0.5 sm:mb-1">
+                <span className="h-[1px] w-4 sm:w-6 bg-[#3b185f]/40"></span>
+                <Icon name="local_florist" className="text-[16px] sm:text-[18px]" />
+                <span className="h-[1px] w-4 sm:w-6 bg-[#3b185f]/40"></span>
               </div>
-              <span className="text-[10px] uppercase tracking-[0.25em] text-[#784a99] font-semibold block">
+              <span className="text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.25em] text-[#784a99] font-semibold block">
                 Together With Their Families
               </span>
-              <h2 className="font-headline text-2xl sm:text-3xl text-[#3b185f] mt-0.5 tracking-tight font-semibold">
+              <h2 className="font-headline text-xl sm:text-3xl text-[#3b185f] mt-0.5 tracking-tight font-semibold">
                 Nadun &amp; Chathurika
               </h2>
             </div>
 
             {/* Couple Portrait Photo */}
-            <div className="relative mx-auto w-full max-w-xs sm:max-w-sm rounded-xl overflow-hidden shadow-lg border-2 border-[#efdbff] my-2 group">
+            <div className="relative mx-auto w-full max-w-[240px] sm:max-w-sm rounded-xl overflow-hidden shadow-lg border-2 border-[#efdbff] my-1 sm:my-2 group">
               {couplePortrait ? (
                 <>
                   <img
                     src={couplePortrait}
                     alt="Nadun & Chathurika - Engagement Portrait"
-                    className="w-full h-56 sm:h-64 object-cover object-[center_20%] transform group-hover:scale-102 transition-transform duration-700"
+                    className="w-full h-36 sm:h-64 object-cover object-[center_20%] transform group-hover:scale-102 transition-transform duration-700"
                     fetchPriority="high"
                     decoding="async"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#240046]/80 via-transparent to-transparent flex flex-col justify-end p-3 text-white text-center">
-                    <p className="font-headline italic text-xs sm:text-sm text-white/95">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#240046]/80 via-transparent to-transparent flex flex-col justify-end p-2 sm:p-3 text-white text-center">
+                    <p className="font-headline italic text-[11px] sm:text-sm text-white/95">
                       &ldquo;Join us to celebrate the moment when love becomes a promise for eternity.&rdquo;
                     </p>
                   </div>
                 </>
               ) : (
-                <div className="w-full h-56 sm:h-64 bg-gradient-to-br from-[#fbf0ff] to-[#f4e8fa] flex flex-col items-center justify-center p-4 text-center">
-                  <Icon name="favorite" className="text-[32px] text-[#784a99] mb-2" />
-                  <p className="font-headline italic text-xs sm:text-sm text-[#3b185f]">
+                <div className="w-full h-36 sm:h-64 bg-gradient-to-br from-[#fbf0ff] to-[#f4e8fa] flex flex-col items-center justify-center p-3 sm:p-4 text-center">
+                  <Icon name="favorite" className="text-[26px] sm:text-[32px] text-[#784a99] mb-1 sm:mb-2" />
+                  <p className="font-headline italic text-[11px] sm:text-sm text-[#3b185f]">
                     &ldquo;Join us to celebrate the moment when love becomes a promise for eternity.&rdquo;
                   </p>
                 </div>
@@ -245,33 +245,33 @@ export const EnvelopeModal: React.FC<EnvelopeModalProps> = ({ isOpen, onClose })
             </div>
 
             {/* Date & Location */}
-            <div className="space-y-1.5">
-              <div className="inline-block px-4 py-1 rounded-full bg-[#fbf0ff] border border-[#e9dfed] text-xs font-semibold uppercase tracking-wider text-[#3b185f]">
+            <div className="space-y-1">
+              <div className="inline-block px-3 sm:px-4 py-0.5 sm:py-1 rounded-full bg-[#fbf0ff] border border-[#e9dfed] text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-[#3b185f]">
                 Friday, November 20, 2026 · 9:00 AM
               </div>
-              <div className="text-xs text-[#4b444f]">
+              <div className="text-[11px] sm:text-xs text-[#4b444f]">
                 <p className="font-semibold text-[#1e1a23]">Grand Landewela</p>
-                <p className="text-[11px] text-[#7c7480]">Beliatte - Tangalle Rd, Beliatta, Sri Lanka</p>
+                <p className="text-[10px] sm:text-[11px] text-[#7c7480]">Beliatte - Tangalle Rd, Beliatta, Sri Lanka</p>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-2.5 justify-center pt-2 border-t border-[#e9dfed]">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-2.5 justify-center pt-1.5 sm:pt-2 border-t border-[#e9dfed]">
               <button
                 onClick={onClose}
                 type="button"
-                className="w-full sm:w-auto px-6 py-3 bg-[#3b185f] hover:bg-[#4e2277] text-white rounded-xl text-xs uppercase tracking-[0.2em] font-semibold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 group"
+                className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-[#3b185f] hover:bg-[#4e2277] text-white rounded-xl text-[11px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] font-semibold transition-all shadow-md cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 group"
               >
                 <span>Proceed to Celebration &amp; RSVP</span>
-                <Icon name="arrow_forward" className="text-[16px] group-hover:translate-x-1 transition-transform" />
+                <Icon name="arrow_forward" className="text-[14px] sm:text-[16px] group-hover:translate-x-1 transition-transform" />
               </button>
 
               <button
                 onClick={handleReseal}
                 type="button"
-                className="w-full sm:w-auto px-4 py-2.5 bg-[#fbf0ff] hover:bg-[#efe5f3] text-[#4b444f] rounded-xl text-xs uppercase tracking-wider font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                className="w-full sm:w-auto px-3 sm:px-4 py-2 sm:py-2.5 bg-[#fbf0ff] hover:bg-[#efe5f3] text-[#4b444f] rounded-xl text-[10px] sm:text-xs uppercase tracking-wider font-semibold transition-colors cursor-pointer flex items-center justify-center gap-1 sm:gap-1.5"
               >
-                <Icon name="replay" className="text-[16px]" />
+                <Icon name="replay" className="text-[14px] sm:text-[16px]" />
                 <span>Re-seal Envelope</span>
               </button>
             </div>
