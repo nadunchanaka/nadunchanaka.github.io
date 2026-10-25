@@ -5,7 +5,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: '/Invitation/',
+    base: '/Wedding/',
     plugins: [
       react(),
       tailwindcss(),
@@ -13,8 +13,8 @@ export default defineConfig(() => {
         name: 'serve-dev-html',
         configureServer(server) {
           server.middlewares.use((req, res, next) => {
-            if (req.url === '/Invitation/' || req.url === '/Invitation') {
-              req.url = '/Invitation/dev.html';
+            if (req.url === '/Wedding/' || req.url === '/Wedding') {
+              req.url = '/Wedding/dev.html';
             }
             next();
           });
