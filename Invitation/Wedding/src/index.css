@@ -1,0 +1,248 @@
+@import "tailwindcss";
+
+@theme {
+  --font-headline: "Playfair Display", Georgia, serif;
+  --font-body: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+
+  /* Nocturne Lilac Color Palette */
+  --color-primary: #3b185f;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #4e2277;
+  --color-on-primary-container: #efdbff;
+  --color-primary-fixed: #efdbff;
+  --color-primary-fixed-dim: #dcb8ff;
+  --color-on-primary-fixed: #2b034f;
+  --color-on-primary-fixed-variant: #58367d;
+  --color-inverse-primary: #dcb8ff;
+
+  --color-secondary: #784a99;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #dba7fe;
+  --color-on-secondary-container: #633684;
+  --color-secondary-fixed: #f3daff;
+  --color-secondary-fixed-dim: #e2b6ff;
+  --color-on-secondary-fixed: #2e004d;
+  --color-on-secondary-fixed-variant: #5f327f;
+
+  --color-tertiary: #240046;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #372050;
+  --color-on-tertiary-container: #a387be;
+  --color-tertiary-fixed: #efdbff;
+  --color-tertiary-fixed-dim: #d9bbf5;
+  --color-on-tertiary-fixed: #270f3f;
+  --color-on-tertiary-fixed-variant: #543c6d;
+
+  --color-surface: #fff7ff;
+  --color-surface-dim: #e1d7e5;
+  --color-surface-bright: #fff7ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #fbf0ff;
+  --color-surface-container: #f5eaf9;
+  --color-surface-container-high: #efe5f3;
+  --color-surface-container-highest: #e9dfed;
+  --color-surface-variant: #e9dfed;
+  --color-surface-tint: #714e97;
+
+  --color-background: #fff7ff;
+  --color-on-background: #1e1a23;
+  --color-on-surface: #1e1a23;
+  --color-on-surface-variant: #4b444f;
+  --color-outline: #7c7480;
+  --color-outline-variant: #cdc3d1;
+  --color-inverse-surface: #342e39;
+  --color-inverse-on-surface: #f8edfc;
+
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  /* Spacing */
+  --spacing-gutter: 1.5rem;
+  --spacing-gutter-sm: 1rem;
+  --spacing-margin: 3rem;
+  --spacing-margin-mobile: 1.25rem;
+  --spacing-space-xs: 0.25rem;
+  --spacing-space-sm: 0.5rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.75rem;
+  --spacing-space-xl: 3rem;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: #fff7ff;
+  color: #1e1a23;
+}
+
+.font-headline,
+.font-headline-xl,
+.font-headline-lg,
+.font-headline-md,
+.font-headline-sm {
+  font-family: var(--font-headline);
+}
+
+.font-body,
+.font-body-lg,
+.font-body-md,
+.font-body-sm,
+.font-label-lg,
+.font-label-md,
+.font-label-sm {
+  font-family: var(--font-body);
+}
+
+/* Typography Scale Utilities from Google Stitch design */
+.text-headline-xl {
+  font-size: 56px;
+  line-height: 68px;
+  letter-spacing: -0.02em;
+}
+
+.text-headline-xl-mobile {
+  font-size: 38px;
+  line-height: 46px;
+  letter-spacing: -0.01em;
+}
+
+.text-headline-lg {
+  font-size: 40px;
+  line-height: 50px;
+  letter-spacing: -0.015em;
+}
+
+.text-headline-lg-mobile {
+  font-size: 28px;
+  line-height: 36px;
+  letter-spacing: 0em;
+}
+
+.text-headline-md {
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.text-headline-sm {
+  font-size: 22px;
+  line-height: 30px;
+}
+
+.text-body-lg {
+  font-size: 18px;
+  line-height: 28px;
+}
+
+.text-body-md {
+  font-size: 15px;
+  line-height: 24px;
+}
+
+.text-body-sm {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.text-label-lg {
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.08em;
+}
+
+.text-label-md {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.1em;
+}
+
+.text-label-sm {
+  font-size: 11px;
+  line-height: 14px;
+  letter-spacing: 0.06em;
+}
+
+/* Stitch Purple Gradient Background */
+.bg-stitch-body {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(220, 184, 255, 0.45), transparent 45%) fixed,
+    radial-gradient(circle at 85% 25%, rgba(123, 67, 151, 0.22), transparent 45%),
+    radial-gradient(circle at 50% 60%, rgba(59, 24, 95, 0.12), transparent 50%),
+    radial-gradient(circle at 20% 85%, rgba(243, 218, 255, 0.5), transparent 40%),
+    linear-gradient(rgb(255, 247, 255) 0%, rgb(250, 238, 255) 30%, rgb(246, 230, 252) 70%, rgb(255, 247, 255) 100%);
+}
+
+.bg-stitch-overlay {
+  background-image: linear-gradient(rgba(255, 247, 255, 0.80), rgba(255, 247, 255, 0.90)),
+    url("https://lh3.googleusercontent.com/aida-public/AB6AXuAdJflFRcSJ296AnfPd6fpbgJBpytb_wfumdn41hHTUdmnusPtZeZgXWUHVSACOpStVVt6oTog0BfgRlGTyTdyj_QKKp4XOFFlDSMrX81g5tQUmABTjdRlwWwsFrDbGc1Pd5LUuh57C7mFKRfpD_LM5afP6y0afR-aIxjXmW2kIs2KWVz31qxMpeLsfeG0WkFl3VRIX_GtzSdHXkjdfiUglGbmyZYNUo8CjG-d9iY0d3BHOXDyA20UgCXUtZEHWkSKSWqc");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* 3D Flip Card Animation Styles */
+.flip-container {
+  perspective: 350px;
+  -webkit-perspective: 350px;
+}
+
+.flip-top-active {
+  transform-origin: bottom center;
+  animation: flipCardTop 0.26s cubic-bezier(0.37, 0, 0.63, 1) forwards;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip-bottom-active {
+  transform-origin: top center;
+  animation: flipCardBottom 0.26s cubic-bezier(0.37, 0, 0.63, 1) 0.25s forwards;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: rotateX(90deg);
+}
+
+.flip-shadow-in {
+  animation: shadowFadeIn 0.26s ease-in forwards;
+}
+
+.flip-shadow-out {
+  animation: shadowFadeOut 0.26s ease-out 0.25s forwards;
+}
+
+@keyframes flipCardTop {
+  0% {
+    transform: rotateX(0deg);
+  }
+  100% {
+    transform: rotateX(-90deg);
+  }
+}
+
+@keyframes flipCardBottom {
+  0% {
+    transform: rotateX(90deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+
+@keyframes shadowFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.65;
+  }
+}
+
+@keyframes shadowFadeOut {
+  0% {
+    opacity: 0.65;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
