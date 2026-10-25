@@ -8,7 +8,7 @@ interface TravelSectionProps {
 
 export const TravelSection: React.FC<TravelSectionProps> = ({ onOpenVenueModal }) => {
   return (
-    <div className="max-w-4xl mx-auto px-4 pb-20 animate-fade-in space-y-12">
+    <div className="max-w-4xl mx-auto px-4 pb-6 sm:pb-12 animate-fade-in space-y-6 sm:space-y-10">
       {/* Editorial Header */}
       <div className="text-center max-w-2xl mx-auto">
         <span className="text-xs uppercase tracking-[0.25em] text-[#784a99] font-semibold mb-2 block">
@@ -23,7 +23,7 @@ export const TravelSection: React.FC<TravelSectionProps> = ({ onOpenVenueModal }
       </div>
 
       {/* Venue Spotlight & Map Card */}
-      <div className="bg-white rounded-2xl border border-[#e9dfed] p-6 md:p-8 shadow-xs">
+      <div className="bg-white rounded-2xl border border-[#e9dfed] p-5 sm:p-6 md:p-8 shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[#e9dfed]">
           <div>
             <div className="flex items-center gap-2 mb-1">
@@ -175,7 +175,7 @@ export const TravelSection: React.FC<TravelSectionProps> = ({ onOpenVenueModal }
       </div>
 
       {/* Local Explorations */}
-      <div className="bg-[#fbf0ff] rounded-2xl border border-[#e9dfed] p-6 md:p-8 shadow-xs">
+      <div className="bg-[#fbf0ff] rounded-2xl border border-[#e9dfed] p-5 sm:p-6 md:p-8 shadow-xs">
         <h3 className="font-headline text-xl text-[#3b185f] font-semibold mb-2">
           Explore the Beauty of Southern Sri Lanka
         </h3>

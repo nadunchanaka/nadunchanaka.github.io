@@ -9,7 +9,7 @@ interface ScheduleSectionProps {
 
 export const ScheduleSection: React.FC<ScheduleSectionProps> = ({ onGoToTravel }) => {
   return (
-    <div className="max-w-4xl mx-auto px-4 pb-20 animate-fade-in space-y-12">
+    <div className="max-w-4xl mx-auto px-4 pb-6 sm:pb-12 animate-fade-in space-y-6 sm:space-y-10">
       {/* Editorial Header */}
       <div className="text-center max-w-2xl mx-auto">
         <span className="text-xs uppercase tracking-[0.25em] text-[#784a99] font-semibold mb-2 block">
@@ -91,12 +91,12 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({ onGoToTravel }
       </div>
 
       {/* Navigation to Travel Page */}
-      <div className="bg-gradient-to-r from-[#fff7ff] via-white to-[#fbf0ff] rounded-2xl border border-[#e9dfed] p-6 md:p-8 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+      <div className="bg-gradient-to-r from-[#fff7ff] via-white to-[#fbf0ff] rounded-2xl border border-[#e9dfed] p-5 sm:p-6 md:p-8 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-6 text-center sm:text-left">
         <div>
           <span className="text-[11px] uppercase tracking-[0.2em] text-[#784a99] font-semibold block mb-1">
             Getting to Beliatta
           </span>
-          <h4 className="font-headline text-2xl text-[#3b185f] font-semibold">
+          <h4 className="font-headline text-xl sm:text-2xl text-[#3b185f] font-semibold">
             Venue Directions &amp; Accommodations
           </h4>
           <p className="text-xs md:text-sm text-[#4b444f] mt-1 max-w-xl">
@@ -106,7 +106,7 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({ onGoToTravel }
         <button
           onClick={onGoToTravel}
           type="button"
-          className="px-6 py-3.5 bg-[#3b185f] hover:bg-[#4e2277] text-white rounded-xl text-xs uppercase tracking-wider font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow-md shrink-0 group"
+          className="w-full sm:w-auto px-5 sm:px-6 py-3.5 bg-[#3b185f] hover:bg-[#4e2277] text-white rounded-xl text-xs uppercase tracking-wider font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow-md shrink-0 group"
         >
           <span>Travel &amp; Lodging Guide</span>
           <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform" />

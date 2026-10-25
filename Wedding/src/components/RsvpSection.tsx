@@ -219,7 +219,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
         )}
 
         {/* RSVP Card */}
-        <div className="w-full bg-white rounded-xl shadow-[0_16px_40px_-10px_rgba(59,24,95,0.08)] border border-[#e9dfed]/80 p-6 md:p-10 transition-all duration-200">
+        <div className="w-full bg-white rounded-xl shadow-[0_16px_40px_-10px_rgba(59,24,95,0.08)] border border-[#e9dfed]/80 p-4 sm:p-8 md:p-10 transition-all duration-200">
           {/* VIEW 1: ACTIVE FORM */}
           {!showFeedback && (
             <form onSubmit={handleSubmit} className="space-y-7">
@@ -618,7 +618,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
         </div>
 
         {/* Modern Venue & Transit Snippet */}
-        <section className="mt-8 bg-[#fbf0ff]/90 border border-[#e9dfed]/80 rounded-xl p-6 sm:p-7 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-xs">
+        <section className="mt-6 sm:mt-8 bg-[#fbf0ff]/90 border border-[#e9dfed]/80 rounded-xl p-4 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-5 shadow-xs">
           <div className="space-y-1.5 text-center sm:text-left">
             <div className="flex items-center justify-center sm:justify-start gap-2 text-[#3b185f] text-xs uppercase tracking-wider font-semibold">
               <Icon name="near_me" className="text-[18px]" />
@@ -635,12 +635,12 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
             </p>
           </div>
 
-          <div className="shrink-0 flex sm:flex-col gap-2 w-full sm:w-auto">
+          <div className="shrink-0 flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             <a
               href="https://maps.app.goo.gl/HjQp3Kjc7KZ1MR14A"
               rel="noopener noreferrer"
               target="_blank"
-              className="flex-1 sm:flex-none px-5 py-2.5 rounded-lg bg-white hover:bg-[#fbf0ff] text-[#1e1a23] border border-[#e9dfed] text-xs uppercase tracking-wider font-semibold shadow-xs flex items-center justify-center gap-2 transition-all"
+              className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-white hover:bg-[#fbf0ff] text-[#1e1a23] border border-[#e9dfed] text-xs uppercase tracking-wider font-semibold shadow-xs flex items-center justify-center gap-2 transition-all"
             >
               <Icon name="directions" className="text-[#3b185f] text-[18px]" />
               <span className="text-[#3b185f]">Get Directions</span>
@@ -648,7 +648,7 @@ export const RsvpSection: React.FC<RsvpSectionProps> = ({
             <button
               type="button"
               onClick={() => setIsMapDrawerOpen(!isMapDrawerOpen)}
-              className="flex-1 sm:flex-none px-5 py-2.5 rounded-lg bg-[#3b185f]/10 hover:bg-[#3b185f]/15 text-[#3b185f] border border-[#3b185f]/20 text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer"
+              className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-[#3b185f]/10 hover:bg-[#3b185f]/15 text-[#3b185f] border border-[#3b185f]/20 text-xs uppercase tracking-wider font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
               <Icon name="map" className="text-[18px]" />
               <span>{isMapDrawerOpen ? 'Hide Map' : 'Show Map'}</span>

@@ -14,7 +14,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
   onGoToSchedule
 }) => {
   return (
-    <div className="max-w-4xl mx-auto px-4 pb-20 animate-fade-in space-y-12">
+    <div className="max-w-4xl mx-auto px-4 pb-6 sm:pb-12 animate-fade-in space-y-6 sm:space-y-10">
       {/* Editorial Header */}
       <div className="text-center max-w-2xl mx-auto">
         <span className="text-xs uppercase tracking-[0.25em] text-[#784a99] font-semibold mb-2 block">
@@ -32,7 +32,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
       <PhotoCarousel />
 
       {/* Story Card: Our Journey */}
-      <div className="bg-white rounded-2xl border border-[#e9dfed] p-8 shadow-[0_16px_40px_-10px_rgba(59,24,95,0.06)] relative overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[#e9dfed] p-5 sm:p-8 shadow-[0_16px_40px_-10px_rgba(59,24,95,0.06)] relative overflow-hidden">
         <div className="max-w-3xl">
           <span className="text-[11px] uppercase tracking-[0.2em] text-[#784a99] font-semibold block mb-2">
             Our Journey
@@ -50,7 +50,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
       </div>
 
       {/* Gifts & Registry + Guestbook Callout */}
-      <div className="bg-[#fbf0ff] rounded-2xl border border-[#e9dfed] p-8 shadow-xs text-center">
+      <div className="bg-[#fbf0ff] rounded-2xl border border-[#e9dfed] p-5 sm:p-8 shadow-xs text-center">
         <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-white flex items-center justify-center text-[#3b185f] shadow-sm border border-[#e9dfed]">
           <Icon name="card_giftcard" className="text-[24px]" />
         </div>
@@ -61,11 +61,11 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
           Your love, presence, and laughter on our engagement day are the greatest gifts we could ever ask for. For those who have graciously inquired, a wishing well card box will be present at the celebration entrance, or you may leave your blessing on our digital guestbook.
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-4">
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
           <button
             onClick={onOpenGuestbook}
             type="button"
-            className="px-6 py-3 bg-[#3b185f] text-white rounded-xl text-xs uppercase tracking-wider font-semibold hover:bg-[#4e2277] transition-colors flex items-center gap-2 cursor-pointer shadow-sm"
+            className="w-full sm:w-auto px-5 sm:px-6 py-3 bg-[#3b185f] text-white rounded-xl text-xs uppercase tracking-wider font-semibold hover:bg-[#4e2277] transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-sm"
           >
             <Icon name="history_edu" className="text-[18px]" />
             <span>Open Well-Wishes Guestbook</span>
@@ -73,7 +73,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
           <button
             onClick={onGoToRsvp}
             type="button"
-            className="px-6 py-3 bg-white text-[#1e1a23] border border-[#e9dfed] rounded-xl text-xs uppercase tracking-wider font-semibold hover:bg-[#fbf0ff] transition-colors cursor-pointer"
+            className="w-full sm:w-auto px-5 sm:px-6 py-3 bg-white text-[#1e1a23] border border-[#e9dfed] rounded-xl text-xs uppercase tracking-wider font-semibold hover:bg-[#fbf0ff] transition-colors cursor-pointer text-center"
           >
             Confirm Your RSVP
           </button>
@@ -81,12 +81,12 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
       </div>
 
       {/* Navigation to Schedule Page */}
-      <div className="bg-gradient-to-r from-[#fff7ff] via-white to-[#fbf0ff] rounded-2xl border border-[#e9dfed] p-6 md:p-8 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+      <div className="bg-gradient-to-r from-[#fff7ff] via-white to-[#fbf0ff] rounded-2xl border border-[#e9dfed] p-5 sm:p-6 md:p-8 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-5 sm:gap-6 text-center sm:text-left">
         <div>
           <span className="text-[11px] uppercase tracking-[0.2em] text-[#784a99] font-semibold block mb-1">
             Celebration Timeline
           </span>
-          <h4 className="font-headline text-2xl text-[#3b185f] font-semibold">
+          <h4 className="font-headline text-xl sm:text-2xl text-[#3b185f] font-semibold">
             Explore the Order of the Day
           </h4>
           <p className="text-xs md:text-sm text-[#4b444f] mt-1 max-w-xl">
@@ -96,7 +96,7 @@ export const DetailsSection: React.FC<DetailsSectionProps> = ({
         <button
           onClick={onGoToSchedule}
           type="button"
-          className="px-6 py-3.5 bg-[#3b185f] hover:bg-[#4e2277] text-white rounded-xl text-xs uppercase tracking-wider font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow-md shrink-0 group"
+          className="w-full sm:w-auto px-5 sm:px-6 py-3.5 bg-[#3b185f] hover:bg-[#4e2277] text-white rounded-xl text-xs uppercase tracking-wider font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm hover:shadow-md shrink-0 group"
         >
           <span>View Celebration Schedule</span>
           <Icon name="arrow_forward" className="text-[18px] group-hover:translate-x-1 transition-transform" />

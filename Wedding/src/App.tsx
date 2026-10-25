@@ -200,7 +200,7 @@ export default function App() {
       )}
 
       <main className="w-full pt-16 sm:pt-20 flex-1 flex flex-col justify-start overflow-x-hidden">
-        <div className="flex flex-col w-full items-center pb-12 bg-stitch-overlay overflow-x-hidden">
+        <div className="flex flex-col w-full items-center pb-4 sm:pb-8 bg-stitch-overlay overflow-x-hidden">
           {/* Ambient Deep Violet Glow & Architectural Header */}
           <div className="relative w-full max-w-[960px] flex flex-col items-center px-2 sm:px-4 overflow-x-clip">
             {/* Ambient Subtle Deep Violet Glow (Constrained to screen bounds) */}
